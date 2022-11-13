@@ -20,7 +20,7 @@ model User {
   last_name  String     @db.VarChar(80)
   email      String     @db.VarChar(255)   @unique
   user_name  String     @db.VarChar(50)    @unique
-  password   String     @db.VarChar(255)
+  password   String     @db.VarChar(118)
   is_online  Boolean    @db.Boolean        @default(false)
   is_deleted Boolean    @db.Boolean        @default(false)
   created_at DateTime   @default(now())

@@ -8,7 +8,7 @@ CREATE TABLE "users" (
     "last_name" VARCHAR(80) NOT NULL,
     "email" VARCHAR(255) NOT NULL,
     "user_name" VARCHAR(50) NOT NULL,
-    "password" VARCHAR(255) NOT NULL,
+    "password" VARCHAR(118) NOT NULL,
     "is_online" BOOLEAN NOT NULL DEFAULT false,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
