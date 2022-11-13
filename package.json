@@ -68,5 +68,12 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "prisma": {
+    "schema": "./prisma/schema.prisma",
+    "hooks": {
+      "post-deploy": "ts-node prisma/seed.ts"
+    },
+    "seed": "ts-node prisma/seeds"
   }
 }
