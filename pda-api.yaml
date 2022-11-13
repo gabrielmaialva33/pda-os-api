@@ -36,7 +36,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/StoreUser'
       responses:
         '201':
           description: User created
@@ -70,8 +70,6 @@ paths:
           description: User not found
 
 tags:
-  - name: Auth
-    description: Operations about auth
   - name: User
     description: Operations about users
 components:
@@ -96,20 +94,66 @@ components:
         id:
           type: string
           format: uuid
-        name:
+          example: 961d77f4-458c-4add-b419-ba70f1b18297
+        first_name:
           type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
         email:
           type: string
+          example: john@pda.com
+        user_name:
+          type: string
+          example: john
         password:
           type: string
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-        deleted_at:
-          type: string
-          format: date-time
+          example: '123456'
+        is_online:
+          type: boolean
+          example: false
+      required:
+        - first_name
+        - last_name
+        - email
+        - user_name
+        - password
+      example:
+        id: 961d77f4-458c-4add-b419-ba70f1b18297
+        first_name: John
+        last_name: Doe
+        email: john@pda.com
+        user_name: john
+        password: '123456'
 
-
+    StoreUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: john@pda.com
+        user_name:
+          type: string
+          example: john
+        password:
+          type: string
+          example: '123456'
+      required:
+        - first_name
+        - last_name
+        - email
+        - user_name
+        - password
+      example:
+        first_name: John
+        last_name: Doe
+        email: john@pda.com
+        user_name: john
+        password: '123456'
