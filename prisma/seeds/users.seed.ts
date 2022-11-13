@@ -1,7 +1,11 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { Logger } from '@nestjs/common';
 
+import { UserEntity } from '../../src/users/entities/user.entity';
+
 const prisma = new PrismaClient();
+
+prisma.$use(UserEntity.hashPassword);
 
 const users: Array<Prisma.UserCreateInput> = [
   {
