@@ -46,9 +46,12 @@ export class UserEntity implements User {
    * ------------------------------------------------------
    */
   static async hashPassword(params: Prisma.MiddlewareParams, next) {
-    if (params.model === UserEntity.model && params.action === 'create') {
+    if (
+      params.model === UserEntity.model &&
+      ['create', 'update'].includes(params.action)
+    ) {
       const user = params.args.data;
-      user.password = await argon2.hash(user.password);
+      if (user.password) user.password = await argon2.hash(user.password);
       params.args.data = user;
     }
 
