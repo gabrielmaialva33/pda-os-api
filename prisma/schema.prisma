@@ -3,9 +3,27 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  extensions = [uuidOssp(map: "uuid-ossp")]
+}
+
+model User {
+  @@map("users")
+
+  id         String     @db.Uuid           @default(dbgenerated("uuid_generate_v4()")) @id
+  first_name String     @db.VarChar(80)
+  last_name  String     @db.VarChar(80)
+  email      String     @db.VarChar(255)   @unique
+  user_name  String     @db.VarChar(50)    @unique
+  password   String     @db.VarChar(255)
+  is_online  Boolean    @db.Boolean        @default(false)
+  is_deleted Boolean    @db.Boolean        @default(false)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  deleted_at DateTime?
 }
