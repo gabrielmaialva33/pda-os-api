@@ -26,6 +26,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@prisma/client": "4.6.1",
     "argon2": "^0.30.2",
+    "dotenv": "^16.0.3",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
