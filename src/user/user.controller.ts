@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 
 import { EditUserDto, StoreUserDto } from '@user/dto';
@@ -16,27 +17,33 @@ export class UserController {
   constructor(private readonly usersService: UserService) {}
 
   @Get()
-  findAll() {
-    return this.usersService.list();
+  list(
+    @Query('page') page: number,
+    @Query('per_page') perPage: number,
+    @Query('search') search: string,
+    @Query('sort') sort: string,
+    @Query('direction') direction: 'asc' | 'desc',
+  ) {
+    return this.usersService.list({ page, perPage, search, sort, direction });
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  get(@Param('id') id: string) {
     return this.usersService.get(id);
   }
 
   @Post()
-  create(@Body() data: StoreUserDto) {
+  store(@Body() data: StoreUserDto) {
     return this.usersService.store(data);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: EditUserDto) {
+  edit(@Param('id') id: string, @Body() data: EditUserDto) {
     return this.usersService.save(id, data);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  delete(@Param('id') id: string) {
     return this.usersService.delete(id);
   }
 }

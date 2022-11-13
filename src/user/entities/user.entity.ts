@@ -51,6 +51,12 @@ export class UserEntity implements User {
     is_online: true,
   };
 
+  static searchScope: Array<keyof UserEntity> = [
+    'first_name',
+    'last_name',
+    'email',
+    'user_name',
+  ];
   /**
    * ------------------------------------------------------
    * Misc

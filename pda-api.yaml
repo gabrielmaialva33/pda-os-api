@@ -16,6 +16,37 @@ paths:
         - User
       summary: Get all users
       description: Use to request all users
+      operationId: GetAllUsers
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 10
+          description: Number of users per page
+        - in: query
+          name: search
+          schema:
+            type: string
+            example: 'John'
+          description: Search by public fields
+        - in: query
+          name: sort
+          schema:
+            type: string
+            default: id
+          description: Sort by field
+        - in: query
+          name: direction
+          schema:
+            type: string
+            default: asc
       responses:
         '200':
           description: A successful response

@@ -5,12 +5,39 @@ import { PrismaModule } from '@prisma/prisma.module';
 
 @Injectable()
 export class PrismaService extends PrismaClient {
+  constructor() {
+    super({
+      log: [
+        {
+          emit: 'stdout',
+          level: 'query',
+        },
+        {
+          emit: 'stdout',
+          level: 'info',
+        },
+        {
+          emit: 'stdout',
+          level: 'warn',
+        },
+        {
+          emit: 'stdout',
+          level: 'error',
+        },
+      ],
+      errorFormat: 'pretty',
+    });
+  }
+
   async onModuleInit() {
     await this.$connect();
 
     this.$use(PrismaModule.filterDeletedRecords);
+
     this.$use(UserEntity.hashPassword);
   }
+
+  paginate = PrismaModule.paginator({ page: 1, perPage: 10 });
 
   async onModuleDestroy() {
     await this.$disconnect();

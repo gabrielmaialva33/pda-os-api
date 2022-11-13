@@ -1,17 +1,30 @@
 import { Injectable } from '@nestjs/common';
+import { User, Prisma } from '@prisma/client';
 
 import { PrismaService } from '@prisma/prisma.service';
 import { StoreUserDto, EditUserDto } from '@user/dto';
 import { UserEntity } from '@user/entities/user.entity';
+import { PaginateOptions } from '@prisma/prisma.module';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  list() {
-    return this.prisma.user.findMany({
-      select: UserEntity.publicScope,
-    });
+  list({ page, perPage, search, sort, direction }: PaginateOptions) {
+    return this.prisma.paginate<User, Prisma.UserFindManyArgs>(
+      this.prisma.user,
+      {
+        page,
+        perPage,
+        sort,
+        direction,
+        search,
+        searchFields: UserEntity.searchScope,
+      },
+      {
+        select: UserEntity.publicScope,
+      },
+    );
   }
 
   get(id: string) {
