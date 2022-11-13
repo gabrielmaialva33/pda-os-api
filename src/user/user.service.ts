@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { User, Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 import { PrismaService } from '@prisma/prisma.service';
-import { StoreUserDto, EditUserDto } from '@user/dto';
+import { EditUserDto, StoreUserDto } from '@user/dto';
 import { UserEntity } from '@user/entities/user.entity';
 import { PaginateOptions } from '@prisma/prisma.module';
 

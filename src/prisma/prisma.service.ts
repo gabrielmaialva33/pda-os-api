@@ -5,6 +5,8 @@ import { PrismaModule } from '@prisma/prisma.module';
 
 @Injectable()
 export class PrismaService extends PrismaClient {
+  paginate = PrismaModule.paginator({ page: 1, perPage: 10 });
+
   constructor() {
     super({
       log: [
@@ -36,8 +38,6 @@ export class PrismaService extends PrismaClient {
 
     this.$use(UserEntity.hashPassword);
   }
-
-  paginate = PrismaModule.paginator({ page: 1, perPage: 10 });
 
   async onModuleDestroy() {
     await this.$disconnect();

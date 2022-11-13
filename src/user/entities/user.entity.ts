@@ -3,7 +3,25 @@ import { Prisma, User } from '@prisma/client';
 
 export class UserEntity implements User {
   static readonly model = 'User';
-
+  /**
+   * ------------------------------------------------------
+   * Scopes
+   * ------------------------------------------------------
+   */
+  static publicScope: Prisma.UserSelect = {
+    id: true,
+    first_name: true,
+    last_name: true,
+    email: true,
+    user_name: true,
+    is_online: true,
+  };
+  static searchScope: Array<keyof UserEntity> = [
+    'first_name',
+    'last_name',
+    'email',
+    'user_name',
+  ];
   /**
    * ------------------------------------------------------
    * Columns
@@ -37,26 +55,6 @@ export class UserEntity implements User {
     return next(params);
   }
 
-  /**
-   * ------------------------------------------------------
-   * Scopes
-   * ------------------------------------------------------
-   */
-  static publicScope: Prisma.UserSelect = {
-    id: true,
-    first_name: true,
-    last_name: true,
-    email: true,
-    user_name: true,
-    is_online: true,
-  };
-
-  static searchScope: Array<keyof UserEntity> = [
-    'first_name',
-    'last_name',
-    'email',
-    'user_name',
-  ];
   /**
    * ------------------------------------------------------
    * Misc
