@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { Logger } from '@nestjs/common';
 
-import { UserEntity } from '../../src/users/entities/user.entity';
+import { UserEntity } from '../../src/user/entities/user.entity';
 
 const prisma = new PrismaClient();
 

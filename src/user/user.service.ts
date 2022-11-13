@@ -3,7 +3,7 @@ import { StoreUserDto } from './dto/store.user.dto';
 import { EditUserDto } from './dto/edit.user.dto';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   create(data: StoreUserDto) {
     return 'This action adds a new user';
   }
