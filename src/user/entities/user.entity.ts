@@ -42,6 +42,14 @@ export class UserEntity implements User {
    * Scopes
    * ------------------------------------------------------
    */
+  static publicScope: Prisma.UserSelect = {
+    id: true,
+    first_name: true,
+    last_name: true,
+    email: true,
+    user_name: true,
+    is_online: true,
+  };
 
   /**
    * ------------------------------------------------------
