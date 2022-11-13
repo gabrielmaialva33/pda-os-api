@@ -13,7 +13,7 @@ export class PrismaModule {
    * ------------------------------------------------------
    */
   static filterDeletedRecords(params: Prisma.MiddlewareParams, next) {
-    if (Object.values(PrismaActions).includes(params.action)) {
+    if (Object.values(PrismaGetActions).includes(params.action)) {
       params.args.where = {
         is_deleted: false,
         ...params.args.where,
@@ -24,39 +24,11 @@ export class PrismaModule {
   }
 }
 
-export type PrismaAction =
-  | 'findUnique'
-  | 'findMany'
-  | 'findFirst'
-  | 'create'
-  | 'createMany'
-  | 'update'
-  | 'updateMany'
-  | 'upsert'
-  | 'delete'
-  | 'deleteMany'
-  | 'executeRaw'
-  | 'queryRaw'
-  | 'aggregate'
-  | 'count'
-  | 'runCommandRaw'
-  | 'findRaw';
-
-export const PrismaActions: PrismaAction[] = [
+export const PrismaGetActions: Array<string> = [
   'findUnique',
   'findMany',
   'findFirst',
-  'create',
-  'createMany',
-  'update',
-  'updateMany',
-  'upsert',
-  'delete',
-  'deleteMany',
-  'executeRaw',
-  'queryRaw',
   'aggregate',
   'count',
-  'runCommandRaw',
   'findRaw',
 ];
