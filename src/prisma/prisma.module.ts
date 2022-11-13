@@ -43,9 +43,11 @@ export class PrismaModule {
         if (search)
           args.where = {
             ...args.where,
-            [field]: {
-              contains: search,
-              mode: 'insensitive',
+            OR: {
+              [field]: {
+                contains: search,
+                mode: 'insensitive',
+              },
             },
           };
 
@@ -64,7 +66,6 @@ export class PrismaModule {
       const lastPage = Math.ceil(total / perPage);
 
       return {
-        data,
         meta: {
           total,
           last_page: lastPage,
@@ -73,6 +74,7 @@ export class PrismaModule {
           prev: page > 1 ? page - 1 : null,
           next: page < lastPage ? page + 1 : null,
         },
+        data,
       };
     };
   };
