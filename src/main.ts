@@ -1,10 +1,10 @@
 import 'dotenv/config';
 
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
 
-import { PrismaService } from './prisma/prisma.service';
+import { AppModule } from '@app/app.module';
+import { PrismaService } from '@prisma/prisma.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
