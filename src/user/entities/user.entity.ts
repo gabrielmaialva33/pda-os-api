@@ -51,7 +51,8 @@ export class UserEntity implements User {
       ['create', 'update'].includes(params.action)
     ) {
       const user = params.args.data;
-      if (user.password) user.password = await argon2.hash(user.password);
+      if (user.password)
+        user.password = await argon2.hash(user.password, { saltLength: 32 });
       params.args.data = user;
     }
 
