@@ -14,7 +14,7 @@ paths:
     get:
       tags:
         - User
-      summary: Get all users
+      summary: List users
       description: Use to request all users
       operationId: GetAllUsers
       parameters:
@@ -59,7 +59,7 @@ paths:
     post:
       tags:
         - User
-      summary: Create a user
+      summary: Store user
       description: Use to create a user
       requestBody:
         description: User object that needs to be added to the store
@@ -81,7 +81,7 @@ paths:
     get:
       tags:
         - User
-      summary: Get a user by id
+      summary: Get user
       description: Use to request a user
       parameters:
         - name: userId
@@ -99,7 +99,53 @@ paths:
                 $ref: '#/components/schemas/User'
         '404':
           description: User not found
-
+    put:
+      tags:
+        - User
+      summary: Edit user
+      description: Use to edit a user
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: User object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditUser'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input
+        '404':
+          description: User not found
+    delete:
+      tags:
+        - User
+      summary: Delete user
+      description: Use to delete a user
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User deleted
+        '404':
+          description: User not found
 tags:
   - name: User
     description: Operations about users
@@ -182,6 +228,30 @@ components:
         - email
         - user_name
         - password
+      example:
+        first_name: John
+        last_name: Doe
+        email: john@pda.com
+        user_name: john
+        password: '123456'
+    EditUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: john@pda.com
+        user_name:
+          type: string
+          example: john
+        password:
+          type: string
+          example: '123456'
       example:
         first_name: John
         last_name: Doe

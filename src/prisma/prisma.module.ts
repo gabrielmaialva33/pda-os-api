@@ -81,7 +81,6 @@ export class PrismaModule {
 }
 
 export const PrismaGetActions: Array<string> = [
-  'findUnique',
   'findMany',
   'findFirst',
   'aggregate',
