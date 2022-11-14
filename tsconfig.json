@@ -21,6 +21,7 @@
       "@/*": ["src/*"],
       "@app/*": ["src/app/*"],
       "@user/*": ["src/user/*"],
+      "@auth/*": ["src/auth/*"],
       "@prisma/*": ["src/prisma/*"],
     }
   }
