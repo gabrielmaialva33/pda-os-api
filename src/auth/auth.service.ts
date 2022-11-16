@@ -1,7 +1,9 @@
 import * as argon2 from 'argon2';
+import { DateTime } from 'luxon';
 import { Injectable } from '@nestjs/common';
 import { UserService } from '@user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { UserEntity } from '@user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -24,15 +26,17 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+  async login(user: UserEntity) {
     return {
       user,
       auth: {
-        token: this.jwtService.sign(payload, {
-          expiresIn: '1d',
-        }),
-        expires_at: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // 1 day
+        token: this.jwtService.sign(
+          { sub: user.id },
+          {
+            expiresIn: '1d',
+          },
+        ),
+        expires_at: DateTime.local().plus({ days: 1 }).toISO(),
       },
     };
   }
