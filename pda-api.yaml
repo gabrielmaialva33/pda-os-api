@@ -34,6 +34,30 @@ paths:
           description: Invalid input
         '401':
           description: Unauthorized
+  /sign_up:
+    post:
+      tags:
+        - Auth
+      summary: Sign up
+      description: Use to sign up
+      requestBody:
+        description: User object that needs to be signed up
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUp'
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
 
   /users:
     get:
@@ -72,6 +96,8 @@ paths:
           schema:
             type: string
             default: asc
+      security:
+        - bearerToken: []
       responses:
         '200':
           description: A successful response
@@ -86,6 +112,7 @@ paths:
         - User
       summary: Store user
       description: Use to create a user
+      operationId: StoreUser
       requestBody:
         description: User object that needs to be added to the store
         required: true
@@ -108,6 +135,7 @@ paths:
         - User
       summary: Get user
       description: Use to request a user
+      operationId: GetUser
       parameters:
         - name: userId
           in: path
@@ -115,6 +143,8 @@ paths:
           required: true
           schema:
             type: string
+      security:
+        - bearerToken: []
       responses:
         '200':
           description: A successful response
@@ -129,6 +159,7 @@ paths:
         - User
       summary: Edit user
       description: Use to edit a user
+      operationId: EditUser
       parameters:
         - name: userId
           in: path
@@ -136,6 +167,8 @@ paths:
           required: true
           schema:
             type: string
+      security:
+        - bearerToken: []
       requestBody:
         description: User object that needs to be updated
         required: true
@@ -159,6 +192,7 @@ paths:
         - User
       summary: Delete user
       description: Use to delete a user
+      operationId: DeleteUser
       parameters:
         - name: userId
           in: path
@@ -166,13 +200,13 @@ paths:
           required: true
           schema:
             type: string
+      security:
+        - bearerToken: []
       responses:
         '204':
           description: User deleted
         '404':
           description: User not found
-
-
 
 tags:
   - name: Auth
@@ -303,4 +337,34 @@ components:
         - password
       example:
         uid: 'maia'
+        password: '123456'
+    SignUp:
+      type: object
+      properties:
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: john@pda.com
+        user_name:
+          type: string
+          example: john
+        password:
+          type: string
+          example: '123456'
+      required:
+        - first_name
+        - last_name
+        - email
+        - user_name
+        - password
+      example:
+        first_name: John
+        last_name: Doe
+        email: john@pda.com
+        user_name: john
         password: '123456'

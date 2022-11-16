@@ -7,15 +7,18 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 
 import { EditUserDto, StoreUserDto } from '@user/dto';
 import { UserService } from '@user/user.service';
+import { JwtAuthGuard } from '@auth/guards/jwt.auth.guard';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly usersService: UserService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   list(
     @Query('page') page: number,
@@ -27,6 +30,7 @@ export class UserController {
     return this.usersService.list({ page, perPage, search, sort, direction });
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   get(@Param('id') id: string) {
     return this.usersService.get(id);
@@ -37,11 +41,13 @@ export class UserController {
     return this.usersService.store(data);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   edit(@Param('id') id: string, @Body() data: EditUserDto) {
     return this.usersService.save(id, data);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.usersService.delete(id);
