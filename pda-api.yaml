@@ -10,6 +10,31 @@ info:
 servers:
   - url: http://127.0.0.1:3333
 paths:
+  /sign_in:
+    post:
+      tags:
+        - Auth
+      summary: Sign in
+      description: Use to sign in
+      requestBody:
+        description: User object that needs to be signed in
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignIn'
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+
   /users:
     get:
       tags:
@@ -146,7 +171,12 @@ paths:
           description: User deleted
         '404':
           description: User not found
+
+
+
 tags:
+  - name: Auth
+    description: Operations about auth
   - name: User
     description: Operations about users
 components:
@@ -257,4 +287,20 @@ components:
         last_name: Doe
         email: john@pda.com
         user_name: john
+        password: '123456'
+
+    SignIn:
+      type: object
+      properties:
+        uid:
+          type: string
+          example: 'maia'
+        password:
+            type: string
+            example: '123456'
+      required:
+        - uid
+        - password
+      example:
+        uid: 'maia'
         password: '123456'

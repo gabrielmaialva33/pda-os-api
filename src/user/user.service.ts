@@ -54,4 +54,12 @@ export class UserService {
       where: { id },
     });
   }
+
+  getBy(keys: string[], values: string[]) {
+    return this.prisma.user.findFirst({
+      where: {
+        OR: keys.map((key, index) => ({ [key]: values[index] })),
+      },
+    });
+  }
 }

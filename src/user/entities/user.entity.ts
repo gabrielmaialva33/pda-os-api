@@ -3,6 +3,11 @@ import { Prisma, User } from '@prisma/client';
 
 export class UserEntity implements User {
   static readonly model = 'User';
+
+  constructor(user: User) {
+    Object.assign(this, user);
+  }
+
   /**
    * ------------------------------------------------------
    * Scopes
@@ -16,12 +21,14 @@ export class UserEntity implements User {
     user_name: true,
     is_online: true,
   };
+
   static searchScope: Array<keyof UserEntity> = [
     'first_name',
     'last_name',
     'email',
     'user_name',
   ];
+
   /**
    * ------------------------------------------------------
    * Columns

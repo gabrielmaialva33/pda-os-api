@@ -10,18 +10,30 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(uid: string, pass: string): Promise<any> {
-    const user: any = await this.userService.get(uid);
-    if (user && (await argon2.verify(user.password, pass))) {
-      return user;
-    }
+  async validateUser(uid: string, password: string): Promise<any> {
+    const user = await this.userService.getBy(['email', 'user_name'], [uid]);
+    if (user && (await argon2.verify(user.password, password)))
+      return {
+        id: user.id,
+        email: user.email,
+        user_name: user.user_name,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        is_online: user.is_online,
+      };
     return null;
   }
 
   async login(user: any) {
     const payload = { username: user.username, sub: user.userId };
     return {
-      access_token: this.jwtService.sign(payload),
+      user,
+      auth: {
+        token: this.jwtService.sign(payload, {
+          expiresIn: '1d',
+        }),
+        expires_at: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // 1 day
+      },
     };
   }
 }
