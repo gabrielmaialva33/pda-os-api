@@ -1,0 +1,10 @@
+Dockerfile
+docker-compose*
+.git
+.gitignore
+.env
+.idea
+.DS_Store
+.dockerignore
+node_modules
+dist

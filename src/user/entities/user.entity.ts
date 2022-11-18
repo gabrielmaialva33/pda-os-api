@@ -4,10 +4,6 @@ import { Prisma, User } from '@prisma/client';
 export class UserEntity implements User {
   static readonly model = 'User';
 
-  constructor(user: User) {
-    Object.assign(this, user);
-  }
-
   /**
    * ------------------------------------------------------
    * Scopes
@@ -47,6 +43,10 @@ export class UserEntity implements User {
   updated_at: Date;
   deleted_at: Date;
 
+  constructor(user: User) {
+    Object.assign(this, user);
+  }
+
   /**
    * ------------------------------------------------------
    * Hooks
@@ -57,7 +57,7 @@ export class UserEntity implements User {
       params.model === UserEntity.model &&
       ['create', 'update'].includes(params.action)
     ) {
-      const user = params.args.data;
+      const user = params.args.data as UserEntity;
       if (user.password)
         user.password = await argon2.hash(user.password, { saltLength: 32 });
       params.args.data = user;
