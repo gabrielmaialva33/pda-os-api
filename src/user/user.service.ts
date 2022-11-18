@@ -55,10 +55,12 @@ export class UserService {
     });
   }
 
-  getBy(keys: string[], values: string[]) {
+  getBy(keys: string[], value) {
+    const OR: Prisma.UserWhereInput['OR'] = [];
+    for (const key of keys) OR.push({ [key]: { equals: value } });
     return this.prisma.user.findFirst({
       where: {
-        OR: keys.map((key, index) => ({ [key]: values[index] })),
+        OR: OR,
       },
     });
   }

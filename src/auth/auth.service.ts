@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   async validateUser(uid: string, password: string): Promise<any> {
-    const user = await this.userService.getBy(['email', 'user_name'], [uid]);
+    const user = await this.userService.getBy(['email', 'user_name'], uid);
     if (user && (await argon2.verify(user.password, password)))
       return {
         id: user.id,
