@@ -9,6 +9,9 @@ info:
     url: github.com/gabrielmaialva33
 servers:
   - url: http://127.0.0.1:3333
+    description: Local server
+  - url: http://127.0.0.1:3000
+    description: Docker server
 paths:
   /sign_in:
     post:
