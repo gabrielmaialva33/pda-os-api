@@ -1,9 +1,9 @@
 module.exports = {
   apps: [
     {
-      name: 'base-graphql-api',
+      name: 'pda.os.api',
       script: 'yarn',
-      args: 'npx prisma migrate deploy && npm run start:prod',
+      args: 'start:prod',
       interpreter: '/bin/bash',
       instances: 'max',
       exec_mode: 'cluster',
