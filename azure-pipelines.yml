@@ -35,7 +35,7 @@ stages:
               runOptions: commands
               commands: |
                 echo "Connected to remote machine"
-                echo "${{ variables.ssh_public_key }}" > private_key && chmod 400 private_key && 
+                echo "$(ssh_public_key)" > private_key && chmod 400 private_key && 
                 ssh -o StrictHostKeyChecking=no -i private_key mrootx@191.233.242.78 '
                 echo "Connected to remote machine"
                 DIR="/home/mrootx/pda.os.api"
@@ -59,7 +59,7 @@ stages:
                 git pull origin master && 
                 export NVM_DIR=~/.nvm &&
                 source ~/.nvm/nvm.sh &&
-                echo "${{ variables.database_url }}" > .env && echo "${{ variables.database_url }}" > envci &&
+                echo "$(database_url)" > .env && echo "$(database_url)" > envci &&
                 source envci && envsubst < .env.ci > .env &&
                 yarn build && start:migrate:prod
                 '
