@@ -1,7 +1,7 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1668789798770
+modified: 1668900011495
 created: 1668302615245
 fileName: pda-api
 contents: |-
@@ -13,12 +13,13 @@ contents: |-
     contact:
       name: Maia
       email: gabrielmaialva33@gmail.com
-      url: github.com/gabrielmaialva33
   servers:
     - url: http://127.0.0.1:3333
       description: Local server
     - url: http://127.0.0.1:3000
       description: Docker server
+    - url: https://pda.os.api.mrootx.xyz/
+      description: Azure server
   paths:
     /sign_in:
       post:
