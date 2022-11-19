@@ -15,6 +15,13 @@ const users: Array<Prisma.UserCreateInput> = [
     user_name: 'maia',
     password: '123456',
   },
+  {
+    first_name: 'Pda',
+    last_name: 'Admin',
+    email: 'pda@email.com',
+    user_name: 'pda',
+    password: '123456',
+  },
 ];
 
 async function UserSeed() {
