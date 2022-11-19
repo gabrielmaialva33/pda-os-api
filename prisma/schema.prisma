@@ -26,4 +26,33 @@ model User {
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
   deleted_at DateTime?  @db.Timestamp(3)
+
+  roles      Role[]     @relation("UserRoles")
+}
+
+model Role {
+  @@map("roles")
+
+  id         String     @db.Uuid           @default(dbgenerated("uuid_generate_v4()")) @id
+  name       String     @db.VarChar(50)    @unique
+  is_deleted Boolean    @db.Boolean        @default(false)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  deleted_at DateTime?  @db.Timestamp(3)
+
+  users      User[]     @relation("UserRoles")
+}
+
+model UserRole {
+  @@map("user_roles")
+
+  id         String     @db.Uuid           @default(dbgenerated("uuid_generate_v4()")) @id
+  user_id    String     @db.Uuid
+  role_id    String     @db.Uuid
+  is_deleted Boolean    @db.Boolean        @default(false)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  deleted_at DateTime?  @db.Timestamp(3)
+
+  @@unique([user_id, role_id])
 }
