@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'base-graphql-api',
       script: 'yarn',
-      args: 'prisma migrate deploy && npm run start:prod',
+      args: 'npx prisma migrate deploy && npm run start:prod',
       interpreter: '/bin/bash',
       instances: 'max',
       exec_mode: 'cluster',
