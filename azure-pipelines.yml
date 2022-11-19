@@ -9,21 +9,62 @@ resources:
 - repo: self
 
 variables:
-  tag: '$(Build.BuildId)'
-
+  - ssh_public_key:
+    value: -----BEGIN RSA PRIVATE KEY----- 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 -----END RSA PRIVATE KEY-----
+  - database_url:
+    value: postgres://postgres:postgres@localhost:5432/postgres
 stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
+  - stage: Build
+    displayName: Build stage
+    jobs:
+      - job: Build
+        displayName: Build
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '18.x'
+            displayName: 'Install Node.js'
+          - script: |
+              yarn 
+              yarn build --if-present
+            displayName: 'yarn install, build'
+          - task: SSH@0
+            displayName: 'SSH into remote machine'
+            inputs:
+              sshEndpoint: 'azure'
+              runOptions: commands
+              commands: |
+                echo "Connected to remote machine"
+                echo "${{ variables.one }}" > private_key && chmod 400 private_key && 
+                ssh -o StrictHostKeyChecking=no -i private_key mrootx@191.233.242.78 '
+                echo "Connected to remote machine"
+                DIR="/home/mrootx/pda.os.api"
+                export NVM_DIR=~/.nvm
+                source ~/.nvm/nvm.sh
+                
+                if [ ! -d $DIR ]
+                then
+                  git clone git@ssh.dev.azure.com:v3/pdasolucoes/Projeto%20Saas%20Agendamento/pda.os.api && 
+                  cd pda.os.api && git checkout main && 
+                  yarn && yarn build
+                else
+                  cd pda.os.api && git pull && 
+                  yarn && yarn build
+                fi
+                  
+                echo "Build finished"
+                git checkout master &&
+                git fetch --all &&
+                git reset --hard origin/master &&
+                git pull origin master && 
+                export NVM_DIR=~/.nvm &&
+                source ~/.nvm/nvm.sh &&
+                echo "$(database_url)" > .env && echo "${{ secrets.DATABASE }}" > envci &&
+                source envci && envsubst < .env.example > .env &&
+                yarn build && start:migrate:prod
+                '
+   
+                
+              
+
+
