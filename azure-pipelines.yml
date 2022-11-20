@@ -7,19 +7,21 @@ pool:
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '18.x'
+      versionSpec: '19.x'
     displayName: 'Install Node.js'
 
   - script: |
       npm i -g yarn
-    displayName: 'yarn install'
+    displayName: 'Install Yarn'
 
   - script: |
-      yarn test
-    displayName: 'yarn test'
+      yarn
+    displayName: 'Install dependencies'
 
   - script: |
       yarn build
-    displayName: 'yarn build'
+    displayName: 'Build'
 
-
+  - script: |
+      yarn test
+    displayName: 'Test'
