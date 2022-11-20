@@ -1,4 +1,31 @@
+trigger:
+  - main
 
-              
+pool:
+  vmImage: 'ubuntu-latest'
 
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '19.x'
+    displayName: 'Install Node.js'
 
+  - script: |
+      npm i -g yarn
+    displayName: 'Install Yarn'
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)'
+      contents: '**'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+    displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+
+  - script: |
+      yarn install
+      yarn build
+    displayName: 'Build'
+
+  - script: |
+      yarn test
+    displayName: 'Test'
