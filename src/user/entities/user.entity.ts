@@ -6,6 +6,24 @@ export class UserEntity implements User {
 
   /**
    * ------------------------------------------------------
+   * Columns
+   * ------------------------------------------------------
+   * - column typing struct
+   */
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  user_name: string;
+  password: string;
+  is_online: boolean;
+  is_deleted: boolean;
+  created_at: Date;
+  updated_at: Date;
+  deleted_at: Date;
+
+  /**
+   * ------------------------------------------------------
    * Scopes
    * ------------------------------------------------------
    */
@@ -24,28 +42,6 @@ export class UserEntity implements User {
     'email',
     'user_name',
   ];
-
-  /**
-   * ------------------------------------------------------
-   * Columns
-   * ------------------------------------------------------
-   * - column typing struct
-   */
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  user_name: string;
-  password: string;
-  is_online: boolean;
-  is_deleted: boolean;
-  created_at: Date;
-  updated_at: Date;
-  deleted_at: Date;
-
-  constructor(user: User) {
-    Object.assign(this, user);
-  }
 
   /**
    * ------------------------------------------------------
@@ -71,4 +67,7 @@ export class UserEntity implements User {
    * Misc
    * ------------------------------------------------------
    */
+  constructor(user: User) {
+    Object.assign(this, user);
+  }
 }

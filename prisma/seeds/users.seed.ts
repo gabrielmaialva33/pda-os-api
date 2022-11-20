@@ -18,7 +18,7 @@ const users: Array<Prisma.UserCreateInput> = [
   {
     first_name: 'Pda',
     last_name: 'Admin',
-    email: 'pda@email.com',
+    email: 'pda@pda.com',
     user_name: 'pda',
     password: '123456',
   },
