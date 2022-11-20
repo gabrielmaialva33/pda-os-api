@@ -25,10 +25,23 @@ const users: Array<Prisma.UserCreateInput> = [
 ];
 
 async function UserSeed() {
-  for (const user of users)
-    await prisma.user.create({
-      data: user,
+  for (let i = 0; i < users.length; i++) {
+    const user = users[i];
+
+    const userExists = await prisma.user.findUnique({
+      select: {
+        id: true,
+      },
+      where: {
+        user_name: user.user_name,
+      },
     });
+
+    if (!userExists)
+      await prisma.user.create({
+        data: user,
+      });
+  }
 }
 
 UserSeed().then(() => Logger.log('Users seeded', 'Seed'));
