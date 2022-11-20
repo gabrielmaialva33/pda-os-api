@@ -7,7 +7,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { Logger } from '@nestjs/common';
 
-import { AppModule } from '@app/app.module';
+import { AppModule } from '@/modules/app/app.module';
 import { PrismaService } from '@prisma/prisma.service';
 
 async function bootstrap() {

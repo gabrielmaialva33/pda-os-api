@@ -19,10 +19,12 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@/*": ["src/*"],
-      "@app/*": ["src/app/*"],
-      "@user/*": ["src/user/*"],
-      "@auth/*": ["src/auth/*"],
+
       "@prisma/*": ["src/prisma/*"],
+
+      "@app/*": ["src/modules//app/*"],
+      "@user/*": ["src/modules/user/*"],
+      "@auth/*": ["src/modules/auth/*"]
     }
   }
 }

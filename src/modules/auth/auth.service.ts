@@ -1,9 +1,9 @@
 import * as argon2 from 'argon2';
 import { DateTime } from 'luxon';
 import { Injectable } from '@nestjs/common';
-import { UserService } from '@user/user.service';
+import { UserService } from '@/modules/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserEntity } from '@user/entities/user.entity';
+import { UserEntity } from '@/modules/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {

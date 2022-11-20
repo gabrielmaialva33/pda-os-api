@@ -27,7 +27,7 @@ model User {
   updated_at DateTime   @updatedAt
   deleted_at DateTime?  @db.Timestamp(3)
 
-  roles      Role[]     @relation("UserRoles")
+  roles      Role[]
 }
 
 model Role {
@@ -40,10 +40,10 @@ model Role {
   updated_at DateTime   @updatedAt
   deleted_at DateTime?  @db.Timestamp(3)
 
-  users      User[]     @relation("UserRoles")
+  users      User[]
 }
 
-model UserRole {
+model User_Role {
   @@map("user_roles")
 
   id         String     @db.Uuid           @default(dbgenerated("uuid_generate_v4()")) @id
