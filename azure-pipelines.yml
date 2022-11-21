@@ -1,31 +1,60 @@
 trigger:
-  - main
+  - master
 
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '19.x'
-    displayName: 'Install Node.js'
-
-  - script: |
-      npm i -g yarn
-    displayName: 'Install Yarn'
-
-  - task: CopyFiles@2
-    inputs:
-      sourceFolder: '$(Build.SourcesDirectory)'
-      contents: '**'
-      targetFolder: '$(Build.ArtifactStagingDirectory)'
-    displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
-
-  - script: |
-      yarn install
-      yarn build
+stages:
+  - stage: 'sBuild'
     displayName: 'Build'
+    jobs:
+      - template: pipelines/build.yml
+        parameters:
+          buildName: jBuild
+          displayTitle: 'Build'
 
-  - script: |
-      yarn test
-    displayName: 'Test'
+  - stage: 'sDeployDEV'
+    displayName: 'Deploy DEV'
+    jobs:
+      - template: pipelines/docker.yml
+        parameters:
+          deploymentName: jDeployDockerDEV
+          displayTitle: 'Push Docker Image on DEV'
+          containerRegistry: pdasolucoes
+          dockerImageName: 'pda-os-api-dev'
+      - template: pipelines/deploy.yml
+        parameters:
+          depends: jDeployDockerDEV
+          deploymentName: jDeployDEV
+          environmentName: 'DEVELOPMENT'
+          displayTitle: 'Deploy API in Development'
+          poolName: 'Azure Pipelines'
+          azureSubscriptionName: 'cloud'
+          containerRegistry: 'pdasolucoes'
+          dockerImageName: 'pda-os-api-dev'
+          dockerImageTag: latest
+          webAppName: 'pda-os-api'
+          webAppSlot: 'dev'
+
+  - stage: 'sDeployPROD'
+    displayName: 'Deploy PROD'
+    jobs:
+      - template: pipelines/docker.yml
+        parameters:
+          deploymentName: jDeployDockerPROD
+          displayTitle: 'Push Docker Image on PROD'
+          containerRegistry: pdasolucoes
+          dockerImageName: 'pda-os-api'
+      - template: pipelines/deploy.yml
+        parameters:
+          depends: jDeployDockerPROD
+          deploymentName: jDeployPROD
+          environmentName: 'PRODUCTION'
+          displayTitle: 'Deploy API in Production'
+          poolName: 'Azure Pipelines'
+          azureSubscriptionName: 'cloud'
+          containerRegistry: 'pdasolucoes'
+          dockerImageName: 'pda-os-api'
+          dockerImageTag: latest
+          webAppName: 'pda-os-api'
+          webAppSlot: 'production'
