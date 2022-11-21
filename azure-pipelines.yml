@@ -17,7 +17,6 @@ stages:
     jobs:
       - template: pipelines/docker.yml
         parameters:
-          
           displayTitle: 'Push Docker Image on DEV'
           containerRegistry: 'pdasolucoes'
           dockerImageName: 'pda-os-api-dev'
