@@ -12,3 +12,12 @@ stages:
         parameters:
           buildName: jBuild
           displayTitle: 'Build'
+  - stage: 'sDeployDEV'
+    displayName: 'Deploy DEV'
+    jobs:
+      - template: pipelines/docker.yml
+        parameters:
+          deploymentName: jDeployDockerDEV
+          displayTitle: 'Push Docker Image on DEV'
+          containerRegistry: 'pdasolucoes.azurecr.io'
+          dockerImageName: 'pda-os-api-dev'
