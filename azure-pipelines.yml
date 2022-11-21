@@ -20,7 +20,7 @@ stages:
         parameters:
           deploymentName: jDeployDockerDEV
           displayTitle: 'Push Docker Image on DEV'
-          containerRegistry: pdasolucoes
+          containerRegistry: '002ef7b0-d00d-4005-b661-9220b75d085e'
           dockerImageName: 'pda-os-api-dev'
       - template: pipelines/deploy.yml
         parameters:
@@ -30,7 +30,7 @@ stages:
           displayTitle: 'Deploy API in Development'
           poolName: 'Azure Pipelines'
           azureSubscriptionName: 'cloud'
-          containerRegistry: 'pdasolucoes'
+          containerRegistry: '002ef7b0-d00d-4005-b661-9220b75d085e'
           dockerImageName: 'pda-os-api-dev'
           dockerImageTag: latest
           webAppName: 'pda-os-api'
@@ -43,7 +43,7 @@ stages:
         parameters:
           deploymentName: jDeployDockerPROD
           displayTitle: 'Push Docker Image on PROD'
-          containerRegistry: pdasolucoes
+          containerRegistry: '002ef7b0-d00d-4005-b661-9220b75d085e'
           dockerImageName: 'pda-os-api'
       - template: pipelines/deploy.yml
         parameters:
@@ -53,7 +53,7 @@ stages:
           displayTitle: 'Deploy API in Production'
           poolName: 'Azure Pipelines'
           azureSubscriptionName: 'cloud'
-          containerRegistry: 'pdasolucoes'
+          containerRegistry: '002ef7b0-d00d-4005-b661-9220b75d085e'
           dockerImageName: 'pda-os-api'
           dockerImageTag: latest
           webAppName: 'pda-os-api'
