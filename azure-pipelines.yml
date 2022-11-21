@@ -15,14 +15,8 @@ stages:
   - stage: 'sDeployDEV'
     displayName: 'Deploy DEV'
     jobs:
-      - template: pipelines/deploy.yml
+      - template: pipelines/docker.yml
         parameters:
-          environmentName: 'DEVELOPMENT'
-          displayTitle: 'Deploy API in Development'
-          poolName: 'Azure Pipelines'
-          azureSubscriptionName: 'cloud'
+          displayTitle: 'Push Docker Image on DEV'
           containerRegistry: 'pdasolucoes'
           dockerImageName: 'pda-os-api-dev'
-          dockerImageTag: latest
-          webAppName: 'pda-os-api'
-          webAppSlot: 'dev'
