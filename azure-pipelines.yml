@@ -15,11 +15,6 @@ stages:
   - stage: 'sDeployDEV'
     displayName: 'Deploy DEV'
     jobs:
-      - template: pipelines/docker.yml
-        parameters:
-          displayTitle: 'Push Docker Image on DEV'
-          containerRegistry: 'pdasolucoes'
-          dockerImageName: 'pda-os-api-dev'
       - template: pipelines/deploy.yml
         parameters:
           environmentName: 'DEVELOPMENT'
