@@ -18,5 +18,5 @@ stages:
       - template: pipelines/docker.yml
         parameters:
           displayTitle: 'Push Docker Image on DEV'
-          containerRegistry: 'pdasolucoes'
+          containerRegistry: 'pdasolucoes.azurecr.io'
           dockerImageName: 'pda-os-api-dev'
