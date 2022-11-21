@@ -17,14 +17,12 @@ stages:
     jobs:
       - template: pipelines/docker.yml
         parameters:
-          deploymentName: jDeployDockerDEV
+          
           displayTitle: 'Push Docker Image on DEV'
           containerRegistry: 'pdasolucoes'
           dockerImageName: 'pda-os-api-dev'
       - template: pipelines/deploy.yml
         parameters:
-          depends: jDeployDockerDEV
-          deploymentName: jDeployDEV
           environmentName: 'DEVELOPMENT'
           displayTitle: 'Deploy API in Development'
           poolName: 'Azure Pipelines'
