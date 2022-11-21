@@ -1,7 +1,7 @@
 parameters:
   deploymentName: jDeployDocker
   displayTitle: 'Build & Push Docker Image'
-  containerRegistry: 'pdasolucoes.azurecr.io'
+  containerRegistry: '002ef7b0-d00d-4005-b661-9220b75d085e'
   dockerImageName: 'pda-os-api-dev'
   dockerImageTag: latest
 
