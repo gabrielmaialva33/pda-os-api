@@ -9,18 +9,72 @@ prisma.$use(UserEntity.hashPassword);
 
 const users: Array<Prisma.UserCreateInput> = [
   {
-    first_name: 'Gabriel',
-    last_name: 'Maia',
-    email: 'maia@pda.com',
-    user_name: 'maia',
+    first_name: 'Pda',
+    last_name: 'Root',
+    email: 'root@pda.com',
+    user_name: 'root',
     password: '123456',
+    roles: {
+      connectOrCreate: {
+        where: {
+          name: 'root',
+        },
+        create: {
+          name: 'root',
+        },
+      },
+    },
   },
   {
     first_name: 'Pda',
     last_name: 'Admin',
-    email: 'pda@pda.com',
-    user_name: 'pda',
+    email: 'admin@pda.com',
+    user_name: 'admin',
     password: '123456',
+    roles: {
+      connectOrCreate: {
+        where: {
+          name: 'admin',
+        },
+        create: {
+          name: 'admin',
+        },
+      },
+    },
+  },
+  {
+    first_name: 'Pda',
+    last_name: 'User',
+    email: 'user@pda.com',
+    user_name: 'user',
+    password: '123456',
+    roles: {
+      connectOrCreate: {
+        where: {
+          name: 'user',
+        },
+        create: {
+          name: 'user',
+        },
+      },
+    },
+  },
+  {
+    first_name: 'Pda',
+    last_name: 'Guest',
+    email: 'guest@pda.com',
+    user_name: 'guest',
+    password: '123456',
+    roles: {
+      connectOrCreate: {
+        where: {
+          name: 'guest',
+        },
+        create: {
+          name: 'guest',
+        },
+      },
+    },
   },
 ];
 

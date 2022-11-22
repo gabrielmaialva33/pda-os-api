@@ -2,57 +2,58 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
   extensions = [uuidOssp(map: "uuid-ossp")]
 }
 
 model User {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  first_name String    @db.VarChar(80)
+  last_name  String    @db.VarChar(80)
+  email      String    @unique @db.VarChar(255)
+  user_name  String    @unique @db.VarChar(50)
+  password   String    @db.VarChar(118)
+  is_online  Boolean   @default(false) @db.Boolean
+  is_deleted Boolean   @default(false) @db.Boolean
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime? @db.Timestamp(3)
+
+  roles    Role[]
+  UserRole UserRole[]
+
   @@map("users")
-
-  id         String     @db.Uuid           @default(dbgenerated("uuid_generate_v4()")) @id
-  first_name String     @db.VarChar(80)
-  last_name  String     @db.VarChar(80)
-  email      String     @db.VarChar(255)   @unique
-  user_name  String     @db.VarChar(50)    @unique
-  password   String     @db.VarChar(118)
-  is_online  Boolean    @db.Boolean        @default(false)
-  is_deleted Boolean    @db.Boolean        @default(false)
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
-  deleted_at DateTime?  @db.Timestamp(3)
-
-  roles      Role[]
 }
 
 model Role {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name       String    @unique @db.VarChar(50)
+  is_deleted Boolean   @default(false) @db.Boolean
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  deleted_at DateTime? @db.Timestamp(3)
+
+  users    User[]
+  UserRole UserRole[]
+
   @@map("roles")
-
-  id         String     @db.Uuid           @default(dbgenerated("uuid_generate_v4()")) @id
-  name       String     @db.VarChar(50)    @unique
-  is_deleted Boolean    @db.Boolean        @default(false)
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
-  deleted_at DateTime?  @db.Timestamp(3)
-
-  users      User[]
 }
 
-model User_Role {
-  @@map("user_roles")
+model UserRole {
+  id      String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String @db.Uuid
+  role    Role   @relation(fields: [role_id], references: [id])
+  role_id String @db.Uuid
 
-  id         String     @db.Uuid           @default(dbgenerated("uuid_generate_v4()")) @id
-  user_id    String     @db.Uuid
-  role_id    String     @db.Uuid
-  is_deleted Boolean    @db.Boolean        @default(false)
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
-  deleted_at DateTime?  @db.Timestamp(3)
+  assigned_at DateTime @default(now())
 
   @@unique([user_id, role_id])
+  @@map("user_roles")
 }

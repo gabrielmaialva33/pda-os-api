@@ -62,6 +62,26 @@ export class UserEntity implements User {
     return next(params);
   }
 
+  static async attachRole(params: Prisma.MiddlewareParams, next) {
+    if (
+      params.model === UserEntity.model &&
+      ['create', 'update'].includes(params.action)
+    ) {
+      const user = params.args.data as UserEntity;
+      console.log(user);
+      // if (user.user_name === 'pda') {
+      //   params.args.data = {
+      //     ...user,
+      //     role: {
+      //       connect: {
+      //         name: 'root',
+      //       },
+      //     },
+      //   };
+      // }
+    }
+  }
+
   /**
    * ------------------------------------------------------
    * Misc
