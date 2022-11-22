@@ -1,31 +1,22 @@
 trigger:
-  - main
+  - master
 
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '19.x'
-    displayName: 'Install Node.js'
-
-  - script: |
-      npm i -g yarn
-    displayName: 'Install Yarn'
-
-  - task: CopyFiles@2
-    inputs:
-      sourceFolder: '$(Build.SourcesDirectory)'
-      contents: '**'
-      targetFolder: '$(Build.ArtifactStagingDirectory)'
-    displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
-
-  - script: |
-      yarn install
-      yarn build
+stages:
+  - stage: 'sBuild'
     displayName: 'Build'
-
-  - script: |
-      yarn test
-    displayName: 'Test'
+    jobs:
+      - template: pipelines/build.yml
+        parameters:
+          buildName: jBuild
+          displayTitle: 'Build'
+  - stage: 'sDeployDEV'
+    displayName: 'Deploy DEV'
+    jobs:
+      - template: pipelines/docker.yml
+        parameters:
+          displayTitle: 'Push Docker Image on DEV'
+          containerRegistry: 'pdasolucoes'
+          dockerImageName: 'pda-os-api-dev'
