@@ -15,14 +15,11 @@ const users: Array<Prisma.UserCreateInput> = [
     user_name: 'root',
     password: '123456',
     roles: {
-      connectOrCreate: {
-        where: {
-          name: 'root',
+      create: [
+        {
+          role: { create: { name: 'root' } },
         },
-        create: {
-          name: 'root',
-        },
-      },
+      ],
     },
   },
   {
@@ -31,16 +28,6 @@ const users: Array<Prisma.UserCreateInput> = [
     email: 'admin@pda.com',
     user_name: 'admin',
     password: '123456',
-    roles: {
-      connectOrCreate: {
-        where: {
-          name: 'admin',
-        },
-        create: {
-          name: 'admin',
-        },
-      },
-    },
   },
   {
     first_name: 'Pda',
@@ -48,16 +35,6 @@ const users: Array<Prisma.UserCreateInput> = [
     email: 'user@pda.com',
     user_name: 'user',
     password: '123456',
-    roles: {
-      connectOrCreate: {
-        where: {
-          name: 'user',
-        },
-        create: {
-          name: 'user',
-        },
-      },
-    },
   },
   {
     first_name: 'Pda',
@@ -65,16 +42,6 @@ const users: Array<Prisma.UserCreateInput> = [
     email: 'guest@pda.com',
     user_name: 'guest',
     password: '123456',
-    roles: {
-      connectOrCreate: {
-        where: {
-          name: 'guest',
-        },
-        create: {
-          name: 'guest',
-        },
-      },
-    },
   },
 ];
 

@@ -25,8 +25,7 @@ model User {
   updated_at DateTime  @updatedAt
   deleted_at DateTime? @db.Timestamp(3)
 
-  roles    Role[]
-  UserRole UserRole[]
+  roles UserRole[]
 
   @@map("users")
 }
@@ -39,8 +38,7 @@ model Role {
   updated_at DateTime  @updatedAt
   deleted_at DateTime? @db.Timestamp(3)
 
-  users    User[]
-  UserRole UserRole[]
+  users UserRole[]
 
   @@map("roles")
 }
@@ -54,6 +52,5 @@ model UserRole {
 
   assigned_at DateTime @default(now())
 
-  @@unique([user_id, role_id])
   @@map("user_roles")
 }

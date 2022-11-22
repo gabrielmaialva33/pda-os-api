@@ -5,7 +5,7 @@ import { UserModule } from '@user/user.module';
 import { AppController } from '@app/app.controller';
 import { AppService } from '@app/app.service';
 import { AuthModule } from '@auth/auth.module';
-import { RoleModule } from '@/role/role.module';
+import { RoleModule } from '@/modules/role/role.module';
 
 @Module({
   controllers: [AppController],

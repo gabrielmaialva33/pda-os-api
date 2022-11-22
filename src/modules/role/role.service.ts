@@ -5,7 +5,7 @@ import { StoreRoleDto } from './dto/store-role.dto';
 import { EditRoleDto } from './dto/edit-role.dto';
 import { PrismaService } from '@prisma/prisma.service';
 import { PaginateOptions } from '@prisma/prisma.module';
-import { RoleEntity } from '@/role/entities/role.entity';
+import { RoleEntity } from '@/modules/role/entities/role.entity';
 
 @Injectable()
 export class RoleService {
