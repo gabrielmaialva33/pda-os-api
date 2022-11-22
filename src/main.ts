@@ -16,6 +16,9 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
+  // const fastify = app.getHttpAdapter().getInstance();
+  // fastify.addHook('onRequest', async (request, reply) => {});
+
   app.enableCors();
 
   const prisma = app.get(PrismaService);

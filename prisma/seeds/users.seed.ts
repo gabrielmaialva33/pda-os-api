@@ -14,6 +14,13 @@ const users: Array<Prisma.UserCreateInput> = [
     email: 'root@pda.com',
     user_name: 'root',
     password: '123456',
+    roles: {
+      create: [
+        {
+          role: { create: { name: 'root' } },
+        },
+      ],
+    },
   },
   {
     first_name: 'Pda',
@@ -21,6 +28,13 @@ const users: Array<Prisma.UserCreateInput> = [
     email: 'admin@pda.com',
     user_name: 'admin',
     password: '123456',
+    roles: {
+      create: [
+        {
+          role: { create: { name: 'admin' } },
+        },
+      ],
+    },
   },
   {
     first_name: 'Pda',
@@ -28,6 +42,13 @@ const users: Array<Prisma.UserCreateInput> = [
     email: 'user@pda.com',
     user_name: 'user',
     password: '123456',
+    roles: {
+      create: [
+        {
+          role: { create: { name: 'user' } },
+        },
+      ],
+    },
   },
   {
     first_name: 'Pda',
@@ -35,6 +56,13 @@ const users: Array<Prisma.UserCreateInput> = [
     email: 'guest@pda.com',
     user_name: 'guest',
     password: '123456',
+    roles: {
+      create: [
+        {
+          role: { create: { name: 'guest' } },
+        },
+      ],
+    },
   },
 ];
 
