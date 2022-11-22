@@ -37,6 +37,7 @@ export class PrismaService extends PrismaClient {
     this.$use(PrismaModule.filterDeletedRecords);
 
     this.$use(UserEntity.hashPassword);
+    this.$use(UserEntity.attachRole);
   }
 
   async onModuleDestroy() {

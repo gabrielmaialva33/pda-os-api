@@ -14,13 +14,6 @@ const users: Array<Prisma.UserCreateInput> = [
     email: 'root@pda.com',
     user_name: 'root',
     password: '123456',
-    roles: {
-      create: [
-        {
-          role: { create: { name: 'root' } },
-        },
-      ],
-    },
   },
   {
     first_name: 'Pda',

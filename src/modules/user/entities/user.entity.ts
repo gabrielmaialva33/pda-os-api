@@ -63,12 +63,15 @@ export class UserEntity implements User {
   }
 
   static async attachRole(params: Prisma.MiddlewareParams, next) {
+    console.log(params);
+    console.log(['create', 'update'].includes(params.action));
     if (
       params.model === UserEntity.model &&
       ['create', 'update'].includes(params.action)
     ) {
       const user = params.args.data as UserEntity;
       console.log(user);
+      return next(params);
       // if (user.user_name === 'pda') {
       //   params.args.data = {
       //     ...user,
