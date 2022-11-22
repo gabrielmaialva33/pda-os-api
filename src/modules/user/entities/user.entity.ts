@@ -34,6 +34,11 @@ export class UserEntity implements User {
     email: true,
     user_name: true,
     is_online: true,
+    roles: {
+      select: {
+        name: true,
+      },
+    },
   };
 
   static searchScope: Array<keyof UserEntity> = [
@@ -65,20 +70,11 @@ export class UserEntity implements User {
   static async attachRole(params: Prisma.MiddlewareParams, next) {
     if (
       params.model === UserEntity.model &&
-      ['create', 'update'].includes(params.action)
+      ['create'].includes(params.action)
     ) {
-      const user = params.args.data as UserEntity;
-      console.log(user);
-      // if (user.user_name === 'pda') {
-      //   params.args.data = {
-      //     ...user,
-      //     role: {
-      //       connect: {
-      //         name: 'root',
-      //       },
-      //     },
-      //   };
-      // }
+      const user = params.args.data;
+      user.roles = { connect: { name: 'user' } };
+      params.args.data = user;
     }
 
     return next(params);

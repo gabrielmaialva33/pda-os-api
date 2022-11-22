@@ -25,7 +25,7 @@ model User {
   updated_at DateTime  @updatedAt
   deleted_at DateTime? @db.Timestamp(3)
 
-  roles UserRole[]
+  roles Role[]
 
   @@map("users")
 }
@@ -38,19 +38,7 @@ model Role {
   updated_at DateTime  @updatedAt
   deleted_at DateTime? @db.Timestamp(3)
 
-  users UserRole[]
+  users User[]
 
   @@map("roles")
-}
-
-model UserRole {
-  id      String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id String @db.Uuid
-  role    Role   @relation(fields: [role_id], references: [id])
-  role_id String @db.Uuid
-
-  assigned_at DateTime @default(now())
-
-  @@map("user_roles")
 }

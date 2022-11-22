@@ -17,7 +17,7 @@ const users: Array<Prisma.UserCreateInput> = [
     roles: {
       create: [
         {
-          role: { create: { name: 'root' } },
+          name: 'root',
         },
       ],
     },
@@ -31,7 +31,7 @@ const users: Array<Prisma.UserCreateInput> = [
     roles: {
       create: [
         {
-          role: { create: { name: 'admin' } },
+          name: 'admin',
         },
       ],
     },
@@ -45,7 +45,7 @@ const users: Array<Prisma.UserCreateInput> = [
     roles: {
       create: [
         {
-          role: { create: { name: 'user' } },
+          name: 'user',
         },
       ],
     },
@@ -59,7 +59,7 @@ const users: Array<Prisma.UserCreateInput> = [
     roles: {
       create: [
         {
-          role: { create: { name: 'guest' } },
+          name: 'guest',
         },
       ],
     },
