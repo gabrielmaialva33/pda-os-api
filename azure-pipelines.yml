@@ -21,3 +21,16 @@ stages:
           displayTitle: 'Push Docker Image on DEV'
           containerRegistry: 'pdasolucoes'
           dockerImageName: 'pda-os-api-dev'
+      - template: pipelines/deploy.yml
+        parameters:
+          depends: jDeployDockerDEV
+          deploymentName: jDeployDEV
+          environmentName: 'DEVELOPMENT'
+          displayTitle: 'Deploy API in Development'
+          poolName: 'Azure Pipelines'
+          azureSubscriptionName: 'cloud'
+          containerRegistry: 'pdasolucoes'
+          dockerImageName: 'pda-os-api-dev'
+          dockerImageTag: latest
+          webAppName: 'pda-os-api'
+          webAppSlot: 'dev'
