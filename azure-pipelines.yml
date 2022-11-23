@@ -24,6 +24,7 @@ stages:
       - template: pipelines/deploy.yml
         parameters:
           depends: jDeployDockerDEV
+          deploymentName: jDeploy
           environmentName: 'DEVELOPMENT'
           displayTitle: 'Deploy API in Development'
           poolName: 'Azure Pipelines'
