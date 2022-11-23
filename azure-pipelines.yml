@@ -28,7 +28,7 @@ stages:
           environmentName: 'DEVELOPMENT'
           displayTitle: 'Deploy API in Development'
           poolName: 'Azure Pipelines'
-          azureSubscriptionName: 'cloud'
+          azureSubscriptionName: 'jDeploy'
           containerRegistry: 'pdasolucoes'
           dockerImageName: 'pda-os-api-dev'
           dockerImageTag: latest
