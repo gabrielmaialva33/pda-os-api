@@ -6,9 +6,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { Logger } from '@nestjs/common';
-
-import { AppModule } from '@/modules/app/app.module';
-import { PrismaService } from '@prisma/prisma.service';
+import { AppModule } from '@src/modules/app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -20,16 +18,12 @@ async function bootstrap() {
   // fastify.addHook('onRequest', async (request, reply) => {});
 
   app.enableCors();
-
-  const prisma = app.get(PrismaService);
-  await prisma.enableShutdownHooks(app);
-
-  await app.listen(process.env.PORT || 3000, process.env.HOST || '0.0.0.0');
+  await app.listen(process.env.PORT || 3333, process.env.HOST || '0.0.0.0');
 }
 
 bootstrap().then(() =>
   Logger.log(
-    `Application is listening on port ${process.env.PORT || 3000}`,
+    `Application is listening on port ${process.env.PORT || 3333}`,
     'Bootstrap',
   ),
 );

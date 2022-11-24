@@ -18,13 +18,21 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@/*": ["src/*"],
-
-      "@prisma/*": ["src/prisma/*"],
-
-      "@app/*": ["src/modules//app/*"],
-      "@user/*": ["src/modules/user/*"],
-      "@auth/*": ["src/modules/auth/*"]
+      "@src/*": [
+        "src/*"
+      ],
+      "@app/*": [
+        "src/modules/app/*"
+      ],
+      "@auth/*": [
+        "src/modules/auth/*"
+      ],
+      "@common/*": [
+        "src/modules/common/*"
+      ],
+      "@user/*": [
+        "src/modules/user/*"
+      ]
     }
   }
 }

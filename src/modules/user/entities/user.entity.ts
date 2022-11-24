@@ -1,8 +1,22 @@
+import {
+  BeforeCreate,
+  BeforeUpdate,
+  Entity,
+  EntityRepositoryType,
+  Enum,
+  Property,
+} from '@mikro-orm/core';
 import * as argon2 from 'argon2';
-import { Prisma, User } from '@prisma/client';
 
-export class UserEntity implements User {
-  static readonly model = 'User';
+import { BaseEntity } from '@src/modules/common/entities/base.entity';
+import { UserRepository } from '@user/repositories/user.repository';
+
+@Entity({
+  tableName: 'users',
+  customRepository: () => UserRepository,
+})
+export class UserEntity extends BaseEntity {
+  [EntityRepositoryType]?: UserRepository;
 
   /**
    * ------------------------------------------------------
@@ -10,82 +24,69 @@ export class UserEntity implements User {
    * ------------------------------------------------------
    * - column typing struct
    */
-  id: string;
+
+  @Property({ length: 80 })
   first_name: string;
+
+  @Property({ length: 80 })
   last_name: string;
+
+  @Property({
+    columnType:
+      "varchar(160) generated always as (first_name || ' ' || last_name) stored",
+    ignoreSchemaChanges: ['type', 'extra'],
+    nullable: true,
+  })
+  full_name: string;
+
+  @Property({ unique: true })
   email: string;
+
+  @Property({ length: 50, unique: true })
   user_name: string;
+
+  @Property({ hidden: true, length: 118 })
   password: string;
+
+  @Property({ type: 'boolean', default: false })
   is_online: boolean;
-  is_deleted: boolean;
-  created_at: Date;
-  updated_at: Date;
-  deleted_at: Date;
 
   /**
    * ------------------------------------------------------
-   * Scopes
+   * Relationships
+   * ------------------------------------------------------
+   * - define Shared model relationships
+   */
+  /**
+   * ------------------------------------------------------
+   * Custom Methods
    * ------------------------------------------------------
    */
-  static publicScope: Prisma.UserSelect = {
-    id: true,
-    first_name: true,
-    last_name: true,
-    email: true,
-    user_name: true,
-    is_online: true,
-    roles: {
-      select: {
-        name: true,
-      },
-    },
-  };
+  @Enum({
+    items: () => ['first_name', 'last_name', 'email', 'user_name'],
+    persist: false,
+  })
+  search_fields: string[] = ['first_name', 'last_name', 'email', 'user_name'];
 
-  static searchScope: Array<keyof UserEntity> = [
-    'first_name',
-    'last_name',
-    'email',
-    'user_name',
-  ];
+  /**
+   * ------------------------------------------------------
+   * Query Scopes
+   * ------------------------------------------------------
+   */
+
+  constructor(data: Partial<UserEntity>) {
+    super();
+    this.assign(data);
+  }
 
   /**
    * ------------------------------------------------------
    * Hooks
    * ------------------------------------------------------
    */
-  static async hashPassword(params: Prisma.MiddlewareParams, next) {
-    if (
-      params.model === UserEntity.model &&
-      ['create', 'update'].includes(params.action)
-    ) {
-      const user = params.args.data as UserEntity;
-      if (user.password)
-        user.password = await argon2.hash(user.password, { saltLength: 32 });
-      params.args.data = user;
-    }
-
-    return next(params);
-  }
-
-  static async attachRole(params: Prisma.MiddlewareParams, next) {
-    if (
-      params.model === UserEntity.model &&
-      ['create'].includes(params.action)
-    ) {
-      const user = params.args.data;
-      user.roles = { connect: { name: 'user' } };
-      params.args.data = user;
-    }
-
-    return next(params);
-  }
-
-  /**
-   * ------------------------------------------------------
-   * Misc
-   * ------------------------------------------------------
-   */
-  constructor(user: User) {
-    Object.assign(this, user);
+  @BeforeCreate()
+  @BeforeUpdate()
+  async hashPassword() {
+    this.password = await argon2.hash(this.password, { saltLength: 32 });
   }
 }

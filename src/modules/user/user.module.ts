@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 
-import { PrismaModule } from '@prisma/prisma.module';
-import { UserController } from '@/modules/user/user.controller';
-import { UserService } from '@/modules/user/user.service';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { UserEntity } from '@user/entities/user.entity';
+import { UserController } from '@user/http/user.controller';
+import { UserService } from '@user/services/user.service';
 
 @Module({
+  imports: [MikroOrmModule.forFeature([UserEntity])],
   controllers: [UserController],
   providers: [UserService],
-  exports: [UserService],
-  imports: [PrismaModule],
 })
 export class UserModule {}
