@@ -32,5 +32,5 @@ stages:
           containerRegistry: 'pdasolucoes'
           dockerImageName: 'pda-os-api-dev'
           dockerImageTag: latest
-          webAppName: 'pda-os-api'
+          webAppName: 'managedEnvironment-cloud-8a2f'
           webAppSlot: 'dev'
