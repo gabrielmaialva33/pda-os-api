@@ -1,12 +1,23 @@
-import { AnyEntity, EntityRepository, ObjectQuery } from '@mikro-orm/core';
+import {
+  EntityData,
+  EntityRepository,
+  FilterQuery,
+  Loaded,
+  ObjectQuery,
+  wrap,
+} from '@mikro-orm/core';
 import {
   Pagination,
   PaginationOptions,
 } from '@common/interfaces/pagination.interface';
+import { BaseEntity } from '@common/entities/base.entity';
+import { EntityDTO, RequiredEntityData } from '@mikro-orm/core/typings';
+import { RepositoryInterface } from '@common/interfaces/repository.interface';
 
-export class BaseRepository<
-  Model extends AnyEntity,
-> extends EntityRepository<Model> {
+export class BaseRepository<Model extends BaseEntity>
+  extends EntityRepository<Model>
+  implements RepositoryInterface<Model>
+{
   async paginate({
     page = 1,
     per_page = 10,
@@ -53,5 +64,23 @@ export class BaseRepository<
     };
   }
 
-  async getBy() {}
+  async get(id: string): Promise<Loaded<Model>> {
+    return this.findOne(id as FilterQuery<Model>);
+  }
+
+  async store(data: RequiredEntityData<Model>): Promise<Model> {
+    const model = this.create(data);
+    await this.persistAndFlush(model);
+    return model;
+  }
+
+  async update(
+    id: string,
+    data: EntityData<Loaded<Model>> | Partial<EntityDTO<Loaded<Model>>>,
+  ): Promise<Loaded<Model>> {
+    const model = await this.findOneOrFail(id as FilterQuery<Model>);
+    wrap(model).assign(data);
+    await this.flush();
+    return model;
+  }
 }

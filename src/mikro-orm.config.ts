@@ -14,6 +14,11 @@ const MikroOrmConfig: Options = {
   dbName: process.env.PG_DB || 'postgres',
   type: 'postgresql',
   debug: process.env.PG_DEBUG === 'true' || false,
+  filters: {
+    deleted: {
+      cond: { deleted_at: { $eq: null } },
+    },
+  },
   logger: logger.log.bind(logger),
   migrations: {
     tableName: 'mikro_orm_migrations',

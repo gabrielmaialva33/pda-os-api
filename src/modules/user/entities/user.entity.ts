@@ -57,6 +57,18 @@ export class UserEntity extends BaseEntity {
    * ------------------------------------------------------
    * - define Shared model relationships
    */
+
+  /**
+   * ------------------------------------------------------
+   * Hooks
+   * ------------------------------------------------------
+   */
+  @BeforeCreate()
+  @BeforeUpdate()
+  async hashPassword() {
+    this.password = await argon2.hash(this.password, { saltLength: 32 });
+  }
+
   /**
    * ------------------------------------------------------
    * Custom Methods
@@ -77,16 +89,5 @@ export class UserEntity extends BaseEntity {
   constructor(data: Partial<UserEntity>) {
     super();
     this.assign(data);
-  }
-
-  /**
-   * ------------------------------------------------------
-   * Hooks
-   * ------------------------------------------------------
-   */
-  @BeforeCreate()
-  @BeforeUpdate()
-  async hashPassword() {
-    this.password = await argon2.hash(this.password, { saltLength: 32 });
   }
 }

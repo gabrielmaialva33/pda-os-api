@@ -1,6 +1,7 @@
 import {
   BaseEntity as MikroBaseEntity,
   Entity,
+  Filter,
   OptionalProps,
   PrimaryKey,
   Property,
@@ -8,6 +9,7 @@ import {
 import { DateTime } from 'luxon';
 
 @Entity({ abstract: true, comment: 'An abstract base entity' })
+@Filter({ name: 'deleted', cond: { deleted_at: { $ne: null } } })
 export class BaseEntity extends MikroBaseEntity<BaseEntity, 'id'> {
   [OptionalProps]?: 'created_at' | 'updated_at' | 'deleted_at';
 
@@ -40,8 +42,15 @@ export class BaseEntity extends MikroBaseEntity<BaseEntity, 'id'> {
     name: 'deleted_at',
     type: 'datetime',
     nullable: true,
+    hidden: true,
   })
   deleted_at?: DateTime;
+
+  /**
+   * ------------------------------------------------------
+   * Hooks
+   * ------------------------------------------------------
+   */
 
   /**
    * ------------------------------------------------------

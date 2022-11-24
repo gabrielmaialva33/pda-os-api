@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { EditUserDto, StoreUserDto } from '@user/dto';
 import { UserRepository } from '@user/repositories/user.repository';
 import { PaginationOptions } from '@common/interfaces/pagination.interface';
-import { DateTime } from 'luxon';
 import { wrap } from '@mikro-orm/core';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class UserService {
@@ -20,29 +20,24 @@ export class UserService {
   }
 
   async get(id: string) {
-    return this.userRepository.findOne(id);
+    return this.userRepository.get(id);
   }
 
   async create(data: StoreUserDto) {
-    const user = await this.userRepository.create(data);
-    await this.userRepository.persistAndFlush(user);
-    return user;
+    return this.userRepository.store(data);
   }
 
   async update(id: string, data: EditUserDto) {
-    const user = await this.userRepository.findOne({
-      id,
-    });
-
-    wrap(user).assign(data);
-    await this.userRepository.flush();
-
-    return user;
+    return this.userRepository.update(id, data);
   }
 
   async delete(id: string) {
-    const user = await this.userRepository.findOneOrFail(id);
-    user.deleted_at = DateTime.local();
-    return this.userRepository.upsert(user);
+    const model = await this.userRepository.get(id);
+    wrap(model).assign({
+      email: `${model.email}:deleted:${model.id.split('-')[0]}`,
+      user_name: `${model.user_name}:deleted:${model.id.split('-')[0]}`,
+      deleted_at: DateTime.local(),
+    });
+    await this.userRepository.flush();
   }
 }
