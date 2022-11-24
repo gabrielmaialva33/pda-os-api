@@ -74,7 +74,7 @@ export class BaseRepository<Model extends BaseEntity>
     return model;
   }
 
-  async update(
+  async save(
     id: string,
     data: EntityData<Loaded<Model>> | Partial<EntityDTO<Loaded<Model>>>,
   ): Promise<Loaded<Model>> {
@@ -82,5 +82,13 @@ export class BaseRepository<Model extends BaseEntity>
     wrap(model).assign(data);
     await this.flush();
     return model;
+  }
+
+  async getBy(keys: string[], values: string[]) {
+    const filters: any = [];
+    for (let i = 0; i < keys.length; i++) filters.push({ [keys[i]]: values });
+    return this.findOne({
+      $or: [...filters],
+    } as unknown as ObjectQuery<Model>);
   }
 }

@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Put,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 
@@ -39,13 +39,13 @@ export class UserController {
   }
 
   @Post()
-  create(@Body() createUserDto: StoreUserDto) {
-    return this.userService.create(createUserDto);
+  create(@Body() data: StoreUserDto) {
+    return this.userService.store(data);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: EditUserDto) {
-    return this.userService.update(id, updateUserDto);
+  edit(@Param('id') id: string, @Body() data: EditUserDto) {
+    return this.userService.save(id, data);
   }
 
   @Delete(':id')

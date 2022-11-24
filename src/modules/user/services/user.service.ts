@@ -23,12 +23,12 @@ export class UserService {
     return this.userRepository.get(id);
   }
 
-  async create(data: StoreUserDto) {
+  async store(data: StoreUserDto) {
     return this.userRepository.store(data);
   }
 
-  async update(id: string, data: EditUserDto) {
-    return this.userRepository.update(id, data);
+  async save(id: string, data: EditUserDto) {
+    return this.userRepository.save(id, data);
   }
 
   async delete(id: string) {
@@ -39,5 +39,9 @@ export class UserService {
       deleted_at: DateTime.local(),
     });
     await this.userRepository.flush();
+  }
+
+  async getBy(fields: string[], values: string[]) {
+    return this.userRepository.getBy(fields, values);
   }
 }

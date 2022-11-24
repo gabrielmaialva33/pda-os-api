@@ -13,7 +13,7 @@ export interface RepositoryInterface<Model extends BaseEntity> {
 
   store(data: RequiredEntityData<Model>): Promise<Model>;
 
-  update(
+  save(
     id: string,
     data: EntityData<Loaded<Model>> | Partial<EntityDTO<Loaded<Model>>>,
   ): Promise<Loaded<Model>>;

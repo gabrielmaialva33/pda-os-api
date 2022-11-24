@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 
-import { AppController } from '@app/app.controller';
-import { AppService } from '@app/app.service';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
 import MikroOrmConfig from '@src/mikro-orm.config';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { AppController } from '@app/app.controller';
 import { UserModule } from '@user/user.module';
+import { AuthModule } from '@auth/auth.module';
+import { AppService } from '@app/app.service';
 
 @Module({
   controllers: [AppController],
-  imports: [MikroOrmModule.forRoot(MikroOrmConfig), UserModule],
+  imports: [UserModule, AuthModule, MikroOrmModule.forRoot(MikroOrmConfig)],
   providers: [AppService],
   exports: [],
 })
