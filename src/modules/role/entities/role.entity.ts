@@ -9,7 +9,6 @@ import {
 } from '@mikro-orm/core';
 import { RoleRepository } from '@role/repositories/role.repository';
 import { UserEntity } from '@user/entities/user.entity';
-import { UserRoleEntity } from '@user/entities/user.role.entity';
 
 @Entity({
   tableName: 'roles',
