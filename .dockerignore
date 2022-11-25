@@ -5,6 +5,5 @@ docker-compose*
 .env
 .idea
 .DS_Store
-.dockerignore
 node_modules
 dist
