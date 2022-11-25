@@ -1,4 +1,4 @@
-import { Options } from '@mikro-orm/core';
+import { Options, UnderscoreNamingStrategy } from '@mikro-orm/core';
 import { Logger } from '@nestjs/common';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
 
@@ -39,6 +39,7 @@ const MikroOrmConfig: Options = {
     fileName: (className: string) =>
       className.toLowerCase().replace(/seeder$/, '.') + 'seeder',
   },
+  namingStrategy: UnderscoreNamingStrategy,
 };
 
 export default MikroOrmConfig;

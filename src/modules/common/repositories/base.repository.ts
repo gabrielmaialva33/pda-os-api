@@ -37,13 +37,13 @@ export class BaseRepository<Model extends BaseEntity>
     const [data, total] = await this.findAndCount(
       {
         $or: [...filter],
-      } as unknown as ObjectQuery<Model>,
+      } as ObjectQuery<Model>,
       {
         limit: per_page,
         offset: Math.abs(per_page * (page - 1)),
         orderBy: {
           [sort]: direction,
-        } as any,
+        } as ObjectQuery<Model>,
       },
     );
 

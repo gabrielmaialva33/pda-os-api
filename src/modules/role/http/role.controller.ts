@@ -1,23 +1,22 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Param,
   Post,
+  Body,
   Put,
+  Param,
+  Delete,
   Query,
   UseGuards,
 } from '@nestjs/common';
-
-import { EditUserDto, StoreUserDto } from '@user/dto';
-import { UserService } from '@user/services/user.service';
+import { RoleService } from '@role/services/role.service';
+import { EditRoleDto, StoreRoleDto } from '@role/dto';
 import { JwtAuthGuard } from '@auth/guards/jwt.auth.guard';
 
 @UseGuards(JwtAuthGuard)
-@Controller('users')
-export class UserController {
-  constructor(private readonly userService: UserService) {}
+@Controller('roles')
+export class RoleController {
+  constructor(private readonly roleService: RoleService) {}
 
   @Get()
   list(
@@ -27,7 +26,7 @@ export class UserController {
     @Query('sort') sort?: string,
     @Query('direction') direction?: string,
   ) {
-    return this.userService.list({
+    return this.roleService.list({
       page,
       per_page,
       search,
@@ -38,21 +37,21 @@ export class UserController {
 
   @Get(':id')
   get(@Param('id') id: string) {
-    return this.userService.get(id);
+    return this.roleService.get(id);
   }
 
   @Post()
-  create(@Body() data: StoreUserDto) {
-    return this.userService.store(data);
+  store(@Body() data: StoreRoleDto) {
+    return this.roleService.store(data);
   }
 
   @Put(':id')
-  edit(@Param('id') id: string, @Body() data: EditUserDto) {
-    return this.userService.save(id, data);
+  edit(@Param('id') id: string, @Body() data: EditRoleDto) {
+    return this.roleService.save(id, data);
   }
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.userService.delete(id);
+    return this.roleService.delete(id);
   }
 }

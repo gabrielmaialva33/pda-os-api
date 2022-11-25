@@ -1,15 +1,20 @@
 import {
   BeforeCreate,
   BeforeUpdate,
+  Collection,
   Entity,
   EntityRepositoryType,
   Enum,
+  LoadStrategy,
+  ManyToMany,
   Property,
 } from '@mikro-orm/core';
 import * as argon2 from 'argon2';
 
 import { BaseEntity } from '@src/modules/common/entities/base.entity';
 import { UserRepository } from '@user/repositories/user.repository';
+import { RoleEntity } from '@role/entities/role.entity';
+import { UserRoleEntity } from '@user/entities/user.role.entity';
 
 @Entity({
   tableName: 'users',
@@ -55,8 +60,16 @@ export class UserEntity extends BaseEntity {
    * ------------------------------------------------------
    * Relationships
    * ------------------------------------------------------
-   * - define Shared model relationships
+   * - define model relationships
    */
+  @ManyToMany(() => RoleEntity, (role) => role.users, {
+    owner: true,
+    entity: () => RoleEntity,
+    pivotEntity: () => UserRoleEntity,
+    pivotTable: 'users_roles',
+    strategy: LoadStrategy.JOINED,
+  })
+  roles: Collection<RoleEntity> = new Collection<RoleEntity>(this);
 
   /**
    * ------------------------------------------------------
@@ -71,12 +84,13 @@ export class UserEntity extends BaseEntity {
 
   /**
    * ------------------------------------------------------
-   * Custom Methods
+   * Methods
    * ------------------------------------------------------
    */
   @Enum({
     items: () => ['first_name', 'last_name', 'email', 'user_name'],
     persist: false,
+    hidden: true,
   })
   search_fields: string[] = ['first_name', 'last_name', 'email', 'user_name'];
 

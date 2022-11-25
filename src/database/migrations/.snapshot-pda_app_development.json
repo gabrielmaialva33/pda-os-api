@@ -48,6 +48,97 @@
           "length": 6,
           "mappedType": "datetime"
         },
+        "name": {
+          "name": "name",
+          "type": "varchar(50)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 50,
+          "mappedType": "string"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(50)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 50,
+          "mappedType": "string"
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        }
+      },
+      "name": "roles",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "roles_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
         "first_name": {
           "name": "first_name",
           "type": "varchar(80)",
@@ -154,6 +245,89 @@
       ],
       "checks": [],
       "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "mappedType": "uuid"
+        },
+        "user_entity_id": {
+          "name": "user_entity_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "role_entity_id": {
+          "name": "role_entity_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "assigned_at": {
+          "name": "assigned_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "now()",
+          "mappedType": "datetime"
+        }
+      },
+      "name": "users_roles",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "users_roles_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "users_roles_user_entity_id_foreign": {
+          "constraintName": "users_roles_user_entity_id_foreign",
+          "columnNames": [
+            "user_entity_id"
+          ],
+          "localTableName": "public.users_roles",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.users",
+          "updateRule": "cascade"
+        },
+        "users_roles_role_entity_id_foreign": {
+          "constraintName": "users_roles_role_entity_id_foreign",
+          "columnNames": [
+            "role_entity_id"
+          ],
+          "localTableName": "public.users_roles",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.roles",
+          "updateRule": "cascade"
+        }
+      }
     }
   ]
 }

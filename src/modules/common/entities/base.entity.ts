@@ -54,7 +54,7 @@ export class BaseEntity extends MikroBaseEntity<BaseEntity, 'id'> {
 
   /**
    * ------------------------------------------------------
-   * Custom Methods
+   * Methods
    * ------------------------------------------------------
    */
 
