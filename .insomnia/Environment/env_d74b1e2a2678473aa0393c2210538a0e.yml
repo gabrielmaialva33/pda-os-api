@@ -1,0 +1,25 @@
+_id: env_d74b1e2a2678473aa0393c2210538a0e
+type: Environment
+parentId: env_268a681c6bf2153075930ef5d7f17427f7c2484a
+modified: 1669337367306
+created: 1669337289613
+name: OpenAPI Azure env
+data:
+  scheme: https
+  base_path: ""
+  host: pda.os.api.mrootx.xyz
+  bearerToken: "{% response 'body',
+    'req_wrk_b084de0cdb4b4710bd5022395701401359487669',
+    'b64::JC5hdXRoLnRva2Vu::46b', 'never', 60 %}"
+  userId: "{% response 'body', 'req_wrk_b084de0cdb4b4710bd5022395701401359487669',
+    'b64::JC51c2VyLmlk::46b', 'never', 60 %}"
+dataPropertyOrder:
+  "&":
+    - scheme
+    - base_path
+    - host
+    - bearerToken
+    - userId
+color: null
+isPrivate: false
+metaSortKey: 1669337289613
