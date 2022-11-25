@@ -1,7 +1,7 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1669334054311
+modified: 1669420260249
 created: 1668302615245
 fileName: pda-api
 contents: |
@@ -342,7 +342,7 @@ contents: |
         properties:
           uid:
             type: string
-            example: 'maia'
+            example: 'admin'
           password:
             type: string
             example: '123456'
@@ -350,7 +350,7 @@ contents: |
           - uid
           - password
         example:
-          uid: 'maia'
+          uid: 'admin'
           password: '123456'
       SignUp:
         type: object
