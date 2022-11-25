@@ -1,10 +1,10 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1668900011495
+modified: 1669334054311
 created: 1668302615245
 fileName: pda-api
-contents: |-
+contents: |
   openapi: 3.0.3
   info:
     version: 1.0.0
@@ -13,6 +13,7 @@ contents: |-
     contact:
       name: Maia
       email: gabrielmaialva33@gmail.com
+      url: github.com/gabrielmaialva33
   servers:
     - url: http://127.0.0.1:3333
       description: Local server
@@ -20,6 +21,8 @@ contents: |-
       description: Docker server
     - url: https://pda.os.api.mrootx.xyz/
       description: Azure server
+    - url: https://pda-os-api.azurewebsites.net/
+      description: Azure Web App
   paths:
     /sign_in:
       post:
@@ -108,7 +111,7 @@ contents: |-
               type: string
               default: asc
         security:
-          - bearerToken: []
+          - bearerToken: [ ]
         responses:
           '200':
             description: A successful response
@@ -155,7 +158,7 @@ contents: |-
             schema:
               type: string
         security:
-          - bearerToken: []
+          - bearerToken: [ ]
         responses:
           '200':
             description: A successful response
@@ -179,7 +182,7 @@ contents: |-
             schema:
               type: string
         security:
-          - bearerToken: []
+          - bearerToken: [ ]
         requestBody:
           description: User object that needs to be updated
           required: true
@@ -212,7 +215,7 @@ contents: |-
             schema:
               type: string
         security:
-          - bearerToken: []
+          - bearerToken: [ ]
         responses:
           '204':
             description: User deleted
@@ -341,8 +344,8 @@ contents: |-
             type: string
             example: 'maia'
           password:
-              type: string
-              example: '123456'
+            type: string
+            example: '123456'
         required:
           - uid
           - password
