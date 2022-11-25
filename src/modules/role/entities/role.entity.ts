@@ -3,6 +3,7 @@ import {
   Collection,
   Entity,
   EntityRepositoryType,
+  LoadStrategy,
   ManyToMany,
   Property,
 } from '@mikro-orm/core';
@@ -12,7 +13,9 @@ import { UserRoleEntity } from '@user/entities/user.role.entity';
 
 @Entity({
   tableName: 'roles',
+  collection: 'roles',
   customRepository: () => RoleRepository,
+  comment: 'Role Table',
 })
 export class RoleEntity extends BaseEntity {
   [EntityRepositoryType]?: RoleRepository;
@@ -39,8 +42,12 @@ export class RoleEntity extends BaseEntity {
    * ------------------------------------------------------
    * - define model relationships
    */
-  @ManyToMany(() => UserEntity, (user) => user.roles, {
-    pivotEntity: () => UserRoleEntity,
+  @ManyToMany({
+    entity: () => UserEntity,
+    pivotTable: 'users_roles',
+    joinColumn: 'user_id',
+    inverseJoinColumn: 'role_id',
+    strategy: LoadStrategy.JOINED,
   })
   users: Collection<UserEntity> = new Collection<UserEntity>(this);
 

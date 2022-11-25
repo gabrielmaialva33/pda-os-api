@@ -44,6 +44,7 @@ export class BaseRepository<Model extends BaseEntity>
         orderBy: {
           [sort]: direction,
         } as ObjectQuery<Model>,
+        populate: true,
       },
     );
 

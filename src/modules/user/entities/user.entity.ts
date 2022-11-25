@@ -14,11 +14,12 @@ import * as argon2 from 'argon2';
 import { BaseEntity } from '@src/modules/common/entities/base.entity';
 import { UserRepository } from '@user/repositories/user.repository';
 import { RoleEntity } from '@role/entities/role.entity';
-import { UserRoleEntity } from '@user/entities/user.role.entity';
 
 @Entity({
   tableName: 'users',
+  collection: 'users',
   customRepository: () => UserRepository,
+  comment: 'User Table',
 })
 export class UserEntity extends BaseEntity {
   [EntityRepositoryType]?: UserRepository;
@@ -62,11 +63,11 @@ export class UserEntity extends BaseEntity {
    * ------------------------------------------------------
    * - define model relationships
    */
-  @ManyToMany(() => RoleEntity, (role) => role.users, {
-    owner: true,
+  @ManyToMany({
     entity: () => RoleEntity,
-    pivotEntity: () => UserRoleEntity,
     pivotTable: 'users_roles',
+    joinColumn: 'user_id',
+    inverseJoinColumn: 'role_id',
     strategy: LoadStrategy.JOINED,
   })
   roles: Collection<RoleEntity> = new Collection<RoleEntity>(this);

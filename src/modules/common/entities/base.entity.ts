@@ -26,6 +26,7 @@ export class BaseEntity extends MikroBaseEntity<BaseEntity, 'id'> {
     name: 'created_at',
     type: 'datetime',
     defaultRaw: 'now()',
+    hidden: true,
     onCreate: () => DateTime.local().toISO(),
   })
   created_at!: DateTime;
@@ -34,6 +35,7 @@ export class BaseEntity extends MikroBaseEntity<BaseEntity, 'id'> {
     name: 'updated_at',
     type: 'datetime',
     defaultRaw: 'now()',
+    hidden: true,
     onCreate: () => DateTime.local().toISO(),
   })
   updated_at!: DateTime;

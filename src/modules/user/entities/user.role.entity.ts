@@ -1,4 +1,10 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import {
+  Cascade,
+  Entity,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/core';
 
 import { UserEntity } from '@user/entities/user.entity';
 import { RoleEntity } from '@role/entities/role.entity';
@@ -6,20 +12,26 @@ import { DateTime } from 'luxon';
 
 @Entity({
   tableName: 'users_roles',
+  collection: 'users_roles',
+  comment: 'User Role Pivot Table',
 })
 export class UserRoleEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
   id: string;
 
   @ManyToOne(() => UserEntity, {
-    fieldName: 'user_entity_id',
-    referenceColumnName: 'id',
+    primary: true,
+    cascade: [Cascade.ALL],
+    onDelete: 'cascade',
+    referencedColumnNames: ['id'],
   })
   user: UserEntity;
 
   @ManyToOne(() => RoleEntity, {
-    fieldName: 'role_entity_id',
-    referenceColumnName: 'id',
+    primary: true,
+    cascade: [Cascade.ALL],
+    onDelete: 'cascade',
+    referencedColumnNames: ['id'],
   })
   role: RoleEntity;
 
