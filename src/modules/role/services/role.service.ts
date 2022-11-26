@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { wrap } from '@mikro-orm/core';
 import { DateTime } from 'luxon';
 
-import { PaginationOptions } from '@common/interfaces/pagination.interface';
 import { RoleRepository } from '@role/repositories/role.repository';
 import { EditRoleDto, StoreRoleDto } from '@role/dto';
+import { PaginationOptions } from '@common/interfaces/pagination.interface';
 
 @Injectable()
 export class RoleService {

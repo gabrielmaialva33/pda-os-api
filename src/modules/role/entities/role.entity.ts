@@ -1,4 +1,3 @@
-import { BaseEntity } from '@common/entities/base.entity';
 import {
   Collection,
   Entity,
@@ -9,6 +8,7 @@ import {
 } from '@mikro-orm/core';
 import { RoleRepository } from '@role/repositories/role.repository';
 import { UserEntity } from '@user/entities/user.entity';
+import { BaseEntity } from '@common/entities/base.entity';
 
 @Entity({
   tableName: 'roles',

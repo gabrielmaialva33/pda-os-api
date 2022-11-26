@@ -7,6 +7,7 @@ import { UserModule } from '@user/user.module';
 import { AuthModule } from '@auth/auth.module';
 import { AppService } from '@app/app.service';
 import { HealthModule } from '@health/health.module';
+import { CommonModule } from '@common/common.module';
 
 @Module({
   controllers: [AppController],
@@ -14,6 +15,7 @@ import { HealthModule } from '@health/health.module';
     UserModule,
     AuthModule,
     HealthModule,
+    CommonModule,
     MikroOrmModule.forRoot(MikroOrmConfig),
   ],
   providers: [AppService],
