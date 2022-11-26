@@ -1,12 +1,9 @@
 import {
   registerDecorator,
-  ValidationOptions,
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
   ValidationArguments,
+  ValidationOptions,
+  ValidatorConstraintInterface,
 } from 'class-validator';
-
-import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 
 export class ExistsConstraint implements ValidatorConstraintInterface {
   async validate(value: any, args: ValidationArguments) {

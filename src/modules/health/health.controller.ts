@@ -20,7 +20,11 @@ export class HealthController {
   @HealthCheck()
   check() {
     return this.health.check([
-      () => this.http.pingCheck('pda_api_ping', 'http://0.0.0.0:3333/hello'),
+      () =>
+        this.http.pingCheck(
+          'pda_api_ping',
+          'https://pda-os-api.azurewebsites.net',
+        ),
       () => this.memory.checkHeap('memory_heap', 150 * 1024 * 1024),
       () => this.memory.checkRSS('memory_rss', 150 * 1024 * 1024),
       () =>
@@ -31,7 +35,7 @@ export class HealthController {
       () =>
         this.http.responseCheck(
           'pda_api_response',
-          'http://0.0.0.0:3333/hello',
+          'https://pda-os-api.azurewebsites.net/hello',
           (res) => res.status === 200,
         ),
     ]);

@@ -15,7 +15,7 @@ const MikroOrmConfig: Options = {
   type: 'postgresql',
   debug: process.env.PG_DEBUG === 'true' || false,
   driverOptions: {
-    connection: { ssl: process.env.PG_SSL === 'true' || true },
+    connection: { ssl: process.env.PG_SSL === 'true' || false },
   },
   filters: {
     deleted: {
