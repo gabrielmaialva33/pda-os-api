@@ -6,10 +6,16 @@ import { AppController } from '@app/app.controller';
 import { UserModule } from '@user/user.module';
 import { AuthModule } from '@auth/auth.module';
 import { AppService } from '@app/app.service';
+import { HealthModule } from '@health/health.module';
 
 @Module({
   controllers: [AppController],
-  imports: [UserModule, AuthModule, MikroOrmModule.forRoot(MikroOrmConfig)],
+  imports: [
+    UserModule,
+    AuthModule,
+    HealthModule,
+    MikroOrmModule.forRoot(MikroOrmConfig),
+  ],
   providers: [AppService],
   exports: [],
 })
