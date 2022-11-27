@@ -1,6 +1,13 @@
-import { BaseEntity, Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import {
+  BaseEntity,
+  Entity,
+  ManyToOne,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/core';
 
 import { DateTime } from 'luxon';
+import { UserEntity } from '@user/entities/user.entity';
 
 @Entity({
   tableName: 'logs',
@@ -54,6 +61,20 @@ export class LoggerEntity extends BaseEntity<LoggerEntity, 'id'> {
     onCreate: () => DateTime.local().toISO(),
   })
   created_at!: DateTime;
+
+  /**
+   * ------------------------------------------------------
+   * Relationships
+   * ------------------------------------------------------
+   * - define model relationships
+   */
+  @ManyToOne(() => UserEntity, {
+    nullable: true,
+    comment: 'user who made the request',
+    type: 'uuid',
+    fieldName: 'user_id',
+  })
+  user: UserEntity;
 
   /**
    * ------------------------------------------------------

@@ -13,6 +13,8 @@ import { ValidationPipeConfig } from '@src/config/validation.pipe.config';
 import { LoggerMiddleware } from '@src/middleware/logger.middleware';
 import { LoggerModule } from '@logger/logger.module';
 import { LoggerService } from '@logger/services/logger.service';
+import { UserModule } from '@user/user.module';
+import { UserService } from '@user/services/user.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -21,10 +23,11 @@ async function bootstrap() {
   );
 
   const fastify = app.getHttpAdapter().getInstance();
-  fastify.addHook('onRequest', async (request, reply) => {
+  fastify.addHook('onRequest', async (request) => {
     await new LoggerMiddleware(
       app.select(LoggerModule).get(LoggerService),
-    ).onRequest(request, reply);
+      app.select(UserModule).get(UserService),
+    ).onRequest(request);
   });
 
   useContainer(app.select(CommonModule), { fallbackOnErrors: true });

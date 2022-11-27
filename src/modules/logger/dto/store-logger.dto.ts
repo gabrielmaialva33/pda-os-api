@@ -1,4 +1,5 @@
 import { LoggerEntity } from '@logger/entities/logger.entity';
+import { UserEntity } from '@user/entities/user.entity';
 
 export class StoreLoggerDto implements Partial<LoggerEntity> {
   ip: string;
@@ -11,4 +12,5 @@ export class StoreLoggerDto implements Partial<LoggerEntity> {
   parameters: object;
   query: object;
   headers: object;
+  user: UserEntity;
 }
