@@ -87,14 +87,17 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
-  },
-  "prisma": {
-    "schema": "./prisma/schema.prisma",
-    "hooks": {
-      "post-deploy": "ts-node prisma/seed.ts"
-    },
-    "seed": "ts-node prisma/seeds"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "@src/(.*)": "<rootDir>/$1",
+      "app/(.*)": "<rootDir>/modules/app/$1",
+      "auth/(.*)": "<rootDir>/modules/auth/$1",
+      "@common/(.*)": "<rootDir>/modules/common/$1",
+      "@health/(.*)": "<rootDir>/modules/health/$1",
+      "@logger/(.*)": "<rootDir>/modules/logger/$1",
+      "@role/(.*)": "<rootDir>/modules/role/$1",
+      "user/(.*)": "<rootDir>/modules/user/$1"
+    }
   },
   "mikro-orm": {
     "useTsNode": true,

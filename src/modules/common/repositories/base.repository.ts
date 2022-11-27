@@ -1,6 +1,5 @@
 import {
   EntityData,
-  EntityRepository,
   FilterQuery,
   Loaded,
   ObjectQuery,
@@ -13,6 +12,7 @@ import {
 import { BaseEntity } from '@common/entities/base.entity';
 import { EntityDTO, RequiredEntityData } from '@mikro-orm/core/typings';
 import { RepositoryInterface } from '@common/interfaces/repository.interface';
+import { EntityRepository } from '@mikro-orm/postgresql';
 
 export class BaseRepository<Model extends BaseEntity>
   extends EntityRepository<Model>
