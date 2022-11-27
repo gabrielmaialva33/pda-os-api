@@ -11,7 +11,7 @@ export class LoggerMiddleware {
     private readonly userService: UserService,
   ) {}
 
-  async onRequest(request: FastifyRequest) {
+  async onRequest(request: FastifyRequest, reply: FastifyReply) {
     if (request.headers['authorization']) {
       const token = request.headers['authorization'].split(' ')[1];
       const { sub: userId } = new JwtService().decode(token);
@@ -31,6 +31,7 @@ export class LoggerMiddleware {
           headers: JSON.parse(JSON.stringify(request.headers)),
           user,
         });
+      else reply.status(401).send({ message: 'Unauthorized' });
     }
   }
 }

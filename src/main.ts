@@ -8,8 +8,10 @@ import {
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppModule } from '@src/modules/app/app.module';
 import { useContainer } from 'class-validator';
-import { CommonModule } from '@common/common.module';
+
 import { ValidationPipeConfig } from '@src/config/validation.pipe.config';
+
+import { CommonModule } from '@common/common.module';
 import { LoggerMiddleware } from '@src/middleware/logger.middleware';
 import { LoggerModule } from '@logger/logger.module';
 import { LoggerService } from '@logger/services/logger.service';
@@ -23,11 +25,11 @@ async function bootstrap() {
   );
 
   const fastify = app.getHttpAdapter().getInstance();
-  fastify.addHook('onRequest', async (request) => {
+  fastify.addHook('onRequest', async (request, reply) => {
     await new LoggerMiddleware(
       app.select(LoggerModule).get(LoggerService),
       app.select(UserModule).get(UserService),
-    ).onRequest(request);
+    ).onRequest(request, reply);
   });
 
   useContainer(app.select(CommonModule), { fallbackOnErrors: true });
