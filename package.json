@@ -23,6 +23,7 @@
     "db:flush": "mikro-orm schema:drop && mikro-orm migration:up && mikro-orm seeder:run"
   },
   "dependencies": {
+    "@fastify/compress": "^6.2.0",
     "@fastify/helmet": "^10.1.0",
     "@mikro-orm/core": "^5.5.3",
     "@mikro-orm/nestjs": "^5.1.2",

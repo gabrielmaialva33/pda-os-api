@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 import { useContainer } from 'class-validator';
 import helmet from '@fastify/helmet';
+import compression from '@fastify/compress';
 
 import { NestFactory } from '@nestjs/core';
 import { FastifyReply, FastifyRequest } from 'fastify';
@@ -35,6 +36,7 @@ async function bootstrap() {
    * ------------------------------------------------------
    */
   await app.register(helmet);
+  await app.register(compression);
   app.enableCors();
 
   /**
