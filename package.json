@@ -23,6 +23,7 @@
     "db:flush": "mikro-orm schema:drop && mikro-orm migration:up && mikro-orm seeder:run"
   },
   "dependencies": {
+    "@fastify/helmet": "^10.1.0",
     "@mikro-orm/core": "^5.5.3",
     "@mikro-orm/nestjs": "^5.1.2",
     "@mikro-orm/postgresql": "^5.5.3",
@@ -56,6 +57,8 @@
     "@types/jest": "^29.2.3",
     "@types/luxon": "^3.1.0",
     "@types/node": "^18.11.9",
+    "@types/passport-jwt": "^3.0.7",
+    "@types/passport-local": "^1.0.34",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.44.0",
     "@typescript-eslint/parser": "^5.44.0",
