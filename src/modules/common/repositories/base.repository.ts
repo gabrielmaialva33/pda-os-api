@@ -19,11 +19,11 @@ export class BaseRepository<Model extends BaseEntity>
   implements RepositoryInterface<Model>
 {
   async paginate({
-    page = 1,
-    per_page = 10,
+    page,
+    per_page,
     search,
-    sort = 'created_at',
-    direction = 'asc',
+    sort,
+    direction,
   }: PaginationOptions): Promise<Pagination<Model>> {
     const filter: any = [];
     if (search) {
@@ -34,13 +34,18 @@ export class BaseRepository<Model extends BaseEntity>
       });
     }
 
+    if (!page) page = 1;
+    if (!per_page) per_page = 10;
+    if (!sort) sort = 'created_at';
+    if (!direction) direction = 'desc';
+
     const [data, total] = await this.findAndCount(
       {
         $or: [...filter],
       } as ObjectQuery<Model>,
       {
-        limit: per_page,
-        offset: Math.abs(per_page * (page - 1)),
+        limit: Number(per_page),
+        offset: Math.abs(Number(per_page) * (Number(page) - 1)),
         orderBy: {
           [sort]: direction,
         } as ObjectQuery<Model>,
@@ -60,6 +65,8 @@ export class BaseRepository<Model extends BaseEntity>
         next_page_url: `/?page=${Number(page) + 1}`,
         previous_page_url:
           Number(page) > 1 ? `/?page=${Number(page) - 1}` : null,
+        sorted_by: sort,
+        direction,
       },
       data,
     };

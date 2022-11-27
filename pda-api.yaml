@@ -120,6 +120,8 @@ paths:
       summary: Store user
       description: Use to create a user
       operationId: StoreUser
+      security:
+        - bearerToken: [ ]
       requestBody:
         description: User object that needs to be added to the store
         required: true

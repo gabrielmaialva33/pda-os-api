@@ -22,7 +22,6 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
       [property]: value,
     });
 
-    console.log('entity', entity);
     return false;
   }
 }

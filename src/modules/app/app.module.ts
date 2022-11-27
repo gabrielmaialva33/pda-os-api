@@ -9,6 +9,8 @@ import { AppService } from '@app/app.service';
 import { HealthModule } from '@health/health.module';
 import { CommonModule } from '@common/common.module';
 
+import { LoggerModule } from '@logger/logger.module';
+
 @Module({
   controllers: [AppController],
   imports: [
@@ -16,6 +18,7 @@ import { CommonModule } from '@common/common.module';
     AuthModule,
     HealthModule,
     CommonModule,
+    LoggerModule,
     MikroOrmModule.forRoot(MikroOrmConfig),
   ],
   providers: [AppService],

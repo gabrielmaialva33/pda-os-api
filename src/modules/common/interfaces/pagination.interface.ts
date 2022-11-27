@@ -8,6 +8,8 @@ export interface PaginationMeta {
   last_page_url: string;
   next_page_url: string;
   previous_page_url: string;
+  sorted_by: string;
+  direction: string;
 }
 
 export interface PaginationOptions {

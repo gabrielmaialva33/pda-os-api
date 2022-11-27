@@ -33,6 +33,9 @@
       "@health/*": [
         "src/modules/health/*"
       ],
+      "@logger/*": [
+        "src/modules/logger/*"
+      ],
       "@role/*": [
         "src/modules/role/*"
       ],

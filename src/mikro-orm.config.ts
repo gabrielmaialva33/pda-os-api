@@ -1,10 +1,11 @@
-import { Options, UnderscoreNamingStrategy } from '@mikro-orm/core';
+import { UnderscoreNamingStrategy } from '@mikro-orm/core';
 import { Logger } from '@nestjs/common';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
+import { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs/typings';
 
 const logger = new Logger('MikroORM');
 
-const MikroOrmConfig: Options = {
+const MikroOrmConfig: MikroOrmModuleSyncOptions = {
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
   host: process.env.PG_HOST || 'localhost',

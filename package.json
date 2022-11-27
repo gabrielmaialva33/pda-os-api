@@ -19,7 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "start:migrate:prod": "mikro-orm migration:up && mikro-orm seeder:run && yarn start:prod"
+    "start:migrate:prod": "mikro-orm migration:up && mikro-orm seeder:run && yarn start:prod",
+    "db:flush": "mikro-orm schema:drop && mikro-orm migration:up && mikro-orm seeder:run"
   },
   "dependencies": {
     "@mikro-orm/core": "^5.5.3",
@@ -39,9 +40,12 @@
     "class-validator": "^0.13.2",
     "dotenv": "^16.0.3",
     "luxon": "^3.1.0",
+    "nestjs-pino": "^3.1.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "pino-http": "^8.2.1",
+    "pino-pretty": "^9.1.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.5.7"
