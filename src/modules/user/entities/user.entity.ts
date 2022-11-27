@@ -11,7 +11,7 @@ import {
 } from '@mikro-orm/core';
 import * as argon2 from 'argon2';
 
-import { BaseEntity } from '@src/modules/common/entities/base.entity';
+import { BaseEntity } from '@src/common/entities/base.entity';
 import { UserRepository } from '@user/repositories/user.repository';
 import { RoleEntity } from '@role/entities/role.entity';
 

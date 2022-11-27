@@ -28,7 +28,7 @@
         "src/modules/auth/*"
       ],
       "@common/*": [
-        "src/modules/common/*"
+        "src/common/*"
       ],
       "@health/*": [
         "src/modules/health/*"

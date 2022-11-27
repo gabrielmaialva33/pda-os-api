@@ -1,24 +1,26 @@
 import 'dotenv/config';
 
+import { useContainer } from 'class-validator';
+import helmet from '@fastify/helmet';
+
 import { NestFactory } from '@nestjs/core';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { AppModule } from '@src/modules/app/app.module';
-import { useContainer } from 'class-validator';
 
 import { ValidationPipeConfig } from '@src/config/validation.pipe.config';
 
+import { AppModule } from '@src/app.module';
 import { CommonModule } from '@common/common.module';
 import { LoggerMiddleware } from '@src/middleware/logger.middleware';
+
 import { LoggerModule } from '@logger/logger.module';
 import { LoggerService } from '@logger/services/logger.service';
 import { UserModule } from '@user/user.module';
 import { UserService } from '@user/services/user.service';
-import helmet from '@fastify/helmet';
-import { FastifyReply, FastifyRequest } from 'fastify';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
