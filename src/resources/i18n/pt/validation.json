@@ -11,5 +11,10 @@
   "isDate": "{property} deve ser uma data válida",
   "isNotEmpty": "{property} não pode ser vazio",
   "isEmail": "{property} deve ser um email válido",
-  "isUnique": "{property} já está em uso"
+  "isUnique": "{property} já está em uso",
+  "isBoolean": "{property} deve ser um booleano",
+  "isNumber": "{property} deve ser um número",
+  "isString": "{property} deve ser uma string",
+  "isUrl": "{property} deve ser uma url válida",
+  "isUUID": "{property} deve ser um UUID válido"
 }

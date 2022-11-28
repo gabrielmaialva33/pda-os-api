@@ -1,0 +1,9 @@
+{
+  "first_name": "Primeiro Nome",
+  "last_name": "Último Nome",
+  "email": "E-mail",
+  "user_name": "Nome de Usuário",
+  "password": "Senha",
+  "password_confirmation": "Confirmação de Senha",
+  "current_password": "Senha Atual"
+}
