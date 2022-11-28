@@ -1,6 +1,6 @@
 import { UserEntity } from '@user/entities/user.entity';
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
-import { IsStringMinMax, IsUnique } from '@common/validators';
+import { IsPassword, IsStringMinMax, IsUnique } from '@common/validators';
 import { i18nValidationMessage } from 'nestjs-i18n';
 
 export class StoreUserDto implements Partial<UserEntity> {
@@ -34,6 +34,7 @@ export class StoreUserDto implements Partial<UserEntity> {
   user_name: string;
 
   @IsNotEmpty()
+  @IsPassword({ message: i18nValidationMessage('validation.isPassword') })
   @Length(6, 20, {
     message: i18nValidationMessage('validation.length', {
       min: 6,

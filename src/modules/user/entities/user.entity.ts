@@ -10,11 +10,11 @@ import {
   ManyToMany,
   Property,
 } from '@mikro-orm/core';
-import * as argon2 from 'argon2';
 
 import { BaseEntity } from '@src/common/entities/base.entity';
 import { UserRepository } from '@user/repositories/user.repository';
 import { RoleEntity } from '@role/entities/role.entity';
+import { Argon2Utils } from '@common/helpers';
 
 @Entity({
   tableName: 'users',
@@ -82,7 +82,7 @@ export class UserEntity extends BaseEntity {
   @BeforeUpdate()
   async hashPassword(arguments_: EventArgs<this>) {
     if (arguments_.changeSet.payload?.password)
-      this.password = await argon2.hash(this.password, { saltLength: 32 });
+      this.password = await Argon2Utils.hash(this.password);
   }
 
   /**

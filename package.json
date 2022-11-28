@@ -48,9 +48,11 @@
     "jsdom": "^20.0.3",
     "luxon": "^3.1.0",
     "nestjs-i18n": "^9.2.2",
+    "nestjs-pino": "^3.1.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "pino-http": "^8.2.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.5.7"
@@ -112,15 +114,9 @@
   },
   "mikro-orm": {
     "useTsNode": true,
-    "entities": [
-      "dist/entities/**/*.js"
-    ],
-    "entitiesTs": [
-      "src/entities/**/*.ts"
-    ],
     "configPaths": [
-      "./src/mikro-orm.config.ts",
-      "./dist/mikro-orm.config.js"
+      "./src/common/database/mikro-orm-cli.config.ts",
+      "./dist/common/database/mikro-orm-cli.config.js"
     ]
   }
 }

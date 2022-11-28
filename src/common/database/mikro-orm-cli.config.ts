@@ -2,8 +2,11 @@ import { UnderscoreNamingStrategy } from '@mikro-orm/core';
 import { Logger } from '@nestjs/common';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
 import { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs/typings';
+import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 
-const logger = new Logger('MikroORM');
+const logger = new Logger('MikroORM-CLI');
+
+logger.log(`🛠️  Using env ${process.cwd()}/env/.env.${process.env.NODE_ENV}\n`);
 
 const MikroOrmConfig: MikroOrmModuleSyncOptions = {
   entities: ['dist/**/*.entity.js'],
@@ -26,8 +29,8 @@ const MikroOrmConfig: MikroOrmModuleSyncOptions = {
   logger: logger.log.bind(logger),
   migrations: {
     tableName: 'mikro_orm_migrations',
-    path: 'dist/src/database/migrations',
-    pathTs: 'src/database/migrations',
+    path: 'dist/src/common/database/migrations',
+    pathTs: 'src/common/database/migrations',
     glob: '!(*.d).{js,ts}',
     transactional: true,
     emit: 'ts',
@@ -35,8 +38,8 @@ const MikroOrmConfig: MikroOrmModuleSyncOptions = {
     fileName: (timestamp: string) => `migration.${timestamp}`,
   },
   seeder: {
-    path: 'dist/src/database/seeds',
-    pathTs: 'src/database/seeds',
+    path: 'dist/src/common/database/seeds',
+    pathTs: 'src/common/database/seeds',
     defaultSeeder: 'DatabaseSeeder',
     glob: '!(*.d).{js,ts}',
     emit: 'ts',
@@ -44,6 +47,7 @@ const MikroOrmConfig: MikroOrmModuleSyncOptions = {
       className.toLowerCase().replace(/seeder$/, '.') + 'seeder',
   },
   namingStrategy: UnderscoreNamingStrategy,
+  highlighter: new SqlHighlighter(),
 };
 
 export default MikroOrmConfig;

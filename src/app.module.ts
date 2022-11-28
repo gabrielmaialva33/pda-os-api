@@ -19,7 +19,6 @@ import { CommonModule } from '@common/common.module';
     NestI18nModule,
     OrmModule,
     NestConfigModule,
-    //MikroOrmModule.forRoot(MikroOrmConfig),
   ],
   exports: [],
 })

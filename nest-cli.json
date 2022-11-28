@@ -4,7 +4,10 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "assets": [
-      { "include": "resources/**/*", "watchAssets": true}
+      {
+        "include": "resources/**/*",
+        "watchAssets": true
+      }
     ]
   }
 }

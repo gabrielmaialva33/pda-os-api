@@ -37,7 +37,7 @@ services:
       PORT: ${PORT}
       SECRET_KEY: ${SECRET_KEY}
 
-      DATABASE_URL: "postgres://postgres:postgres@postgres:5432/pda_app_development"
+      DATABASE_URL: 'postgres://postgres:postgres@postgres:5432/pda_app_development'
       PG_HOST: postgres
       PG_PORT: 5432
       PG_USER: postgres

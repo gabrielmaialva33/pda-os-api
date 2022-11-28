@@ -7,13 +7,17 @@ import {
   Post,
   Put,
   Query,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 
 import { EditUserDto, StoreUserDto } from '@user/dto';
 import { UserService } from '@user/services/user.service';
-import { JwtAuthGuard } from '@auth/guards/jwt.auth.guard';
 
+import { I18nValidationExceptionFilter } from '@common/filters';
+import { JwtAuthGuard } from '@common/guards/jwt.auth.guard';
+
+@UseFilters(new I18nValidationExceptionFilter())
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {

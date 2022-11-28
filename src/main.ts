@@ -12,7 +12,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { Logger } from '@nestjs/common';
 
-import { ValidationPipeConfig } from '@src/lib/config/configs/validation.pipe.config';
+import { ValidationPipeConfig } from '@src/lib/config/nest/validation.pipe.config';
 
 import { LoggerMiddleware } from '@src/common/middleware/logger.middleware';
 
