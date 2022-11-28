@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 
 import { LoggerService } from '@logger/services/logger.service';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { LoggerEntity } from '@logger/entities/logger.entity';
+import { OrmModule } from '@src/lib/orm/orm.module';
 
 @Module({
-  imports: [MikroOrmModule.forFeature([LoggerEntity])],
+  imports: [OrmModule],
   providers: [LoggerService],
   exports: [LoggerService],
 })

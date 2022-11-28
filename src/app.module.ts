@@ -1,24 +1,26 @@
 import { Module } from '@nestjs/common';
-
-import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { UserModule } from '@user/user.module';
 import { AuthModule } from '@auth/auth.module';
 import { HealthModule } from '@health/health.module';
-import { CommonModule } from '@common/common.module';
-import { LoggerModule } from '@logger/logger.module';
 
-import MikroOrmConfig from '@src/mikro-orm.config';
+import { LoggerModule } from '@logger/logger.module';
+import { NestI18nModule } from '@src/lib/i18n/i18n.module';
+import { OrmModule } from '@src/lib/orm/orm.module';
+import { NestConfigModule } from '@src/lib/config/config.module';
+import { CommonModule } from '@common/common.module';
 
 @Module({
   imports: [
     UserModule,
     AuthModule,
     HealthModule,
-    CommonModule,
     LoggerModule,
-    MikroOrmModule.forRoot(MikroOrmConfig),
+    CommonModule,
+    NestI18nModule,
+    OrmModule,
+    NestConfigModule,
+    //MikroOrmModule.forRoot(MikroOrmConfig),
   ],
-
   exports: [],
 })
 export class AppModule {}

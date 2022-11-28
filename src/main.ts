@@ -10,18 +10,21 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 
-import { ValidationPipeConfig } from '@src/config/validation.pipe.config';
+import { ValidationPipeConfig } from '@src/lib/config/configs/validation.pipe.config';
+
+import { LoggerMiddleware } from '@src/common/middleware/logger.middleware';
 
 import { AppModule } from '@src/app.module';
-import { CommonModule } from '@common/common.module';
-import { LoggerMiddleware } from '@src/middleware/logger.middleware';
 
 import { LoggerModule } from '@logger/logger.module';
 import { LoggerService } from '@logger/services/logger.service';
 import { UserModule } from '@user/user.module';
 import { UserService } from '@user/services/user.service';
+import { I18nValidationExceptionFilter } from 'nestjs-i18n';
+import { AppUtils } from '@common/helpers';
+import { ValidationPipe } from '@common/pipes';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -29,6 +32,7 @@ async function bootstrap() {
     new FastifyAdapter(),
     { bufferLogs: true },
   );
+  AppUtils.killAppWithGrace(app);
 
   /**
    * ------------------------------------------------------
@@ -60,16 +64,24 @@ async function bootstrap() {
    * Global Config
    * ------------------------------------------------------
    */
+  app.enableShutdownHooks();
+
+  app.useGlobalFilters(
+    new I18nValidationExceptionFilter({ detailedErrors: false }),
+  );
   app.useGlobalPipes(new ValidationPipe(ValidationPipeConfig));
 
-  useContainer(app.select(CommonModule), { fallbackOnErrors: true });
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.listen(process.env.PORT || 3333, process.env.HOST || '0.0.0.0');
 }
 
-bootstrap().then(() =>
-  Logger.log(
-    `Application is listening on port ${process.env.PORT || 3333}`,
-    'Bootstrap',
-  ),
-);
+(async () =>
+  await bootstrap().then(() =>
+    Logger.log(
+      `Application is listening on port ${
+        process.env.PORT || 3333
+      } in environment ${process.env.NODE_ENV}`,
+      'Bootstrap',
+    ),
+  ))();

@@ -13,7 +13,7 @@ import { DateTime } from 'luxon';
 @Entity({
   tableName: 'users_roles',
   collection: 'users_roles',
-  comment: 'User Role Pivot Table',
+  comment: 'UserEntity Role Pivot Table',
 })
 export class UserRoleEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })

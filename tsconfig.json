@@ -42,6 +42,6 @@
       "@user/*": [
         "src/modules/user/*"
       ]
-    }
+    },
   }
 }

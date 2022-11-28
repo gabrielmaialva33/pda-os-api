@@ -24,7 +24,7 @@ paths:
       summary: Sign in
       description: Use to sign in
       requestBody:
-        description: User object that needs to be signed in
+        description: UserEntity object that needs to be signed in
         required: true
         content:
           application/json:
@@ -36,7 +36,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserEntity'
         '400':
           description: Invalid input
         '401':
@@ -48,7 +48,7 @@ paths:
       summary: Sign up
       description: Use to sign up
       requestBody:
-        description: User object that needs to be signed up
+        description: UserEntity object that needs to be signed up
         required: true
         content:
           application/json:
@@ -60,7 +60,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserEntity'
         '400':
           description: Invalid input
         '401':
@@ -69,7 +69,7 @@ paths:
   /users:
     get:
       tags:
-        - User
+        - UserEntity
       summary: List users
       description: Use to request all users
       operationId: GetAllUsers
@@ -113,17 +113,17 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: '#/components/schemas/UserEntity'
     post:
       tags:
-        - User
+        - UserEntity
       summary: Store user
       description: Use to create a user
       operationId: StoreUser
       security:
         - bearerToken: [ ]
       requestBody:
-        description: User object that needs to be added to the store
+        description: UserEntity object that needs to be added to the store
         required: true
         content:
           application/json:
@@ -131,17 +131,17 @@ paths:
               $ref: '#/components/schemas/StoreUser'
       responses:
         '201':
-          description: User created
+          description: UserEntity created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserEntity'
         '400':
           description: Invalid input
   /users/{userId}:
     get:
       tags:
-        - User
+        - UserEntity
       summary: Get user
       description: Use to request a user
       operationId: GetUser
@@ -160,12 +160,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserEntity'
         '404':
-          description: User not found
+          description: UserEntity not found
     put:
       tags:
-        - User
+        - UserEntity
       summary: Edit user
       description: Use to edit a user
       operationId: EditUser
@@ -179,7 +179,7 @@ paths:
       security:
         - bearerToken: [ ]
       requestBody:
-        description: User object that needs to be updated
+        description: UserEntity object that needs to be updated
         required: true
         content:
           application/json:
@@ -187,18 +187,18 @@ paths:
               $ref: '#/components/schemas/EditUser'
       responses:
         '200':
-          description: User updated
+          description: UserEntity updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserEntity'
         '400':
           description: Invalid input
         '404':
-          description: User not found
+          description: UserEntity not found
     delete:
       tags:
-        - User
+        - UserEntity
       summary: Delete user
       description: Use to delete a user
       operationId: DeleteUser
@@ -213,14 +213,14 @@ paths:
         - bearerToken: [ ]
       responses:
         '204':
-          description: User deleted
+          description: UserEntity deleted
         '404':
-          description: User not found
+          description: UserEntity not found
 
 tags:
   - name: Auth
     description: Operations about auth
-  - name: User
+  - name: UserEntity
     description: Operations about users
 components:
   securitySchemes:

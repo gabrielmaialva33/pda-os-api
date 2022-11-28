@@ -5,6 +5,7 @@ import {
   Entity,
   EntityRepositoryType,
   Enum,
+  EventArgs,
   LoadStrategy,
   ManyToMany,
   Property,
@@ -19,7 +20,7 @@ import { RoleEntity } from '@role/entities/role.entity';
   tableName: 'users',
   collection: 'users',
   customRepository: () => UserRepository,
-  comment: 'User Table',
+  comment: 'UserEntity Table',
 })
 export class UserEntity extends BaseEntity {
   [EntityRepositoryType]?: UserRepository;
@@ -79,8 +80,9 @@ export class UserEntity extends BaseEntity {
    */
   @BeforeCreate()
   @BeforeUpdate()
-  async hashPassword() {
-    this.password = await argon2.hash(this.password, { saltLength: 32 });
+  async hashPassword(arguments_: EventArgs<this>) {
+    if (arguments_.changeSet.payload?.password)
+      this.password = await argon2.hash(this.password, { saltLength: 32 });
   }
 
   /**
