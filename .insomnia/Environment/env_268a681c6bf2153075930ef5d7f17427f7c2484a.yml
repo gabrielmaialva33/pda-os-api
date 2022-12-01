@@ -1,12 +1,17 @@
 _id: env_268a681c6bf2153075930ef5d7f17427f7c2484a
 type: Environment
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1668302615248
+modified: 1669920639741
 created: 1668302615248
 name: Base Environment
 data:
   base_url: "{{ scheme }}://{{ host }}{{ base_path }}"
-dataPropertyOrder: null
+  roleId: "{% response 'body', 'req_wrk_b084de0cdb4b4710bd5022395701401366e2bf60',
+    'b64::JC5kYXRhLjAuaWQ=::46b', 'never', 60 %}"
+dataPropertyOrder:
+  "&":
+    - base_url
+    - roleId
 color: null
 isPrivate: false
 metaSortKey: 1668302615248
