@@ -5,5 +5,6 @@
   "user_name": "Nome de Usuário",
   "password": "Senha",
   "password_confirmation": "Confirmação de Senha",
-  "current_password": "Senha Atual"
+  "current_password": "Senha Atual",
+  "slug": "Slug"
 }

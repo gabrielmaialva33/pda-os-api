@@ -2,6 +2,7 @@ import {
   Collection,
   Entity,
   EntityRepositoryType,
+  Enum,
   LoadStrategy,
   ManyToMany,
   Property,
@@ -26,7 +27,7 @@ export class RoleEntity extends BaseEntity {
    * - column typing struct
    */
 
-  @Property({ length: 50, hidden: true })
+  @Property({ length: 50, hidden: true, unique: true, comment: 'Role Name' })
   name: string;
 
   @Property({ length: 50 })
@@ -47,6 +48,7 @@ export class RoleEntity extends BaseEntity {
     joinColumn: 'user_id',
     inverseJoinColumn: 'role_id',
     strategy: LoadStrategy.JOINED,
+    hidden: true,
   })
   users: Collection<UserEntity> = new Collection<UserEntity>(this);
 
@@ -61,6 +63,12 @@ export class RoleEntity extends BaseEntity {
    * Methods
    * ------------------------------------------------------
    */
+  @Enum({
+    items: () => ['slug', 'description'],
+    persist: false,
+    hidden: true,
+  })
+  search_fields: string[];
 
   /**
    * ------------------------------------------------------

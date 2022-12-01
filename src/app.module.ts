@@ -8,11 +8,13 @@ import { NestI18nModule } from '@src/lib/i18n/i18n.module';
 import { OrmModule } from '@src/lib/orm/orm.module';
 import { NestConfigModule } from '@src/lib/config/config.module';
 import { CommonModule } from '@common/common.module';
+import { RoleModule } from '@role/role.module';
 
 @Module({
   imports: [
     UserModule,
     AuthModule,
+    RoleModule,
     HealthModule,
     LoggerModule,
     CommonModule,

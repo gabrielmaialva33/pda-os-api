@@ -29,9 +29,9 @@ export class BaseRepository<Model extends BaseEntity>
     if (search) {
       const fields = this._em.getMetadata().get<Model>(String(this.entityName))
         .properties['search_fields'].items;
-      fields.forEach((field) => {
-        filter.push({ [field]: { $like: `%${search}%` } });
-      });
+      fields.forEach((field) =>
+        filter.push({ [field]: { $ilike: `%${search}%` } }),
+      );
     }
 
     if (!page) page = 1;

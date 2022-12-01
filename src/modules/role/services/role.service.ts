@@ -25,7 +25,10 @@ export class RoleService {
   }
 
   async store(data: StoreRoleDto) {
-    return this.roleRepository.store(data);
+    return this.roleRepository.store({
+      ...data,
+      name: data.slug.toLowerCase().trim(),
+    });
   }
 
   async save(id: string, data: EditRoleDto) {

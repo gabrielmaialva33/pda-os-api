@@ -58,6 +58,15 @@ export class UserEntity extends BaseEntity {
   @Property({ type: 'boolean', default: false })
   is_online: boolean;
 
+  @Property({ nullable: true, length: 8 })
+  code: string;
+
+  @Property({ nullable: true, length: 14 })
+  cpf: string;
+
+  @Property({ nullable: true, length: 20 })
+  phone: string;
+
   /**
    * ------------------------------------------------------
    * Relationships
@@ -85,17 +94,36 @@ export class UserEntity extends BaseEntity {
       this.password = await Argon2Utils.hash(this.password);
   }
 
+  @BeforeCreate()
+  async attachRoles(arguments_: EventArgs<this>) {
+    console.log('changeSet', arguments_.changeSet.payload);
+    if (arguments_.changeSet.payload?.roles) {
+      const userRole = arguments_.em.getRepository(RoleEntity).findOne({
+        name: 'user',
+      });
+      console.log('userRole', userRole);
+    }
+  }
+
   /**
    * ------------------------------------------------------
    * Methods
    * ------------------------------------------------------
    */
   @Enum({
-    items: () => ['first_name', 'last_name', 'email', 'user_name'],
+    items: () => [
+      'first_name',
+      'last_name',
+      'email',
+      'user_name',
+      'code',
+      'phone',
+      'cpf',
+    ],
     persist: false,
     hidden: true,
   })
-  search_fields: string[] = ['first_name', 'last_name', 'email', 'user_name'];
+  search_fields: string[];
 
   /**
    * ------------------------------------------------------

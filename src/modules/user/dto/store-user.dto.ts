@@ -3,6 +3,9 @@ import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 import { IsPassword, IsStringMinMax, IsUnique } from '@common/validators';
 import { i18nValidationMessage } from 'nestjs-i18n';
 
+import { RoleEntity } from '@role/entities/role.entity';
+import { Collection } from '@mikro-orm/core';
+
 export class StoreUserDto implements Partial<UserEntity> {
   @IsStringMinMax({ min: 2, max: 80, optional: false })
   first_name: string;
@@ -42,4 +45,16 @@ export class StoreUserDto implements Partial<UserEntity> {
     }),
   })
   password: string;
+
+  @IsStringMinMax({ min: 11, max: 14, optional: true })
+  cpf: string;
+
+  @IsStringMinMax({ min: 11, max: 20, optional: true })
+  phone: string;
+
+  @IsStringMinMax({ min: 8, max: 8, optional: true })
+  code: string;
+
+  @IsNotEmpty()
+  roles: Collection<RoleEntity>;
 }

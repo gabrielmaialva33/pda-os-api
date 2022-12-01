@@ -56,6 +56,7 @@
           "primary": false,
           "nullable": false,
           "length": 50,
+          "comment": "Role Name",
           "mappedType": "string"
         },
         "slug": {
@@ -82,6 +83,15 @@
       "name": "roles",
       "schema": "public",
       "indexes": [
+        {
+          "columnNames": [
+            "name"
+          ],
+          "composite": false,
+          "keyName": "roles_name_unique",
+          "primary": false,
+          "unique": true
+        },
         {
           "keyName": "roles_pkey",
           "columnNames": [
@@ -211,6 +221,36 @@
           "nullable": false,
           "default": "false",
           "mappedType": "boolean"
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(8)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 8,
+          "mappedType": "string"
+        },
+        "cpf": {
+          "name": "cpf",
+          "type": "varchar(14)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 14,
+          "mappedType": "string"
+        },
+        "phone": {
+          "name": "phone",
+          "type": "varchar(20)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 20,
+          "mappedType": "string"
         }
       },
       "name": "users",
@@ -246,7 +286,7 @@
       ],
       "checks": [],
       "foreignKeys": {},
-      "comment": "User Table"
+      "comment": "UserEntity Table"
     },
     {
       "columns": {
@@ -495,7 +535,7 @@
           "updateRule": "cascade"
         }
       },
-      "comment": "User Role Pivot Table"
+      "comment": "UserEntity Role Pivot Table"
     },
     {
       "columns": {

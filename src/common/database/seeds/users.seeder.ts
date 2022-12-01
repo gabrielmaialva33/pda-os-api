@@ -23,7 +23,7 @@ export class UsersSeeder extends Seeder {
       last_name: 'Root',
       email: 'root@pda.com',
       user_name: 'root',
-      password: '123456',
+      password: 'Pda@551238',
     });
     root.roles.add(roles[0]);
 
@@ -32,7 +32,7 @@ export class UsersSeeder extends Seeder {
       last_name: 'Admin',
       email: 'admin@pda.com',
       user_name: 'admin',
-      password: '123456',
+      password: 'Pda@551238',
     });
     admin.roles.add(roles[1]);
 
@@ -41,7 +41,7 @@ export class UsersSeeder extends Seeder {
       last_name: 'User',
       email: 'user@pda.com',
       user_name: 'user',
-      password: '123456',
+      password: 'Pda@551238',
     });
     user.roles.add(roles[2]);
 
@@ -50,7 +50,7 @@ export class UsersSeeder extends Seeder {
       last_name: 'Guest',
       email: 'guest@pda.com',
       user_name: 'guest',
-      password: '123456',
+      password: 'Pda@551238',
     });
     guest.roles.add(roles[3]);
 
