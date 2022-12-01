@@ -1,7 +1,7 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1669420260249
+modified: 1669921754439
 created: 1668302615245
 fileName: pda-api
 contents: |
@@ -127,6 +127,8 @@ contents: |
         summary: Store user
         description: Use to create a user
         operationId: StoreUser
+        security:
+          - bearerToken: [ ]
         requestBody:
           description: User object that needs to be added to the store
           required: true
@@ -222,11 +224,163 @@ contents: |
           '404':
             description: User not found
 
+    /roles:
+      get:
+        tags:
+          - Role
+        summary: List roles
+        description: Use to request all roles
+        operationId: GetAllRoles
+        parameters:
+          - in: query
+            name: page
+            schema:
+              type: integer
+              default: 1
+            description: Page number
+          - in: query
+            name: per_page
+            schema:
+              type: integer
+              default: 10
+            description: Number of roles per page
+          - in: query
+            name: search
+            schema:
+              type: string
+              example: 'John'
+            description: Search by public fields
+          - in: query
+            name: sort
+            schema:
+              type: string
+              default: id
+            description: Sort by field
+          - in: query
+            name: direction
+            schema:
+              type: string
+              default: asc
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Role'
+      post:
+        tags:
+          - Role
+        summary: Store role
+        description: Use to create a role
+        operationId: StoreRole
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Role object that needs to be added to the store
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreRole'
+        responses:
+          '201':
+            description: Role created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Role'
+          '400':
+            description: Invalid input
+    /roles/{roleId}:
+      get:
+        tags:
+          - Role
+        summary: Get role
+        description: Use to request a role
+        operationId: GetRole
+        parameters:
+          - name: roleId
+            in: path
+            description: ID of role to return
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Role'
+          '404':
+            description: Role not found
+      put:
+        tags:
+          - Role
+        summary: Edit role
+        description: Use to edit a role
+        operationId: EditRole
+        parameters:
+          - name: roleId
+            in: path
+            description: ID of role to update
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Role object that needs to be updated
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditRole'
+        responses:
+          '200':
+            description: Role updated
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Role'
+          '400':
+            description: Invalid input
+          '404':
+            description: Role not found
+      delete:
+        tags:
+          - Role
+        summary: Delete role
+        description: Use to delete a role
+        operationId: DeleteRole
+        parameters:
+          - name: roleId
+            in: path
+            description: ID of role to delete
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '204':
+            description: Role deleted
+          '404':
+            description: Role not found
   tags:
     - name: Auth
       description: Operations about auth
     - name: User
       description: Operations about users
+    - name: Role
+      description: Operations about roles
   components:
     securitySchemes:
       bearerToken:
@@ -264,10 +418,19 @@ contents: |
             example: john
           password:
             type: string
-            example: '123456'
+            example: 'Pda@551238'
           is_online:
             type: boolean
             example: false
+          code:
+            type: string
+            example: '22108253'
+          phone:
+            type: string
+            example: '(15) 99660-1742'
+          cpf:
+            type: string
+            example: '387.387.348-69'
         required:
           - first_name
           - last_name
@@ -280,8 +443,31 @@ contents: |
           last_name: Doe
           email: john@pda.com
           user_name: john
-          password: '123456'
-
+          password: 'Pda@551238'
+          is_online: false
+          code: '22108253'
+          phone: '(15) 99660-1742'
+          cpf: '387.387.348-69'
+      Role:
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: 2885a01e-565e-4dec-8aa3-1f550acd8427
+          slug:
+            type: string
+            example: USER
+          description:
+            type: string
+            example: 'An common user'
+        required:
+          - slug
+          - description
+        example:
+          id: 948b0353-0bd4-4cfe-a443-f3204a91c86c
+          slug: USER
+          description: 'An common user'
+      # user request body
       StoreUser:
         type: object
         properties:
@@ -299,7 +485,16 @@ contents: |
             example: john
           password:
             type: string
-            example: '123456'
+            example: 'Pda@551238'
+          code:
+            type: string
+            example: '22108253'
+          phone:
+            type: string
+            example: '(15) 99660-1742'
+          cpf:
+            type: string
+            example: '387.387.348-69'
         required:
           - first_name
           - last_name
@@ -311,7 +506,10 @@ contents: |
           last_name: Doe
           email: john@pda.com
           user_name: john
-          password: '123456'
+          password: 'Pda@551238'
+          code: '22108253'
+          phone: '(15) 99660-1742'
+          cpf: '387.387.348-69'
       EditUser:
         type: object
         properties:
@@ -329,14 +527,54 @@ contents: |
             example: john
           password:
             type: string
-            example: '123456'
+            example: 'Pda@551238'
+          code:
+            type: string
+            example: '22108253'
+          phone:
+            type: string
+            example: '(15) 99660-1742'
+          cpf:
+            type: string
+            example: '387.387.348-69'
         example:
           first_name: John
           last_name: Doe
           email: john@pda.com
           user_name: john
-          password: '123456'
-
+          password: 'Pda@551238'
+          code: '22108253'
+          phone: '(15) 99660-1742'
+          cpf: '387.387.348-69'
+      # role request body
+      StoreRole:
+        type: object
+        properties:
+          slug:
+            type: string
+            example: USER
+          description:
+            type: string
+            example: 'An common user'
+        required:
+          - slug
+          - description
+        example:
+          slug: USER
+          description: 'An common user'
+      EditRole:
+        type: object
+        properties:
+          slug:
+            type: string
+            example: USER
+          description:
+            type: string
+            example: 'An common user'
+        example:
+          slug: USER
+          description: 'An common user'
+      # auth request body
       SignIn:
         type: object
         properties:
@@ -345,13 +583,13 @@ contents: |
             example: 'admin'
           password:
             type: string
-            example: '123456'
+            example: 'Pda@551238'
         required:
           - uid
           - password
         example:
           uid: 'admin'
-          password: '123456'
+          password: 'Pda@551238'
       SignUp:
         type: object
         properties:
@@ -369,7 +607,7 @@ contents: |
             example: john
           password:
             type: string
-            example: '123456'
+            example: 'Pda@551238'
         required:
           - first_name
           - last_name
@@ -381,5 +619,5 @@ contents: |
           last_name: Doe
           email: john@pda.com
           user_name: john
-          password: '123456'
+          password: 'Pda@551238'
 contentType: yaml
