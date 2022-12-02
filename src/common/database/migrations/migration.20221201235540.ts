@@ -3,6 +3,7 @@ import { Migration } from '@mikro-orm/migrations';
 export class Migration20221201235540 extends Migration {
   async up(): Promise<void> {
     this.addSql('create extension if not exists "uuid-ossp";');
+
     this.addSql(
       'create table "roles" ("id" uuid not null default uuid_generate_v4(), "created_at" timestamptz(0) not null default now(), "updated_at" timestamptz(0) not null default now(), "deleted_at" timestamptz(0) null, "name" varchar(50) not null, "slug" varchar(50) not null, "description" varchar(255) not null, constraint "roles_pkey" primary key ("id"));',
     );
