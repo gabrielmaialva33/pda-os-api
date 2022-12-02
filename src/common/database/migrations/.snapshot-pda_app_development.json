@@ -212,6 +212,16 @@
           "length": 118,
           "mappedType": "string"
         },
+        "avatar": {
+          "name": "avatar",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 255,
+          "mappedType": "string"
+        },
         "is_online": {
           "name": "is_online",
           "type": "boolean",
@@ -583,7 +593,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.users",
+          "referencedTableName": "public.roles",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         },
@@ -596,7 +606,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.roles",
+          "referencedTableName": "public.users",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }

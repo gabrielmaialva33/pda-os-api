@@ -3,12 +3,15 @@ import {
   BeforeUpdate,
   Collection,
   Entity,
+  EntityData,
+  EntityManager,
   EntityRepositoryType,
   Enum,
   EventArgs,
   LoadStrategy,
   ManyToMany,
   Property,
+  wrap,
 } from '@mikro-orm/core';
 
 import { BaseEntity } from '@src/common/entities/base.entity';
@@ -55,6 +58,12 @@ export class UserEntity extends BaseEntity {
   @Property({ hidden: true, length: 118 })
   password: string;
 
+  @Property({
+    length: 255,
+    nullable: true,
+  })
+  avatar: string;
+
   @Property({ type: 'boolean', default: false })
   is_online: boolean;
 
@@ -97,8 +106,12 @@ export class UserEntity extends BaseEntity {
   @BeforeCreate()
   async attachRoles(arguments_: EventArgs<this>) {
     console.log('changeSet', arguments_.changeSet.payload);
+    const userRole = await arguments_.em.getRepository(RoleEntity).findOne({
+      name: 'user',
+    });
+    console.log('userRole', userRole);
     if (arguments_.changeSet.payload?.roles) {
-      const userRole = arguments_.em.getRepository(RoleEntity).findOne({
+      const userRole = await arguments_.em.getRepository(RoleEntity).findOne({
         name: 'user',
       });
       console.log('userRole', userRole);
@@ -131,8 +144,11 @@ export class UserEntity extends BaseEntity {
    * ------------------------------------------------------
    */
 
-  constructor(data: Partial<UserEntity>) {
+  constructor(data: EntityData<UserEntity>) {
     super();
-    this.assign(data);
+    Object.assign(this, {
+      ...data,
+      avatar: `https://api.multiavatar.com/${data.user_name.toLowerCase()}.svg`,
+    });
   }
 }

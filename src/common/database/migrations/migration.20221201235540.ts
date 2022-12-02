@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20221201190412 extends Migration {
+export class Migration20221201235540 extends Migration {
 
   async up(): Promise<void> {
     this.addSql('create table "roles" ("id" uuid not null default uuid_generate_v4(), "created_at" timestamptz(0) not null default now(), "updated_at" timestamptz(0) not null default now(), "deleted_at" timestamptz(0) null, "name" varchar(50) not null, "slug" varchar(50) not null, "description" varchar(255) not null, constraint "roles_pkey" primary key ("id"));');
@@ -8,7 +8,7 @@ export class Migration20221201190412 extends Migration {
     this.addSql('comment on column "roles"."name" is \'Role Name\';');
     this.addSql('alter table "roles" add constraint "roles_name_unique" unique ("name");');
 
-    this.addSql('create table "users" ("id" uuid not null default uuid_generate_v4(), "created_at" timestamptz(0) not null default now(), "updated_at" timestamptz(0) not null default now(), "deleted_at" timestamptz(0) null, "first_name" varchar(80) not null, "last_name" varchar(80) not null, "full_name" varchar(160) generated always as (first_name || \' \' || last_name) stored null, "email" varchar(255) not null, "user_name" varchar(50) not null, "password" varchar(118) not null, "is_online" boolean not null default false, "code" varchar(8) null, "cpf" varchar(14) null, "phone" varchar(20) null, constraint "users_pkey" primary key ("id"));');
+    this.addSql('create table "users" ("id" uuid not null default uuid_generate_v4(), "created_at" timestamptz(0) not null default now(), "updated_at" timestamptz(0) not null default now(), "deleted_at" timestamptz(0) null, "first_name" varchar(80) not null, "last_name" varchar(80) not null, "full_name" varchar(160) generated always as (first_name || \' \' || last_name) stored null, "email" varchar(255) not null, "user_name" varchar(50) not null, "password" varchar(118) not null, "avatar" varchar(255) null, "is_online" boolean not null default false, "code" varchar(8) null, "cpf" varchar(14) null, "phone" varchar(20) null, constraint "users_pkey" primary key ("id"));');
     this.addSql('comment on table "users" is \'UserEntity Table\';');
     this.addSql('alter table "users" add constraint "users_email_unique" unique ("email");');
     this.addSql('alter table "users" add constraint "users_user_name_unique" unique ("user_name");');

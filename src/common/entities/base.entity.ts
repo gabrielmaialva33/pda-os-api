@@ -10,7 +10,7 @@ import { DateTime } from 'luxon';
 
 @Entity({ abstract: true, comment: 'An abstract base entity' })
 @Filter({ name: 'deleted', cond: { deleted_at: { $ne: null } } })
-export class BaseEntity extends MikroBaseEntity<BaseEntity, 'id'> {
+export abstract class BaseEntity extends MikroBaseEntity<BaseEntity, 'id'> {
   [OptionalProps]?: 'created_at' | 'updated_at' | 'deleted_at';
 
   /**

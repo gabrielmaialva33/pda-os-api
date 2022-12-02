@@ -18,42 +18,54 @@ export class UsersSeeder extends Seeder {
       },
     });
 
-    const root = em.create(UserEntity, {
-      first_name: 'Pda',
-      last_name: 'Root',
-      email: 'root@pda.com',
-      user_name: 'root',
-      password: 'Pda@551238',
-    });
-    root.roles.add(roles[0]);
+    for (const role of roles) {
+      if (role.name === 'root') {
+        const root = em.create(UserEntity, {
+          first_name: 'Pda',
+          last_name: 'Root',
+          email: 'root@pda.com',
+          user_name: 'root',
+          password: 'Pda@551238',
+        });
+        root.roles.add(role);
+        await em.persistAndFlush(root);
+      }
 
-    const admin = em.create(UserEntity, {
-      first_name: 'Pda',
-      last_name: 'Admin',
-      email: 'admin@pda.com',
-      user_name: 'admin',
-      password: 'Pda@551238',
-    });
-    admin.roles.add(roles[1]);
+      if (role.name === 'admin') {
+        const admin = em.create(UserEntity, {
+          first_name: 'Pda',
+          last_name: 'Admin',
+          email: 'admin@pda.com',
+          user_name: 'admin',
+          password: 'Pda@551238',
+        });
+        admin.roles.add(role);
+        await em.persistAndFlush(admin);
+      }
 
-    const user = em.create(UserEntity, {
-      first_name: 'Pda',
-      last_name: 'User',
-      email: 'user@pda.com',
-      user_name: 'user',
-      password: 'Pda@551238',
-    });
-    user.roles.add(roles[2]);
+      if (role.name === 'user') {
+        const user = em.create(UserEntity, {
+          first_name: 'Pda',
+          last_name: 'User',
+          email: 'user@pda.com',
+          user_name: 'user',
+          password: 'Pda@551238',
+        });
+        user.roles.add(role);
+        await em.persistAndFlush(user);
+      }
 
-    const guest = em.create(UserEntity, {
-      first_name: 'Pda',
-      last_name: 'Guest',
-      email: 'guest@pda.com',
-      user_name: 'guest',
-      password: 'Pda@551238',
-    });
-    guest.roles.add(roles[3]);
-
-    return em.persistAndFlush([root, admin, user, guest]);
+      if (role.name === 'guest') {
+        const guest = em.create(UserEntity, {
+          first_name: 'Pda',
+          last_name: 'Guest',
+          email: 'guest@pda.com',
+          user_name: 'guest',
+          password: 'Pda@551238',
+        });
+        guest.roles.add(role);
+        await em.persistAndFlush(guest);
+      }
+    }
   }
 }

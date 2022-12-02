@@ -48,6 +48,7 @@ const MikroOrmConfig: MikroOrmModuleSyncOptions = {
   },
   namingStrategy: UnderscoreNamingStrategy,
   highlighter: new SqlHighlighter(),
+  forceEntityConstructor: true,
 };
 
 export default MikroOrmConfig;
