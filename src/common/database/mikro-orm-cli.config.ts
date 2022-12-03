@@ -15,7 +15,7 @@ const MikroOrmConfig: MikroOrmModuleSyncOptions = {
   port: parseInt(process.env.PG_PORT) || 5432,
   user: process.env.PG_USER || 'postgres',
   password: process.env.PG_PASSWORD || 'postgres',
-  dbName: process.env.PG_DB || 'postgres',
+  dbName: process.env.PG_DB || 'pda_app_development',
   type: 'postgresql',
   debug: process.env.PG_DEBUG === 'true' || false,
   driverOptions: {
@@ -48,6 +48,7 @@ const MikroOrmConfig: MikroOrmModuleSyncOptions = {
   },
   namingStrategy: UnderscoreNamingStrategy,
   highlighter: new SqlHighlighter(),
+  forceEntityConstructor: true,
 };
 
 export default MikroOrmConfig;

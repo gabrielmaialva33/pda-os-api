@@ -7,12 +7,15 @@ import {
   Post,
   Put,
   Query,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { RoleService } from '@role/services/role.service';
 import { EditRoleDto, StoreRoleDto } from '@role/dto';
 import { JwtAuthGuard } from '@common/guards/jwt.auth.guard';
+import { I18nValidationExceptionFilter } from '@common/filters';
 
+@UseFilters(new I18nValidationExceptionFilter())
 @UseGuards(JwtAuthGuard)
 @Controller('roles')
 export class RoleController {

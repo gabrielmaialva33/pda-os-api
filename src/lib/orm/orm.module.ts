@@ -1,15 +1,18 @@
 import { LoadStrategy, UnderscoreNamingStrategy } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-
-import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { Logger, Module } from '@nestjs/common';
+import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TSMigrationGenerator } from '@mikro-orm/migrations';
+
 import { UserEntity } from '@user/entities/user.entity';
 import { UserRoleEntity } from '@user/entities/user.role.entity';
 import { RoleEntity } from '@role/entities/role.entity';
 import { LoggerEntity } from '@logger/entities/logger.entity';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BaseRepository } from '@common/repositories/base.repository';
-import { TSMigrationGenerator } from '@mikro-orm/migrations';
+import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
+import { PhoneEntity } from '@collaborator/entities/phone.entity';
+import { AddressEntity } from '@collaborator/entities/address.entity';
 
 const logger = new Logger('MikroORM');
 
@@ -65,7 +68,6 @@ const logger = new Logger('MikroORM');
           },
         },
       }),
-
       inject: [ConfigService],
     }),
     MikroOrmModule.forFeature({
@@ -74,6 +76,9 @@ const logger = new Logger('MikroORM');
         UserRoleEntity,
         RoleEntity,
         LoggerEntity,
+        CollaboratorEntity,
+        PhoneEntity,
+        AddressEntity,
       ]),
     }),
   ],

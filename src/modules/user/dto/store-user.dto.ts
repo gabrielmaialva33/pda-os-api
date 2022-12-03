@@ -1,9 +1,11 @@
 import { UserEntity } from '@user/entities/user.entity';
-import { IsEmail, IsNotEmpty, Length } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsObject, Length } from 'class-validator';
 import { IsPassword, IsStringMinMax, IsUnique } from '@common/validators';
 import { i18nValidationMessage } from 'nestjs-i18n';
 
-export class StoreUserDto implements Partial<UserEntity> {
+import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
+
+export class StoreUserDto {
   @IsStringMinMax({ min: 2, max: 80, optional: false })
   first_name: string;
 
@@ -42,4 +44,10 @@ export class StoreUserDto implements Partial<UserEntity> {
     }),
   })
   password: string;
+
+  @IsNotEmpty()
+  roles: string[];
+
+  @IsObject()
+  collaborator: CollaboratorEntity;
 }

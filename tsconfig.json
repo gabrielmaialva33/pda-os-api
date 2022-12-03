@@ -17,6 +17,7 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "useDefineForClassFields": false,
     "paths": {
       "@src/*": [
         "src/*"
@@ -26,6 +27,9 @@
       ],
       "@auth/*": [
         "src/modules/auth/*"
+      ],
+      "@collaborator/*": [
+        "src/modules/collaborator/*"
       ],
       "@common/*": [
         "src/common/*"

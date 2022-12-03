@@ -69,8 +69,8 @@ async function bootstrap() {
   app.useGlobalFilters(
     new I18nValidationExceptionFilter({ detailedErrors: false }),
   );
-  app.useGlobalPipes(new ValidationPipe(ValidationPipeConfig));
 
+  app.useGlobalPipes(new ValidationPipe(ValidationPipeConfig));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.listen(process.env.PORT || 3333, process.env.HOST || '0.0.0.0');

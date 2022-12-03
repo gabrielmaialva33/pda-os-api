@@ -37,6 +37,7 @@ export class I18nValidationExceptionFilter implements ExceptionFilter {
     const errors: Array<{
       message: string;
       field: string;
+      property: string;
       validation: string;
     }> = [];
 
@@ -44,7 +45,8 @@ export class I18nValidationExceptionFilter implements ExceptionFilter {
       for (const key in i18nErrors[i].constraints)
         errors.push({
           message: i18nErrors[i].constraints[key],
-          field: i18nErrors[i].property,
+          field: i18n.t(`common.${i18nErrors[i].property}`),
+          property: i18nErrors[i].property,
           validation: StringUtils.CamelCaseToUnderscore(key),
         });
 

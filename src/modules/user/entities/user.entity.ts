@@ -1,6 +1,7 @@
 import {
   BeforeCreate,
   BeforeUpdate,
+  Cascade,
   Collection,
   Entity,
   EntityRepositoryType,
@@ -8,14 +9,19 @@ import {
   EventArgs,
   LoadStrategy,
   ManyToMany,
+  OneToOne,
   Property,
 } from '@mikro-orm/core';
 
 import { BaseEntity } from '@src/common/entities/base.entity';
 import { UserRepository } from '@user/repositories/user.repository';
 import { RoleEntity } from '@role/entities/role.entity';
-import { Argon2Utils } from '@common/helpers';
+import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
 
+import { Argon2Utils } from '@common/helpers';
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
 @Entity({
   tableName: 'users',
   collection: 'users',
@@ -31,7 +37,6 @@ export class UserEntity extends BaseEntity {
    * ------------------------------------------------------
    * - column typing struct
    */
-
   @Property({ length: 80 })
   first_name: string;
 
@@ -55,6 +60,12 @@ export class UserEntity extends BaseEntity {
   @Property({ hidden: true, length: 118 })
   password: string;
 
+  @Property({
+    length: 255,
+    nullable: true,
+  })
+  avatar: string;
+
   @Property({ type: 'boolean', default: false })
   is_online: boolean;
 
@@ -70,8 +81,52 @@ export class UserEntity extends BaseEntity {
     joinColumn: 'user_id',
     inverseJoinColumn: 'role_id',
     strategy: LoadStrategy.JOINED,
+    cascade: [Cascade.ALL],
   })
   roles: Collection<RoleEntity> = new Collection<RoleEntity>(this);
+
+  @OneToOne({
+    entity: () => CollaboratorEntity,
+    nullable: true,
+    cascade: [Cascade.ALL],
+    mappedBy: (collaborator) => collaborator.user,
+  })
+  collaborator?: CollaboratorEntity;
+  /**
+   * ------------------------------------------------------
+   * Methods
+   * ------------------------------------------------------
+   */
+  @Enum({
+    items: () => [
+      'first_name',
+      'last_name',
+      'email',
+      'user_name',
+      'code',
+      'phone',
+      'cpf',
+    ],
+    persist: false,
+    hidden: true,
+  })
+  search_fields: string[];
+
+  /**
+   * ------------------------------------------------------
+   * Query Scopes
+   * ------------------------------------------------------
+   */
+  constructor({ collaborator, ...data }: Partial<UserEntity>) {
+    super();
+    Object.assign(this, {
+      ...data,
+      avatar: `https://api.multiavatar.com/${data.user_name.toLowerCase()}.svg`,
+    });
+    this.collaborator = collaborator
+      ? new CollaboratorEntity(collaborator)
+      : null;
+  }
 
   /**
    * ------------------------------------------------------
@@ -85,26 +140,13 @@ export class UserEntity extends BaseEntity {
       this.password = await Argon2Utils.hash(this.password);
   }
 
-  /**
-   * ------------------------------------------------------
-   * Methods
-   * ------------------------------------------------------
-   */
-  @Enum({
-    items: () => ['first_name', 'last_name', 'email', 'user_name'],
-    persist: false,
-    hidden: true,
-  })
-  search_fields: string[] = ['first_name', 'last_name', 'email', 'user_name'];
-
-  /**
-   * ------------------------------------------------------
-   * Query Scopes
-   * ------------------------------------------------------
-   */
-
-  constructor(data: Partial<UserEntity>) {
-    super();
-    this.assign(data);
+  @BeforeCreate()
+  async attachGuestRole(arguments_: EventArgs<this>) {
+    if (arguments_.changeSet.entity.roles.getItems().length === 0) {
+      const guestRole = await arguments_.em.getRepository(RoleEntity).findOne({
+        name: 'guest',
+      });
+      this.roles.add(guestRole);
+    }
   }
 }
