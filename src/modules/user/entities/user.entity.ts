@@ -79,6 +79,7 @@ export class UserEntity extends BaseEntity {
     joinColumn: 'user_id',
     inverseJoinColumn: 'role_id',
     strategy: LoadStrategy.JOINED,
+    cascade: [Cascade.ALL],
   })
   roles: Collection<RoleEntity> = new Collection<RoleEntity>(this);
 
@@ -100,7 +101,7 @@ export class UserEntity extends BaseEntity {
   }
 
   @BeforeCreate()
-  async attachRoles(arguments_: EventArgs<this>) {
+  async attachGuestRole(arguments_: EventArgs<this>) {
     if (arguments_.changeSet.entity.roles.getItems().length === 0) {
       const guestRole = await arguments_.em.getRepository(RoleEntity).findOne({
         name: 'guest',
