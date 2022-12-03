@@ -1,10 +1,10 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1670089270214
+modified: 1670090144410
 created: 1668302615245
 fileName: pda-api
-contents: |+
+contents: |
   openapi: 3.0.3
   info:
     version: 1.0.0
@@ -472,7 +472,7 @@ contents: |+
             example: 'male'
           work_type:
             type: string
-            example: 'CLT'
+            example: 'clt'
           status:
             type: string
             example: 'active'
@@ -502,7 +502,7 @@ contents: |+
           birth_date: '1998-01-01'
           job: 'Developer'
           sex: 'male'
-          work_type: 'CLT'
+          work_type: 'clt'
           status: 'active'
           civil_status: 'single'
           description: 'A good developer'
@@ -652,7 +652,7 @@ contents: |+
             birth_date: '1998-01-01'
             job: 'Developer'
             sex: 'male'
-            work_type: 'CLT'
+            work_type: 'clt'
             status: 'active'
             civil_status: 'single'
             description: 'A good developer'
@@ -680,7 +680,7 @@ contents: |+
                 state: 'SP'
                 country: 'Brasil'
                 zip_code: '12345-678'
-                
+
       EditUser:
         type: object
         properties:
@@ -786,7 +786,7 @@ contents: |+
             example: 'male'
           work_type:
             type: string
-            example: 'CLT'
+            example: 'clt'
           status:
             type: string
             example: 'active'
@@ -811,7 +811,7 @@ contents: |+
           birth_date: '1998-01-01'
           job: 'Developer'
           sex: 'male'
-          work_type: 'CLT'
+          work_type: 'clt'
           status: 'active'
           civil_status: 'single'
           description: 'A good developer'
@@ -887,7 +887,4 @@ contents: |+
               city: 'São Paulo'
               state: 'SP'
               zip_code: '12345-678'
-
-
-
 contentType: yaml
