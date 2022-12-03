@@ -699,8 +699,8 @@
           "length": 20,
           "mappedType": "string"
         },
-        "fixed_phone": {
-          "name": "fixed_phone",
+        "home_phone": {
+          "name": "home_phone",
           "type": "varchar(20)",
           "unsigned": false,
           "autoincrement": false,
@@ -709,8 +709,8 @@
           "length": 20,
           "mappedType": "string"
         },
-        "commercial_phone": {
-          "name": "commercial_phone",
+        "work_phone": {
+          "name": "work_phone",
           "type": "varchar(20)",
           "unsigned": false,
           "autoincrement": false,
@@ -865,12 +865,12 @@
         },
         "zip_code": {
           "name": "zip_code",
-          "type": "varchar(8)",
+          "type": "varchar(10)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": true,
-          "length": 8,
+          "length": 10,
           "mappedType": "string"
         },
         "collaborator_id": {

@@ -41,7 +41,7 @@ export class AddressEntity extends BaseEntity {
   @Property({ nullable: true, length: 2 })
   state: string;
 
-  @Property({ nullable: true, length: 8 })
+  @Property({ nullable: true, length: 10 })
   zip_code: string;
 
   /**

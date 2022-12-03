@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20221203163239 extends Migration {
+export class Migration20221203175130 extends Migration {
 
   async up(): Promise<void> {
     this.addSql('create table "roles" ("id" uuid not null default uuid_generate_v4(), "created_at" timestamptz(0) not null default now(), "updated_at" timestamptz(0) not null default now(), "deleted_at" timestamptz(0) null, "name" varchar(50) not null, "slug" varchar(50) not null, "description" varchar(255) not null, constraint "roles_pkey" primary key ("id"));');
@@ -27,10 +27,10 @@ export class Migration20221203163239 extends Migration {
     this.addSql('comment on table "collaborators" is \'CollaboratorEntity Table\';');
     this.addSql('alter table "collaborators" add constraint "collaborators_user_id_unique" unique ("user_id");');
 
-    this.addSql('create table "phones" ("id" uuid not null default uuid_generate_v4(), "created_at" timestamptz(0) not null default now(), "updated_at" timestamptz(0) not null default now(), "deleted_at" timestamptz(0) null, "cell_phone" varchar(20) null, "fixed_phone" varchar(20) null, "commercial_phone" varchar(20) null, "collaborator_id" uuid not null, constraint "phones_pkey" primary key ("id"));');
+    this.addSql('create table "phones" ("id" uuid not null default uuid_generate_v4(), "created_at" timestamptz(0) not null default now(), "updated_at" timestamptz(0) not null default now(), "deleted_at" timestamptz(0) null, "cell_phone" varchar(20) null, "home_phone" varchar(20) null, "work_phone" varchar(20) null, "collaborator_id" uuid not null, constraint "phones_pkey" primary key ("id"));');
     this.addSql('comment on table "phones" is \'PhoneEntity Table\';');
 
-    this.addSql('create table "addresses" ("id" uuid not null default uuid_generate_v4(), "created_at" timestamptz(0) not null default now(), "updated_at" timestamptz(0) not null default now(), "deleted_at" timestamptz(0) null, "street" varchar(100) null, "number" varchar(10) null, "complement" varchar(100) null, "neighborhood" varchar(100) null, "city" varchar(100) null, "state" varchar(2) null, "zip_code" varchar(8) null, "collaborator_id" uuid not null, constraint "addresses_pkey" primary key ("id"));');
+    this.addSql('create table "addresses" ("id" uuid not null default uuid_generate_v4(), "created_at" timestamptz(0) not null default now(), "updated_at" timestamptz(0) not null default now(), "deleted_at" timestamptz(0) null, "street" varchar(100) null, "number" varchar(10) null, "complement" varchar(100) null, "neighborhood" varchar(100) null, "city" varchar(100) null, "state" varchar(2) null, "zip_code" varchar(10) null, "collaborator_id" uuid not null, constraint "addresses_pkey" primary key ("id"));');
     this.addSql('comment on table "addresses" is \'AddressEntity Table\';');
 
     this.addSql('create table "users_roles" ("id" uuid not null default uuid_generate_v4(), "user_id" uuid null, "role_id" uuid null, "assigned_at" timestamptz(0) not null default now(), constraint "users_roles_pkey" primary key ("id", "user_id", "role_id"));');
