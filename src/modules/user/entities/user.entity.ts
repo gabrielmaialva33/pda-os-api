@@ -4,8 +4,6 @@ import {
   Cascade,
   Collection,
   Entity,
-  EntityData,
-  EntityManager,
   EntityRepositoryType,
   Enum,
   EventArgs,
@@ -13,7 +11,6 @@ import {
   ManyToMany,
   OneToOne,
   Property,
-  wrap,
 } from '@mikro-orm/core';
 
 import { BaseEntity } from '@src/common/entities/base.entity';
@@ -95,29 +92,6 @@ export class UserEntity extends BaseEntity {
     mappedBy: (collaborator) => collaborator.user,
   })
   collaborator?: CollaboratorEntity;
-
-  /**
-   * ------------------------------------------------------
-   * Hooks
-   * ------------------------------------------------------
-   */
-  @BeforeCreate()
-  @BeforeUpdate()
-  async hashPassword(arguments_: EventArgs<this>) {
-    if (arguments_.changeSet.payload?.password)
-      this.password = await Argon2Utils.hash(this.password);
-  }
-
-  @BeforeCreate()
-  async attachGuestRole(arguments_: EventArgs<this>) {
-    if (arguments_.changeSet.entity.roles.getItems().length === 0) {
-      const guestRole = await arguments_.em.getRepository(RoleEntity).findOne({
-        name: 'guest',
-      });
-      this.roles.add(guestRole);
-    }
-  }
-
   /**
    * ------------------------------------------------------
    * Methods
@@ -152,5 +126,27 @@ export class UserEntity extends BaseEntity {
     this.collaborator = collaborator
       ? new CollaboratorEntity(collaborator)
       : null;
+  }
+
+  /**
+   * ------------------------------------------------------
+   * Hooks
+   * ------------------------------------------------------
+   */
+  @BeforeCreate()
+  @BeforeUpdate()
+  async hashPassword(arguments_: EventArgs<this>) {
+    if (arguments_.changeSet.payload?.password)
+      this.password = await Argon2Utils.hash(this.password);
+  }
+
+  @BeforeCreate()
+  async attachGuestRole(arguments_: EventArgs<this>) {
+    if (arguments_.changeSet.entity.roles.getItems().length === 0) {
+      const guestRole = await arguments_.em.getRepository(RoleEntity).findOne({
+        name: 'guest',
+      });
+      this.roles.add(guestRole);
+    }
   }
 }

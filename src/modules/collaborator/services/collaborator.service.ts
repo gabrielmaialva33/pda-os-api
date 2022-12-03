@@ -1,25 +1,44 @@
 import { Injectable } from '@nestjs/common';
+import { wrap } from '@mikro-orm/core';
+import { DateTime } from 'luxon';
+
 import { EditCollaboratorDto, StoreCollaboratorDto } from '@collaborator/dto';
+import { CollaboratorRepository } from '@collaborator/repositories/collaborator.repository';
+import { PaginationOptions } from '@common/interfaces/pagination.interface';
 
 @Injectable()
 export class CollaboratorService {
-  create(createCollaboratorDto: StoreCollaboratorDto) {
-    return 'This action adds a new collaborator';
+  constructor(
+    private readonly collaboratorRepository: CollaboratorRepository,
+  ) {}
+
+  async list({ page, per_page, search, sort, direction }: PaginationOptions) {
+    return this.collaboratorRepository.paginate({
+      page,
+      per_page,
+      search,
+      sort,
+      direction,
+    });
   }
 
-  findAll() {
-    return `This action returns all collaborator`;
+  async get(id: string) {
+    return this.collaboratorRepository.get(id);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} collaborator`;
+  async store(data: StoreCollaboratorDto) {
+    return this.collaboratorRepository.store(data);
   }
 
-  update(id: number, updateCollaboratorDto: EditCollaboratorDto) {
-    return `This action updates a #${id} collaborator`;
+  async save(id: string, data: EditCollaboratorDto) {
+    return this.collaboratorRepository.save(id, data);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} collaborator`;
+  async delete(id: string) {
+    const collaborator = await this.collaboratorRepository.get(id);
+    wrap(collaborator).assign({
+      deleted_at: DateTime.local(),
+    });
+    await this.collaboratorRepository.flush();
   }
 }

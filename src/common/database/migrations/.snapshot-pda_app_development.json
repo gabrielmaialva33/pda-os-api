@@ -513,15 +513,6 @@
           "length": 6,
           "mappedType": "datetime"
         },
-        "role": {
-          "name": "role",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "string"
-        },
         "job": {
           "name": "job",
           "type": "varchar(100)",

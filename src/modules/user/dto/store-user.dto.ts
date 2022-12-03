@@ -1,5 +1,5 @@
 import { UserEntity } from '@user/entities/user.entity';
-import { IsEmail, IsNotEmpty, Length, IsObject } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsObject, Length } from 'class-validator';
 import { IsPassword, IsStringMinMax, IsUnique } from '@common/validators';
 import { i18nValidationMessage } from 'nestjs-i18n';
 

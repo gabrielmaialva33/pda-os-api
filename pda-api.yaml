@@ -41,30 +41,6 @@ paths:
           description: Invalid input
         '401':
           description: Unauthorized
-  /sign_up:
-    post:
-      tags:
-        - Auth
-      summary: Sign up
-      description: Use to sign up
-      requestBody:
-        description: User object that needs to be signed up
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SignUp'
-      responses:
-        '200':
-          description: A successful response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Invalid input
-        '401':
-          description: Unauthorized
 
   /users:
     get:

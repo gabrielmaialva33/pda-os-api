@@ -12,8 +12,7 @@ import {
 } from '@mikro-orm/core';
 import { CollaboratorRepository } from '@collaborator/repositories/collaborator.repository';
 import { DateTime } from 'luxon';
-import { Sexes, Status, WorkTypes } from '@common/types/enums';
-import { CivilStatus } from '@common/types/enums/civil-status.enum';
+import { Sexes, Status, WorkTypes, CivilStatus } from '@common/types/enums';
 import { PhoneEntity } from '@collaborator/entities/phone.entity';
 import { AddressEntity } from '@collaborator/entities/address.entity';
 import { UserEntity } from '@user/entities/user.entity';
@@ -34,6 +33,7 @@ export class CollaboratorEntity extends BaseEntity {
    */
   @Property({ nullable: true, length: 8 })
   code: string;
+
   @Property({ nullable: true, length: 14 })
   cpf: string;
 
@@ -42,9 +42,6 @@ export class CollaboratorEntity extends BaseEntity {
 
   @Property({ nullable: true })
   birth_date: DateTime;
-
-  @Property({ nullable: true })
-  role: string;
 
   @Property({ nullable: true, length: 100 })
   job: string;

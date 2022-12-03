@@ -1,20 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { wrap } from '@mikro-orm/core';
 import { DateTime } from 'luxon';
+import { I18nService } from 'nestjs-i18n';
 
 import { EditUserDto, StoreUserDto } from '@user/dto';
 import { UserRepository } from '@user/repositories/user.repository';
 import { PaginationOptions } from '@common/interfaces/pagination.interface';
 import { RoleRepository } from '@role/repositories/role.repository';
 import { RoleEntity } from '@role/entities/role.entity';
-import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
-    private roleRepository: RoleRepository,
-    private i18n: I18nService,
+    private readonly roleRepository: RoleRepository,
+    private readonly i18n: I18nService,
   ) {}
 
   async list({ page, per_page, search, sort, direction }: PaginationOptions) {
