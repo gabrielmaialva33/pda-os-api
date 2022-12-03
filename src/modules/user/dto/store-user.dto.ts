@@ -6,7 +6,7 @@ import { i18nValidationMessage } from 'nestjs-i18n';
 import { RoleEntity } from '@role/entities/role.entity';
 import { Collection } from '@mikro-orm/core';
 
-export class StoreUserDto implements Partial<UserEntity> {
+export class StoreUserDto {
   @IsStringMinMax({ min: 2, max: 80, optional: false })
   first_name: string;
 
@@ -56,5 +56,5 @@ export class StoreUserDto implements Partial<UserEntity> {
   code: string;
 
   @IsNotEmpty()
-  roles: Collection<RoleEntity>;
+  roles: Collection<RoleEntity> = new Collection<RoleEntity>(this);
 }

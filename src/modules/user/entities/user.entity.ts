@@ -1,23 +1,24 @@
 import {
   BeforeCreate,
   BeforeUpdate,
+  Cascade,
   Collection,
   Entity,
   EntityData,
-  EntityManager,
   EntityRepositoryType,
   Enum,
   EventArgs,
   LoadStrategy,
   ManyToMany,
+  OneToOne,
   Property,
-  wrap,
 } from '@mikro-orm/core';
 
 import { BaseEntity } from '@src/common/entities/base.entity';
 import { UserRepository } from '@user/repositories/user.repository';
 import { RoleEntity } from '@role/entities/role.entity';
 import { Argon2Utils } from '@common/helpers';
+import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
 
 @Entity({
   tableName: 'users',
@@ -34,7 +35,6 @@ export class UserEntity extends BaseEntity {
    * ------------------------------------------------------
    * - column typing struct
    */
-
   @Property({ length: 80 })
   first_name: string;
 
@@ -67,15 +67,6 @@ export class UserEntity extends BaseEntity {
   @Property({ type: 'boolean', default: false })
   is_online: boolean;
 
-  @Property({ nullable: true, length: 8 })
-  code: string;
-
-  @Property({ nullable: true, length: 14 })
-  cpf: string;
-
-  @Property({ nullable: true, length: 20 })
-  phone: string;
-
   /**
    * ------------------------------------------------------
    * Relationships
@@ -91,6 +82,11 @@ export class UserEntity extends BaseEntity {
   })
   roles: Collection<RoleEntity> = new Collection<RoleEntity>(this);
 
+  @OneToOne(() => CollaboratorEntity, (collaborator) => collaborator.user, {
+    cascade: [Cascade.ALL],
+  })
+  collaborator?: CollaboratorEntity;
+
   /**
    * ------------------------------------------------------
    * Hooks
@@ -105,16 +101,16 @@ export class UserEntity extends BaseEntity {
 
   @BeforeCreate()
   async attachRoles(arguments_: EventArgs<this>) {
-    console.log('changeSet', arguments_.changeSet.payload);
+    //console.log('changeSet', arguments_.changeSet.payload);
     const userRole = await arguments_.em.getRepository(RoleEntity).findOne({
       name: 'user',
     });
-    console.log('userRole', userRole);
+    //console.log('userRole', userRole);
     if (arguments_.changeSet.payload?.roles) {
       const userRole = await arguments_.em.getRepository(RoleEntity).findOne({
         name: 'user',
       });
-      console.log('userRole', userRole);
+      //console.log('userRole', userRole);
     }
   }
 
@@ -143,7 +139,6 @@ export class UserEntity extends BaseEntity {
    * Query Scopes
    * ------------------------------------------------------
    */
-
   constructor(data: EntityData<UserEntity>) {
     super();
     Object.assign(this, {

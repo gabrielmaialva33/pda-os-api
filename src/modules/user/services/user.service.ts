@@ -5,10 +5,14 @@ import { DateTime } from 'luxon';
 import { EditUserDto, StoreUserDto } from '@user/dto';
 import { UserRepository } from '@user/repositories/user.repository';
 import { PaginationOptions } from '@common/interfaces/pagination.interface';
+import { RoleService } from '@role/services/role.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly roleService: RoleService,
+  ) {}
 
   async list({ page, per_page, search, sort, direction }: PaginationOptions) {
     return this.userRepository.paginate({
@@ -24,8 +28,15 @@ export class UserService {
     return this.userRepository.get(id);
   }
 
-  async store(data: StoreUserDto) {
-    return this.userRepository.store(data);
+  async store({ roles, ...data }: StoreUserDto) {
+    for (const role of roles) {
+      await this.roleService.get(role.id);
+    }
+
+    const user = await this.userRepository.store(data);
+
+    await this.userRepository.flush();
+    return user;
   }
 
   async save(id: string, data: EditUserDto) {

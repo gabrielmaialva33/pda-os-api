@@ -5,10 +5,10 @@ import {
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
+import { DateTime } from 'luxon';
 
 import { UserEntity } from '@user/entities/user.entity';
 import { RoleEntity } from '@role/entities/role.entity';
-import { DateTime } from 'luxon';
 
 @Entity({
   tableName: 'users_roles',

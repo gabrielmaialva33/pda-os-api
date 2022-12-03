@@ -9,6 +9,7 @@ import { OrmModule } from '@src/lib/orm/orm.module';
 import { NestConfigModule } from '@src/lib/config/config.module';
 import { CommonModule } from '@common/common.module';
 import { RoleModule } from '@role/role.module';
+import { CollaboratorModule } from '@collaborator/collaborator.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RoleModule } from '@role/role.module';
     NestI18nModule,
     OrmModule,
     NestConfigModule,
+    CollaboratorModule,
   ],
   exports: [],
 })

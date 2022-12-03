@@ -18,6 +18,9 @@ export class BaseRepository<Model extends BaseEntity>
   extends EntityRepository<Model>
   implements RepositoryInterface<Model>
 {
+  private UUID_REGEX =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
   async paginate({
     page,
     per_page,
@@ -73,7 +76,7 @@ export class BaseRepository<Model extends BaseEntity>
   }
 
   async get(id: string): Promise<Loaded<Model>> {
-    return this.findOne(id as FilterQuery<Model>);
+    return this.findOneOrFail(id as FilterQuery<Model>);
   }
 
   async store(data: RequiredEntityData<Model>): Promise<Model> {
@@ -94,7 +97,11 @@ export class BaseRepository<Model extends BaseEntity>
 
   async getBy(keys: string[], values: string[]) {
     const filters: any = [];
-    for (let i = 0; i < keys.length; i++) filters.push({ [keys[i]]: values });
+
+    for (let i = 0; i < keys.length; i++)
+      for (let j = 0; j < values.length; j++)
+        if (values[j]) filters.push({ [keys[i]]: values[j] });
+
     return this.findOne({
       $or: [...filters],
     } as unknown as ObjectQuery<Model>);

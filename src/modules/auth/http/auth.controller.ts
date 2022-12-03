@@ -14,7 +14,6 @@ import { StoreUserDto } from '@user/dto';
 import { I18nValidationExceptionFilter } from '@common/filters';
 import { LocalAuthGuard } from '@common/guards/local.auth.guard';
 
-@UseFilters(new I18nValidationExceptionFilter())
 @Controller()
 export class AuthController {
   constructor(

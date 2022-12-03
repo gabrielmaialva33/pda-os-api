@@ -27,6 +27,9 @@
       "@auth/*": [
         "src/modules/auth/*"
       ],
+      "@collaborator/*": [
+        "src/modules/collaborator/*"
+      ],
       "@common/*": [
         "src/common/*"
       ],
