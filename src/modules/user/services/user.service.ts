@@ -31,10 +31,10 @@ export class UserService {
     return this.userRepository.get(id);
   }
 
-  async store({ roles, ...data }: StoreUserDto) {
+  async store({ roles, collaborator, ...data }: StoreUserDto) {
     const collection: RoleEntity[] = [];
 
-    for (const { id } of roles) {
+    for (const id of roles) {
       const role = await this.roleRepository.get(id);
       if (!role) {
         throw new NotFoundException({
@@ -51,6 +51,9 @@ export class UserService {
     return this.userRepository.store({
       ...data,
       roles: collection,
+      collaborator: {
+        ...collaborator,
+      },
     });
   }
 

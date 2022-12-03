@@ -1,5 +1,6 @@
 import { BaseEntity } from '@common/entities/base.entity';
 import {
+  Cascade,
   Collection,
   Entity,
   EntityData,
@@ -81,14 +82,19 @@ export class CollaboratorEntity extends BaseEntity {
    * ------------------------------------------------------
    * - define model relationships
    */
-  @OneToOne(() => UserEntity)
+  @OneToOne({
+    entity: () => UserEntity,
+    cascade: [Cascade.ALL],
+    orphanRemoval: true,
+    inversedBy: (user) => user.collaborator,
+  })
   user: UserEntity;
 
   @OneToMany(() => PhoneEntity, (phone) => phone.collaborator)
-  phones: Collection<PhoneEntity> = new Collection<PhoneEntity>(this);
+  phones?: Collection<PhoneEntity> = new Collection<PhoneEntity>(this);
 
   @OneToMany(() => AddressEntity, (address) => address.collaborator)
-  addresses: Collection<AddressEntity> = new Collection<AddressEntity>(this);
+  addresses?: Collection<AddressEntity> = new Collection<AddressEntity>(this);
 
   /**
    * ------------------------------------------------------

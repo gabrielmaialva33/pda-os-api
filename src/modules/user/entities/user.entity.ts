@@ -5,6 +5,7 @@ import {
   Collection,
   Entity,
   EntityData,
+  EntityManager,
   EntityRepositoryType,
   Enum,
   EventArgs,
@@ -12,14 +13,18 @@ import {
   ManyToMany,
   OneToOne,
   Property,
+  wrap,
 } from '@mikro-orm/core';
 
 import { BaseEntity } from '@src/common/entities/base.entity';
 import { UserRepository } from '@user/repositories/user.repository';
 import { RoleEntity } from '@role/entities/role.entity';
-import { Argon2Utils } from '@common/helpers';
 import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
 
+import { Argon2Utils } from '@common/helpers';
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
 @Entity({
   tableName: 'users',
   collection: 'users',
@@ -83,8 +88,11 @@ export class UserEntity extends BaseEntity {
   })
   roles: Collection<RoleEntity> = new Collection<RoleEntity>(this);
 
-  @OneToOne(() => CollaboratorEntity, (collaborator) => collaborator.user, {
+  @OneToOne({
+    entity: () => CollaboratorEntity,
+    nullable: true,
     cascade: [Cascade.ALL],
+    mappedBy: (collaborator) => collaborator.user,
   })
   collaborator?: CollaboratorEntity;
 
@@ -135,11 +143,14 @@ export class UserEntity extends BaseEntity {
    * Query Scopes
    * ------------------------------------------------------
    */
-  constructor(data: EntityData<UserEntity>) {
+  constructor({ collaborator, ...data }: Partial<UserEntity>) {
     super();
     Object.assign(this, {
       ...data,
       avatar: `https://api.multiavatar.com/${data.user_name.toLowerCase()}.svg`,
     });
+    this.collaborator = collaborator
+      ? new CollaboratorEntity(collaborator)
+      : null;
   }
 }

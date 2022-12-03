@@ -1,10 +1,9 @@
 import { UserEntity } from '@user/entities/user.entity';
-import { IsEmail, IsNotEmpty, Length } from 'class-validator';
+import { IsEmail, IsNotEmpty, Length, IsObject } from 'class-validator';
 import { IsPassword, IsStringMinMax, IsUnique } from '@common/validators';
 import { i18nValidationMessage } from 'nestjs-i18n';
 
-import { RoleEntity } from '@role/entities/role.entity';
-import { Collection } from '@mikro-orm/core';
+import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
 
 export class StoreUserDto {
   @IsStringMinMax({ min: 2, max: 80, optional: false })
@@ -46,15 +45,9 @@ export class StoreUserDto {
   })
   password: string;
 
-  @IsStringMinMax({ min: 11, max: 14, optional: true })
-  cpf: string;
-
-  @IsStringMinMax({ min: 11, max: 20, optional: true })
-  phone: string;
-
-  @IsStringMinMax({ min: 8, max: 8, optional: true })
-  code: string;
-
   @IsNotEmpty()
-  roles: Collection<RoleEntity> = new Collection<RoleEntity>(this);
+  roles: string[];
+
+  @IsObject()
+  collaborator: CollaboratorEntity;
 }
