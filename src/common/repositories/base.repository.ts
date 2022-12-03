@@ -13,6 +13,7 @@ import { BaseEntity } from '@common/entities/base.entity';
 import { EntityDTO, RequiredEntityData } from '@mikro-orm/core/typings';
 import { RepositoryInterface } from '@common/interfaces/repository.interface';
 import { EntityRepository } from '@mikro-orm/postgresql';
+import { NotFoundException } from '@nestjs/common';
 
 export class BaseRepository<Model extends BaseEntity>
   extends EntityRepository<Model>
@@ -76,7 +77,10 @@ export class BaseRepository<Model extends BaseEntity>
   }
 
   async get(id: string): Promise<Loaded<Model>> {
-    return this.findOneOrFail(id as FilterQuery<Model>);
+    const model = await this.findOne(id as FilterQuery<Model>);
+    if (!model)
+      throw new NotFoundException(`No ${this.entityName} found with id ${id}`);
+    return model;
   }
 
   async store(data: RequiredEntityData<Model>): Promise<Model> {

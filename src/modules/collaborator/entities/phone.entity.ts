@@ -27,10 +27,10 @@ export class PhoneEntity extends BaseEntity {
   cell_phone: string;
 
   @Property({ nullable: true, length: 20 })
-  fixed_phone: string;
+  home_phone: string;
 
   @Property({ nullable: true, length: 20 })
-  commercial_phone: string;
+  work_phone: string;
 
   /**
    * ------------------------------------------------------
