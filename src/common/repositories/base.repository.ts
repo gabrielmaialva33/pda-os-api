@@ -76,7 +76,7 @@ export class BaseRepository<Model extends BaseEntity>
   }
 
   async get(id: string): Promise<Loaded<Model>> {
-    return this.findOneOrFail(id as FilterQuery<Model>);
+    return this.findOne(id as FilterQuery<Model>);
   }
 
   async store(data: RequiredEntityData<Model>): Promise<Model> {

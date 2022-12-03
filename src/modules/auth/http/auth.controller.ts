@@ -1,17 +1,9 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Request,
-  UseFilters,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 
 import { AuthService } from '@auth/services/auth.service';
 import { UserService } from '@user/services/user.service';
 
 import { StoreUserDto } from '@user/dto';
-import { I18nValidationExceptionFilter } from '@common/filters';
 import { LocalAuthGuard } from '@common/guards/local.auth.guard';
 
 @Controller()

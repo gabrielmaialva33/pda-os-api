@@ -1,17 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { wrap } from '@mikro-orm/core';
 import { DateTime } from 'luxon';
 
 import { EditUserDto, StoreUserDto } from '@user/dto';
 import { UserRepository } from '@user/repositories/user.repository';
 import { PaginationOptions } from '@common/interfaces/pagination.interface';
-import { RoleService } from '@role/services/role.service';
+import { RoleRepository } from '@role/repositories/role.repository';
+import { RoleEntity } from '@role/entities/role.entity';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly roleService: RoleService,
+    private roleRepository: RoleRepository,
+    private i18n: I18nService,
   ) {}
 
   async list({ page, per_page, search, sort, direction }: PaginationOptions) {
@@ -29,14 +32,26 @@ export class UserService {
   }
 
   async store({ roles, ...data }: StoreUserDto) {
-    for (const role of roles) {
-      await this.roleService.get(role.id);
+    const collection: RoleEntity[] = [];
+
+    for (const { id } of roles) {
+      const role = await this.roleRepository.get(id);
+      if (!role) {
+        throw new NotFoundException({
+          message: this.i18n.t(`exception.not_found`, {
+            args: [this.i18n.t(`exception.role`)],
+          }),
+          status: 401,
+          display: true,
+        });
+      }
+      collection.push(role);
     }
 
-    const user = await this.userRepository.store(data);
-
-    await this.userRepository.flush();
-    return user;
+    return this.userRepository.store({
+      ...data,
+      roles: collection,
+    });
   }
 
   async save(id: string, data: EditUserDto) {

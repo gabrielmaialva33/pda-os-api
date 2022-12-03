@@ -101,16 +101,11 @@ export class UserEntity extends BaseEntity {
 
   @BeforeCreate()
   async attachRoles(arguments_: EventArgs<this>) {
-    //console.log('changeSet', arguments_.changeSet.payload);
-    const userRole = await arguments_.em.getRepository(RoleEntity).findOne({
-      name: 'user',
-    });
-    //console.log('userRole', userRole);
-    if (arguments_.changeSet.payload?.roles) {
-      const userRole = await arguments_.em.getRepository(RoleEntity).findOne({
-        name: 'user',
+    if (arguments_.changeSet.entity.roles.getItems().length === 0) {
+      const guestRole = await arguments_.em.getRepository(RoleEntity).findOne({
+        name: 'guest',
       });
-      //console.log('userRole', userRole);
+      this.roles.add(guestRole);
     }
   }
 

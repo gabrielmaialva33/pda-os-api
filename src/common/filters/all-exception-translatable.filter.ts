@@ -19,11 +19,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     let message = exception.getResponse() as {
       key: string;
-      args: Record<string, any>;
+      args?: Record<string, any>;
       display?: boolean;
     };
 
-    console.log(message.key);
     message = await i18n.t(message.key, {
       lang: host.switchToHttp().getRequest().i18nLang,
       args: message.args,

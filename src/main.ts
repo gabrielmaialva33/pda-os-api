@@ -4,7 +4,7 @@ import { useContainer } from 'class-validator';
 import helmet from '@fastify/helmet';
 import compression from '@fastify/compress';
 
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import {
   FastifyAdapter,
@@ -25,7 +25,6 @@ import { UserService } from '@user/services/user.service';
 import { I18nValidationExceptionFilter } from 'nestjs-i18n';
 import { AppUtils } from '@common/helpers';
 import { ValidationPipe } from '@common/pipes';
-import { HttpExceptionFilter } from '@common/filters';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -69,7 +68,6 @@ async function bootstrap() {
 
   app.useGlobalFilters(
     new I18nValidationExceptionFilter({ detailedErrors: false }),
-    //new HttpExceptionFilter(),
   );
 
   app.useGlobalPipes(new ValidationPipe(ValidationPipeConfig));

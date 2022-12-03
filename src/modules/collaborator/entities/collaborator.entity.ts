@@ -1,7 +1,6 @@
 import { BaseEntity } from '@common/entities/base.entity';
 import {
   Collection,
-  Embedded,
   Entity,
   EntityData,
   EntityRepositoryType,

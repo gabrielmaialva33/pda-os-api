@@ -9,6 +9,6 @@ export class AppException extends HttpException {
     },
     status: HttpStatus,
   ) {
-    super({ ...message }, status);
+    super(message, status);
   }
 }
