@@ -38,7 +38,9 @@ export class PhoneEntity extends BaseEntity {
    * ------------------------------------------------------
    * - define model relationships
    */
-  @ManyToOne(() => CollaboratorEntity)
+  @ManyToOne(() => CollaboratorEntity, {
+    hidden: true,
+  })
   collaborator: CollaboratorEntity;
 
   /**

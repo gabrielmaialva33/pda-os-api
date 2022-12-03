@@ -50,7 +50,9 @@ export class AddressEntity extends BaseEntity {
    * ------------------------------------------------------
    * - define model relationships
    */
-  @ManyToOne(() => CollaboratorEntity)
+  @ManyToOne(() => CollaboratorEntity, {
+    hidden: true,
+  })
   collaborator: CollaboratorEntity;
 
   /**
