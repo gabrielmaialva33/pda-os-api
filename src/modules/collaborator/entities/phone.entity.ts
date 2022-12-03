@@ -1,5 +1,6 @@
 import { BaseEntity } from '@common/entities/base.entity';
 import {
+  Cascade,
   Entity,
   EntityData,
   EntityRepositoryType,
@@ -40,6 +41,7 @@ export class PhoneEntity extends BaseEntity {
    */
   @ManyToOne(() => CollaboratorEntity, {
     hidden: true,
+    cascade: [Cascade.ALL],
   })
   collaborator: CollaboratorEntity;
 

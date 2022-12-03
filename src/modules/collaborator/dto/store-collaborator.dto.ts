@@ -1,4 +1,4 @@
-import { IsDateString, IsEnum } from 'class-validator';
+import { IsArray, IsDateString, IsEnum, IsObject } from 'class-validator';
 import { DateTime } from 'luxon';
 import { Collection } from '@mikro-orm/core';
 
@@ -38,9 +38,12 @@ export class StoreCollaboratorDto {
 
   description: string;
 
+  @IsObject()
   user: UserEntity;
 
+  @IsArray()
   phones: Collection<PhoneEntity>;
 
+  @IsArray()
   addresses: Collection<AddressEntity>;
 }

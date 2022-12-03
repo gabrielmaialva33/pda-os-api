@@ -84,13 +84,18 @@ export class CollaboratorEntity extends BaseEntity {
     cascade: [Cascade.ALL],
     orphanRemoval: true,
     inversedBy: (user) => user.collaborator,
+    nullable: false,
   })
-  user: UserEntity;
+  user!: UserEntity;
 
-  @OneToMany(() => PhoneEntity, (phone) => phone.collaborator)
+  @OneToMany(() => PhoneEntity, (phone) => phone.collaborator, {
+    cascade: [Cascade.ALL],
+  })
   phones?: Collection<PhoneEntity> = new Collection<PhoneEntity>(this);
 
-  @OneToMany(() => AddressEntity, (address) => address.collaborator)
+  @OneToMany(() => AddressEntity, (address) => address.collaborator, {
+    cascade: [Cascade.ALL],
+  })
   addresses?: Collection<AddressEntity> = new Collection<AddressEntity>(this);
 
   /**
@@ -111,8 +116,9 @@ export class CollaboratorEntity extends BaseEntity {
    * ------------------------------------------------------
    */
 
-  constructor(data: EntityData<CollaboratorEntity>) {
+  constructor({ user, ...data }: Partial<CollaboratorEntity>) {
     super();
     Object.assign(this, data);
+    this.user = new UserEntity(user);
   }
 }

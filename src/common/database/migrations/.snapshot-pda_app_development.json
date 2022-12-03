@@ -601,7 +601,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
           "mappedType": "uuid"
         }
       },
@@ -725,7 +725,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "uuid"
         }
       },
@@ -754,6 +754,7 @@
             "id"
           ],
           "referencedTableName": "public.collaborators",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       },
@@ -879,7 +880,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "uuid"
         }
       },
@@ -908,6 +909,7 @@
             "id"
           ],
           "referencedTableName": "public.collaborators",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       },

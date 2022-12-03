@@ -343,6 +343,157 @@ paths:
           description: Role deleted
         '404':
           description: Role not found
+
+  /collaborators:
+    get:
+      tags:
+        - Collaborator
+      summary: List collaborators
+      description: Use to request all collaborators
+      operationId: GetAllCollaborators
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 10
+          description: Number of collaborators per page
+        - in: query
+          name: search
+          schema:
+            type: string
+            example: 'John'
+          description: Search by public fields
+        - in: query
+          name: sort
+          schema:
+            type: string
+            default: id
+          description: Sort by field
+        - in: query
+          name: direction
+          schema:
+            type: string
+            default: asc
+      security:
+        - bearerToken: [ ]
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Collaborator'
+    post:
+      tags:
+        - Collaborator
+      summary: Store collaborator
+      description: Use to create a collaborator
+      operationId: StoreCollaborator
+      security:
+        - bearerToken: [ ]
+      requestBody:
+        description: Collaborator object that needs to be added to the store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreCollaborator'
+      responses:
+        '201':
+          description: Collaborator created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '400':
+          description: Invalid input
+  /collaborators/{collaboratorId}:
+    get:
+      tags:
+        - Collaborator
+      summary: Get collaborator
+      description: Use to request a collaborator
+      operationId: GetCollaborator
+      parameters:
+        - name: collaboratorId
+          in: path
+          description: ID of collaborator to return
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerToken: [ ]
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '404':
+          description: Collaborator not found
+    put:
+      tags:
+        - Collaborator
+      summary: Edit collaborator
+      description: Use to edit a collaborator
+      operationId: EditCollaborator
+      parameters:
+        - name: collaboratorId
+          in: path
+          description: ID of collaborator to update
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerToken: [ ]
+      requestBody:
+        description: Collaborator object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreCollaborator'
+      responses:
+        '200':
+          description: Collaborator updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '400':
+          description: Invalid input
+        '404':
+          description: Collaborator not found
+    delete:
+      tags:
+        - Collaborator
+      summary: Delete collaborator
+      description: Use to delete a collaborator
+      operationId: DeleteCollaborator
+      parameters:
+        - name: collaboratorId
+          in: path
+          description: ID of collaborator to delete
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerToken: [ ]
+      responses:
+        '204':
+          description: Collaborator deleted
+        '404':
+          description: Collaborator not found
 tags:
   - name: Auth
     description: Operations about auth
