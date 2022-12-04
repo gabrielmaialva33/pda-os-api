@@ -1,25 +1,18 @@
 _id: env_1a2e3818e6ad48d083f0da6ebde6f46c
 type: Environment
 parentId: env_268a681c6bf2153075930ef5d7f17427f7c2484a
-modified: 1669337377009
+modified: 1670091457307
 created: 1669337343033
 name: OpenAPI Azure PDA env
 data:
   scheme: https
   base_path: ""
   host: pda-os-api.azurewebsites.net
-  bearerToken: "{% response 'body',
-    'req_wrk_b084de0cdb4b4710bd5022395701401359487669',
-    'b64::JC5hdXRoLnRva2Vu::46b', 'never', 60 %}"
-  userId: "{% response 'body', 'req_wrk_b084de0cdb4b4710bd5022395701401359487669',
-    'b64::JC51c2VyLmlk::46b', 'never', 60 %}"
 dataPropertyOrder:
   "&":
     - scheme
     - base_path
     - host
-    - bearerToken
-    - userId
 color: null
 isPrivate: false
 metaSortKey: 1669337343033
