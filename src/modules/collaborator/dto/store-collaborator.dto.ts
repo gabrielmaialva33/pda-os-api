@@ -5,8 +5,8 @@ import { Collection } from '@mikro-orm/core';
 import { CivilStatus, Sexes, Status, WorkTypes } from '@common/types/enums';
 import { IsStringMinMax } from '@common/validators';
 import { UserEntity } from '@user/entities/user.entity';
-import { AddressEntity } from '@collaborator/entities/address.entity';
-import { PhoneEntity } from '@collaborator/entities/phone.entity';
+import { PhoneEntity } from '@phone/entities/phone.entity';
+import { AddressEntity } from '@address/entities/address.entity';
 
 export class StoreCollaboratorDto {
   @IsStringMinMax({ min: 8, max: 8, optional: true })

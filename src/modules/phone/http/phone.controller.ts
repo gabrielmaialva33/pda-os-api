@@ -10,17 +10,16 @@ import {
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
-
-import { RoleService } from '@role/services/role.service';
-import { EditRoleDto, StoreRoleDto } from '@role/dto';
-import { JwtAuthGuard } from '@common/guards/jwt.auth.guard';
+import { PhoneService } from '@phone/services/phone.service';
+import { EditPhoneDto, StorePhoneDto } from '@phone/dto';
 import { I18nValidationExceptionFilter } from '@common/filters';
+import { JwtAuthGuard } from '@common/guards/jwt.auth.guard';
 
 @UseFilters(new I18nValidationExceptionFilter())
 @UseGuards(JwtAuthGuard)
-@Controller('roles')
-export class RoleController {
-  constructor(private readonly roleService: RoleService) {}
+@Controller('phones')
+export class PhoneController {
+  constructor(private readonly phoneService: PhoneService) {}
 
   @Get()
   list(
@@ -30,7 +29,7 @@ export class RoleController {
     @Query('sort') sort?: string,
     @Query('direction') direction?: string,
   ) {
-    return this.roleService.list({
+    return this.phoneService.list({
       page,
       per_page,
       search,
@@ -40,22 +39,22 @@ export class RoleController {
   }
 
   @Get(':id')
-  get(@Param('id') id: string) {
-    return this.roleService.get(id);
+  findOne(@Param('id') id: string) {
+    return this.phoneService.get(id);
   }
 
   @Post()
-  store(@Body() data: StoreRoleDto) {
-    return this.roleService.store(data);
+  create(@Body() data: StorePhoneDto) {
+    return this.phoneService.store(data);
   }
 
   @Put(':id')
-  edit(@Param('id') id: string, @Body() data: EditRoleDto) {
-    return this.roleService.save(id, data);
+  edit(@Param('id') id: string, @Body() updatePhoneDto: EditPhoneDto) {
+    return this.phoneService.save(id, updatePhoneDto);
   }
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.roleService.delete(id);
+    return this.phoneService.delete(id);
   }
 }

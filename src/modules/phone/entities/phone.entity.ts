@@ -1,14 +1,8 @@
+import { Entity, EntityRepositoryType, Enum, Property } from '@mikro-orm/core';
+
 import { BaseEntity } from '@common/entities/base.entity';
-import {
-  Cascade,
-  Entity,
-  EntityData,
-  EntityRepositoryType,
-  ManyToOne,
-  Property,
-} from '@mikro-orm/core';
-import { PhoneRepository } from '@collaborator/repositories/phone.repository';
-import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
+import { PhoneRepository } from '@phone/repositories/phone.repository';
+import { PhoneType } from '@common/types/enums/phone-type.enum';
 
 @Entity({
   tableName: 'phones',
@@ -24,14 +18,15 @@ export class PhoneEntity extends BaseEntity {
    * ------------------------------------------------------
    * - column typing struct
    */
-  @Property({ nullable: true, length: 20 })
-  cell_phone: string;
 
   @Property({ nullable: true, length: 20 })
-  home_phone: string;
+  phone: string;
 
-  @Property({ nullable: true, length: 20 })
-  work_phone: string;
+  @Enum({
+    items: () => PhoneType,
+    default: PhoneType.NOT_INFORMED,
+  })
+  type: PhoneType;
 
   /**
    * ------------------------------------------------------
@@ -39,11 +34,6 @@ export class PhoneEntity extends BaseEntity {
    * ------------------------------------------------------
    * - define model relationships
    */
-  @ManyToOne(() => CollaboratorEntity, {
-    hidden: true,
-    cascade: [Cascade.ALL],
-  })
-  collaborator: CollaboratorEntity;
 
   /**
    * ------------------------------------------------------
@@ -56,7 +46,8 @@ export class PhoneEntity extends BaseEntity {
    * Methods
    * ------------------------------------------------------
    */
-  constructor(data: EntityData<PhoneEntity>) {
+
+  constructor(data: Partial<PhoneEntity>) {
     super();
     Object.assign(this, data);
   }

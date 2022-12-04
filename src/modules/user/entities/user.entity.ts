@@ -17,16 +17,15 @@ import { BaseEntity } from '@src/common/entities/base.entity';
 import { UserRepository } from '@user/repositories/user.repository';
 import { RoleEntity } from '@role/entities/role.entity';
 import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
+import { UserRoleEntity } from '@user/entities/user-role.entity';
 
 import { Argon2Utils } from '@common/helpers';
-import { Injectable } from '@nestjs/common';
 
-@Injectable()
 @Entity({
   tableName: 'users',
   collection: 'users',
-  customRepository: () => UserRepository,
   comment: 'UserEntity Table',
+  customRepository: () => UserRepository,
 })
 export class UserEntity extends BaseEntity {
   [EntityRepositoryType]?: UserRepository;
@@ -77,6 +76,7 @@ export class UserEntity extends BaseEntity {
    */
   @ManyToMany({
     entity: () => RoleEntity,
+    //pivotEntity: () => UserRoleEntity,
     pivotTable: 'users_roles',
     joinColumn: 'user_id',
     inverseJoinColumn: 'role_id',

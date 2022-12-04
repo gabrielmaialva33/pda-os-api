@@ -1,6 +1,7 @@
 import { IsStringMinMax, IsUnique } from '@common/validators';
-import { RoleEntity } from '@role/entities/role.entity';
 import { i18nValidationMessage } from 'nestjs-i18n';
+
+import { RoleEntity } from '@role/entities/role.entity';
 
 export class StoreRoleDto {
   @IsUnique(() => RoleEntity, 'slug', {
