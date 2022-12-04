@@ -17,7 +17,6 @@ import { BaseEntity } from '@src/common/entities/base.entity';
 import { UserRepository } from '@user/repositories/user.repository';
 import { RoleEntity } from '@role/entities/role.entity';
 import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
-import { UserRoleEntity } from '@user/entities/user-role.entity';
 
 import { Argon2Utils } from '@common/helpers';
 

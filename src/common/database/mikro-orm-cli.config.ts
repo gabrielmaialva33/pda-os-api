@@ -1,4 +1,7 @@
-import { UnderscoreNamingStrategy } from '@mikro-orm/core';
+import {
+  ReflectMetadataProvider,
+  UnderscoreNamingStrategy,
+} from '@mikro-orm/core';
 import { Logger } from '@nestjs/common';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
 import { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs/typings';
@@ -27,6 +30,10 @@ const MikroOrmConfig: MikroOrmModuleSyncOptions = {
     },
   },
   logger: logger.log.bind(logger),
+  namingStrategy: UnderscoreNamingStrategy,
+  highlighter: new SqlHighlighter(),
+  forceEntityConstructor: true,
+  metadataProvider: ReflectMetadataProvider,
   migrations: {
     tableName: 'mikro_orm_migrations',
     path: 'dist/src/common/database/migrations',
@@ -46,9 +53,6 @@ const MikroOrmConfig: MikroOrmModuleSyncOptions = {
     fileName: (className: string) =>
       className.toLowerCase().replace(/seeder$/, '.') + 'seeder',
   },
-  namingStrategy: UnderscoreNamingStrategy,
-  highlighter: new SqlHighlighter(),
-  forceEntityConstructor: true,
 };
 
 export default MikroOrmConfig;

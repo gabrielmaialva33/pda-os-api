@@ -3,7 +3,6 @@ import {
   Entity,
   EntityRepositoryType,
   Enum,
-  LoadStrategy,
   ManyToMany,
   Property,
 } from '@mikro-orm/core';
@@ -11,7 +10,6 @@ import {
 import { RoleRepository } from '@role/repositories/role.repository';
 import { UserEntity } from '@user/entities/user.entity';
 import { BaseEntity } from '@common/entities/base.entity';
-import { UserRoleEntity } from '@user/entities/user-role.entity';
 
 @Entity({
   tableName: 'roles',

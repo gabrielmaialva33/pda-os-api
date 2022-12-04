@@ -64,6 +64,7 @@ export class AddressEntity extends BaseEntity {
   })
   collaborators: Collection<CollaboratorEntity> =
     new Collection<CollaboratorEntity>(this);
+
   /**
    * ------------------------------------------------------
    * Hooks
