@@ -343,6 +343,157 @@ paths:
           description: Role deleted
         '404':
           description: Role not found
+
+  /collaborators:
+    get:
+      tags:
+        - Collaborator
+      summary: List collaborators
+      description: Use to request all collaborators
+      operationId: GetAllCollaborators
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 10
+          description: Number of collaborators per page
+        - in: query
+          name: search
+          schema:
+            type: string
+            example: 'John'
+          description: Search by public fields
+        - in: query
+          name: sort
+          schema:
+            type: string
+            default: id
+          description: Sort by field
+        - in: query
+          name: direction
+          schema:
+            type: string
+            default: asc
+      security:
+        - bearerToken: [ ]
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Collaborator'
+    post:
+      tags:
+        - Collaborator
+      summary: Store collaborator
+      description: Use to create a collaborator
+      operationId: StoreCollaborator
+      security:
+        - bearerToken: [ ]
+      requestBody:
+        description: Collaborator object that needs to be added to the store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreCollaborator'
+      responses:
+        '201':
+          description: Collaborator created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '400':
+          description: Invalid input
+  /collaborators/{collaboratorId}:
+    get:
+      tags:
+        - Collaborator
+      summary: Get collaborator
+      description: Use to request a collaborator
+      operationId: GetCollaborator
+      parameters:
+        - name: collaboratorId
+          in: path
+          description: ID of collaborator to return
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerToken: [ ]
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '404':
+          description: Collaborator not found
+    put:
+      tags:
+        - Collaborator
+      summary: Edit collaborator
+      description: Use to edit a collaborator
+      operationId: EditCollaborator
+      parameters:
+        - name: collaboratorId
+          in: path
+          description: ID of collaborator to update
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerToken: [ ]
+      requestBody:
+        description: Collaborator object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreCollaborator'
+      responses:
+        '200':
+          description: Collaborator updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '400':
+          description: Invalid input
+        '404':
+          description: Collaborator not found
+    delete:
+      tags:
+        - Collaborator
+      summary: Delete collaborator
+      description: Use to delete a collaborator
+      operationId: DeleteCollaborator
+      parameters:
+        - name: collaboratorId
+          in: path
+          description: ID of collaborator to delete
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerToken: [ ]
+      responses:
+        '204':
+          description: Collaborator deleted
+        '404':
+          description: Collaborator not found
 tags:
   - name: Auth
     description: Operations about auth
@@ -501,13 +652,11 @@ components:
         description: 'A good developer'
         phones:
           - id: e051d2a5-3c22-481a-a175-8c59942c0c0e
-            cell_phone: '(15) 99660-1742'
-            home_phone: '(15) 99660-1742'
-            work_phone: '(15) 99660-1742'
+            phone: '(15) 99660-1742'
+            type: 'mobile'
           - id: f2cad45f-b954-481f-98ca-fe76bec77ad5
-            cell_phone: '(15) 99660-1742'
-            home_phone: '(15) 99660-1742'
-            work_phone: '(15) 99660-1742'
+            phone: '(15) 99660-1742'
+            type: 'work'
         addresses:
           - id: 1c0b0b9a-1b9a-4b0f-8b1f-1b9a4b0f8b1f
             street: 'Rua 1'
@@ -535,25 +684,16 @@ components:
           type: string
           format: uuid
           example: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
-        cell_phone:
-          type: string
-          example: '(15) 99660-1742'
-        home_phone:
-          type: string
-          example: '(15) 99660-1742'
-        work_phone:
-          type: string
-          example: '(15) 99660-1742'
-        collaborator_id:
-          type: string
-          format: uuid
-          example: 5da76fd7-e945-4c87-98ff-a73be856e16e
+        phone:
+            type: string
+            example: '(15) 99660-1742'
+        type:
+            type: string
+            example: 'mobile'
       example:
-        id: 5883af93-525d-4f14-8588-7c347a5e6166
-        cell_phone: '(15) 99660-1742'
-        home_phone: '(15) 99660-1742'
-        work_phone: '(15) 99660-1742'
-        collaborator_id: b8e1db41-195b-46f1-9024-08915b6a6833
+        id: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
+        phone: '(15) 99660-1742'
+        type: 'mobile'
     Address:
       type: object
       properties:
@@ -650,12 +790,10 @@ components:
           civil_status: 'single'
           description: 'A good developer'
           phones:
-            - cell_phone: '(15) 99660-1742'
-              home_phone: '(15) 99660-1742'
-              work_phone: '(15) 99660-1742'
-            - cell_phone: '(15) 99660-1742'
-              home_phone: '(15) 99660-1742'
-              work_phone: '(15) 99660-1742'
+            - phone: '(15) 99660-1742'
+              type: 'mobile'
+            - phone: '(15) 99660-1742'
+              type: 'work'
           addresses:
             - street: 'Rua 1'
               number: '1'
@@ -692,24 +830,55 @@ components:
         password:
           type: string
           example: 'Pda@551238'
-        code:
-          type: string
-          example: '22108253'
-        phone:
-          type: string
-          example: '(15) 99660-1742'
-        cpf:
-          type: string
-          example: '387.387.348-69'
+        colaborator:
+          $ref: '#/components/schemas/StoreCollaborator'
+        roles:
+          type: array
+          items:
+            format: uuid
+            example: 4b2b6ec4-6946-4b27-9dec-28b5b328f145
       example:
         first_name: John
         last_name: Doe
         email: john@pda.com
         user_name: john
         password: 'Pda@551238'
-        code: '22108253'
-        phone: '(15) 99660-1742'
-        cpf: '387.387.348-69'
+        roles:
+          - 73b01c16-e22e-43ca-857e-85fcac45c80c
+          - 5b1a65dc-f0d2-4e16-91cf-9a9c62d62d1d
+        collaborator:
+          code: '22108253'
+          cpf: '387.387.344-21'
+          rg: '58.912.123-1'
+          birth_date: '1998-01-01'
+          job: 'Developer'
+          sex: 'male'
+          work_type: 'clt'
+          status: 'active'
+          civil_status: 'single'
+          description: 'A good developer'
+          phones:
+            - phone: '(15) 99660-1742'
+              type: 'mobile'
+            - phone: '(15) 99660-1742'
+              type: 'work'
+          addresses:
+            - street: 'Rua 1'
+              number: '1'
+              complement: 'Casa 1'
+              neighborhood: 'Bairro 1'
+              city: 'São Paulo'
+              state: 'SP'
+              country: 'Brasil'
+              zip_code: '12345-678'
+            - street: 'Rua 2'
+              number: '2'
+              complement: 'Casa 2'
+              neighborhood: 'Bairro 2'
+              city: 'São Paulo'
+              state: 'SP'
+              country: 'Brasil'
+              zip_code: '12345-678'
     # role request body
     StoreRole:
       type: object
@@ -797,6 +966,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Address'
+        user:
+          type: object
+          properties:
+            first_name:
+              type: string
+              example: John
+            last_name:
+              type: string
+              example: Doe
+            email:
+              type: string
+              example: john@pda.com
+            user_name:
+              type: string
+              example: john
+            password:
+              type: string
+              example: 'Pda@551238'
+            roles:
+              type: array
+              items:
+                format: uuid
+                example: 4b2b6ec4-6946-4b27-9dec-28b5b328f145
       example:
         code: '22108253'
         cpf: '387.387.344-21'
@@ -809,12 +1001,10 @@ components:
         civil_status: 'single'
         description: 'A good developer'
         phones:
-          - cell_phone: '(15) 99660-1742'
-            home_phone: '(15) 99660-1742'
-            work_phone: '(15) 99660-1742'
-          - cell_phone: '(15) 99660-1742'
-            home_phone: '(15) 99660-1742'
-            work_phone: '(15) 99660-1742'
+          - phone: '(15) 99660-1742'
+            type: 'home'
+          - phone: '(15) 99660-1742'
+            type: 'work'
         addresses:
           - street: 'Rua 1'
             number: '1'
@@ -832,22 +1022,27 @@ components:
             state: 'SP'
             country: 'Brasil'
             zip_code: '12345-678'
+        user:
+          first_name: John
+          last_name: Doe
+          email: john@pda.com
+          user_name: john
+          password: 'Pda@551238'
+          roles:
+            - f9bfa8f2-67e0-4d0d-80ea-bd97be273285
+            - 3afab4c9-1ba6-4625-a345-c4b05b6087ff
     StorePhone:
       type: object
       properties:
-        cell_phone:
+        phone:
           type: string
           example: '(15) 99660-1742'
-        home_phone:
+        type:
           type: string
-          example: '(15) 99660-1742'
-        work_phone:
-          type: string
-          example: '(15) 99660-1742'
+          example: 'home'
       example:
-        cell_phone: '(15) 99660-1742'
-        home_phone: '(15) 99660-1742'
-        work_phone: '(15) 99660-1742'
+        phone: '(15) 99660-1742'
+        type: 'home'
     StoreAddress:
         type: object
         properties:

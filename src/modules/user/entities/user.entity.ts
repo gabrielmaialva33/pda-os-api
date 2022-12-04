@@ -17,16 +17,15 @@ import { BaseEntity } from '@src/common/entities/base.entity';
 import { UserRepository } from '@user/repositories/user.repository';
 import { RoleEntity } from '@role/entities/role.entity';
 import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
+import { UserRoleEntity } from '@user/entities/user-role.entity';
 
 import { Argon2Utils } from '@common/helpers';
-import { Injectable } from '@nestjs/common';
 
-@Injectable()
 @Entity({
   tableName: 'users',
   collection: 'users',
-  customRepository: () => UserRepository,
   comment: 'UserEntity Table',
+  customRepository: () => UserRepository,
 })
 export class UserEntity extends BaseEntity {
   [EntityRepositoryType]?: UserRepository;
@@ -77,6 +76,7 @@ export class UserEntity extends BaseEntity {
    */
   @ManyToMany({
     entity: () => RoleEntity,
+    //pivotEntity: () => UserRoleEntity,
     pivotTable: 'users_roles',
     joinColumn: 'user_id',
     inverseJoinColumn: 'role_id',
@@ -92,6 +92,29 @@ export class UserEntity extends BaseEntity {
     mappedBy: (collaborator) => collaborator.user,
   })
   collaborator?: CollaboratorEntity;
+
+  /**
+   * ------------------------------------------------------
+   * Hooks
+   * ------------------------------------------------------
+   */
+  @BeforeCreate()
+  @BeforeUpdate()
+  async hashPassword(arguments_: EventArgs<this>) {
+    if (arguments_.changeSet.payload?.password)
+      this.password = await Argon2Utils.hash(this.password);
+  }
+
+  @BeforeCreate()
+  async attachGuestRole(arguments_: EventArgs<this>) {
+    if (arguments_.changeSet.entity.roles.getItems().length === 0) {
+      const guestRole = await arguments_.em.getRepository(RoleEntity).findOne({
+        name: 'guest',
+      });
+      this.roles.add(guestRole);
+    }
+  }
+
   /**
    * ------------------------------------------------------
    * Methods
@@ -117,6 +140,7 @@ export class UserEntity extends BaseEntity {
    * Query Scopes
    * ------------------------------------------------------
    */
+
   constructor({ collaborator, ...data }: Partial<UserEntity>) {
     super();
     Object.assign(this, {
@@ -126,27 +150,5 @@ export class UserEntity extends BaseEntity {
     this.collaborator = collaborator
       ? new CollaboratorEntity(collaborator)
       : null;
-  }
-
-  /**
-   * ------------------------------------------------------
-   * Hooks
-   * ------------------------------------------------------
-   */
-  @BeforeCreate()
-  @BeforeUpdate()
-  async hashPassword(arguments_: EventArgs<this>) {
-    if (arguments_.changeSet.payload?.password)
-      this.password = await Argon2Utils.hash(this.password);
-  }
-
-  @BeforeCreate()
-  async attachGuestRole(arguments_: EventArgs<this>) {
-    if (arguments_.changeSet.entity.roles.getItems().length === 0) {
-      const guestRole = await arguments_.em.getRepository(RoleEntity).findOne({
-        name: 'guest',
-      });
-      this.roles.add(guestRole);
-    }
   }
 }

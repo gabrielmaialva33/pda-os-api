@@ -6,13 +6,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
 
 import { UserEntity } from '@user/entities/user.entity';
-import { UserRoleEntity } from '@user/entities/user.role.entity';
+import { UserRoleEntity } from '@user/entities/user-role.entity';
 import { RoleEntity } from '@role/entities/role.entity';
 import { LoggerEntity } from '@logger/entities/logger.entity';
 import { BaseRepository } from '@common/repositories/base.repository';
 import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
-import { PhoneEntity } from '@collaborator/entities/phone.entity';
-import { AddressEntity } from '@collaborator/entities/address.entity';
+import { PhoneEntity } from '@phone/entities/phone.entity';
+import { PhoneCollaboratorEntity } from '@phone/entities/phone-collaborator.entity';
+import { AddressEntity } from '@address/entities/address.entity';
+import { AddressCollaboratorEntity } from '@address/entities/address-collaborator.entity';
 
 const logger = new Logger('MikroORM');
 
@@ -78,7 +80,9 @@ const logger = new Logger('MikroORM');
         LoggerEntity,
         CollaboratorEntity,
         PhoneEntity,
+        PhoneCollaboratorEntity,
         AddressEntity,
+        AddressCollaboratorEntity,
       ]),
     }),
   ],

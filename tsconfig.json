@@ -22,8 +22,11 @@
       "@src/*": [
         "src/*"
       ],
-      "@app/*": [
-        "src/modules/app/*"
+      "@common/*": [
+        "src/common/*"
+      ],
+      "@address/*": [
+        "src/modules/address/*"
       ],
       "@auth/*": [
         "src/modules/auth/*"
@@ -31,14 +34,14 @@
       "@collaborator/*": [
         "src/modules/collaborator/*"
       ],
-      "@common/*": [
-        "src/common/*"
-      ],
       "@health/*": [
         "src/modules/health/*"
       ],
       "@logger/*": [
         "src/modules/logger/*"
+      ],
+      "@phone/*": [
+        "src/modules/phone/*"
       ],
       "@role/*": [
         "src/modules/role/*"

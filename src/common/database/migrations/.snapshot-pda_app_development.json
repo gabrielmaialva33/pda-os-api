@@ -48,6 +48,226 @@
           "length": 6,
           "mappedType": "datetime"
         },
+        "street": {
+          "name": "street",
+          "type": "varchar(100)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 100,
+          "mappedType": "string"
+        },
+        "number": {
+          "name": "number",
+          "type": "varchar(10)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 10,
+          "mappedType": "string"
+        },
+        "complement": {
+          "name": "complement",
+          "type": "varchar(100)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 100,
+          "mappedType": "string"
+        },
+        "neighborhood": {
+          "name": "neighborhood",
+          "type": "varchar(100)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 100,
+          "mappedType": "string"
+        },
+        "city": {
+          "name": "city",
+          "type": "varchar(100)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 100,
+          "mappedType": "string"
+        },
+        "state": {
+          "name": "state",
+          "type": "varchar(2)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 2,
+          "mappedType": "string"
+        },
+        "zip_code": {
+          "name": "zip_code",
+          "type": "varchar(10)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 10,
+          "mappedType": "string"
+        }
+      },
+      "name": "addresses",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "addresses_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {},
+      "comment": "AddressEntity Table"
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "phone": {
+          "name": "phone",
+          "type": "varchar(20)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 20,
+          "mappedType": "string"
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "'not_informed'",
+          "enumItems": [
+            "mobile",
+            "home",
+            "work",
+            "not_informed"
+          ],
+          "mappedType": "enum"
+        }
+      },
+      "name": "phones",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "phones_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {},
+      "comment": "PhoneEntity Table"
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
         "name": {
           "name": "name",
           "type": "varchar(50)",
@@ -601,7 +821,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
           "mappedType": "uuid"
         }
       },
@@ -657,107 +877,81 @@
           "default": "uuid_generate_v4()",
           "mappedType": "uuid"
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "default": "now()",
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "default": "now()",
-          "mappedType": "datetime"
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "cell_phone": {
-          "name": "cell_phone",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "home_phone": {
-          "name": "home_phone",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
-        "work_phone": {
-          "name": "work_phone",
-          "type": "varchar(20)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 20,
-          "mappedType": "string"
-        },
         "collaborator_id": {
           "name": "collaborator_id",
           "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "uuid"
+        },
+        "phone_id": {
+          "name": "phone_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
+        },
+        "assigned_at": {
+          "name": "assigned_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "now()",
+          "mappedType": "datetime"
         }
       },
-      "name": "phones",
+      "name": "phones_collaborators",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "phones_pkey",
+          "keyName": "phones_collaborators_pkey",
           "columnNames": [
-            "id"
+            "id",
+            "collaborator_id",
+            "phone_id"
           ],
-          "composite": false,
+          "composite": true,
           "primary": true,
           "unique": true
         }
       ],
       "checks": [],
       "foreignKeys": {
-        "phones_collaborator_id_foreign": {
-          "constraintName": "phones_collaborator_id_foreign",
+        "phones_collaborators_collaborator_id_foreign": {
+          "constraintName": "phones_collaborators_collaborator_id_foreign",
           "columnNames": [
             "collaborator_id"
           ],
-          "localTableName": "public.phones",
+          "localTableName": "public.phones_collaborators",
           "referencedColumnNames": [
             "id"
           ],
           "referencedTableName": "public.collaborators",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "phones_collaborators_phone_id_foreign": {
+          "constraintName": "phones_collaborators_phone_id_foreign",
+          "columnNames": [
+            "phone_id"
+          ],
+          "localTableName": "public.phones_collaborators",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.phones",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       },
-      "comment": "PhoneEntity Table"
+      "comment": "PhoneEntity Collaborator Pivot Table"
     },
     {
       "columns": {
@@ -771,147 +965,81 @@
           "default": "uuid_generate_v4()",
           "mappedType": "uuid"
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "default": "now()",
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "default": "now()",
-          "mappedType": "datetime"
-        },
-        "deleted_at": {
-          "name": "deleted_at",
-          "type": "timestamptz(0)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "street": {
-          "name": "street",
-          "type": "varchar(100)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 100,
-          "mappedType": "string"
-        },
-        "number": {
-          "name": "number",
-          "type": "varchar(10)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 10,
-          "mappedType": "string"
-        },
-        "complement": {
-          "name": "complement",
-          "type": "varchar(100)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 100,
-          "mappedType": "string"
-        },
-        "neighborhood": {
-          "name": "neighborhood",
-          "type": "varchar(100)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 100,
-          "mappedType": "string"
-        },
-        "city": {
-          "name": "city",
-          "type": "varchar(100)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 100,
-          "mappedType": "string"
-        },
-        "state": {
-          "name": "state",
-          "type": "varchar(2)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 2,
-          "mappedType": "string"
-        },
-        "zip_code": {
-          "name": "zip_code",
-          "type": "varchar(10)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "length": 10,
-          "mappedType": "string"
-        },
         "collaborator_id": {
           "name": "collaborator_id",
           "type": "uuid",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "uuid"
+        },
+        "address_id": {
+          "name": "address_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
+        },
+        "assigned_at": {
+          "name": "assigned_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "now()",
+          "mappedType": "datetime"
         }
       },
-      "name": "addresses",
+      "name": "addresses_collaborators",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "addresses_pkey",
+          "keyName": "addresses_collaborators_pkey",
           "columnNames": [
-            "id"
+            "id",
+            "collaborator_id",
+            "address_id"
           ],
-          "composite": false,
+          "composite": true,
           "primary": true,
           "unique": true
         }
       ],
       "checks": [],
       "foreignKeys": {
-        "addresses_collaborator_id_foreign": {
-          "constraintName": "addresses_collaborator_id_foreign",
+        "addresses_collaborators_collaborator_id_foreign": {
+          "constraintName": "addresses_collaborators_collaborator_id_foreign",
           "columnNames": [
             "collaborator_id"
           ],
-          "localTableName": "public.addresses",
+          "localTableName": "public.addresses_collaborators",
           "referencedColumnNames": [
             "id"
           ],
           "referencedTableName": "public.collaborators",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "addresses_collaborators_address_id_foreign": {
+          "constraintName": "addresses_collaborators_address_id_foreign",
+          "columnNames": [
+            "address_id"
+          ],
+          "localTableName": "public.addresses_collaborators",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.addresses",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       },
-      "comment": "AddressEntity Table"
+      "comment": "AddressCollaboratorEntity Pivot Table"
     },
     {
       "columns": {
@@ -1047,7 +1175,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.users",
+          "referencedTableName": "public.roles",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         },
@@ -1060,7 +1188,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.roles",
+          "referencedTableName": "public.users",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }

@@ -1,13 +1,7 @@
+import { Entity, EntityRepositoryType, Property } from '@mikro-orm/core';
+
+import { AddressRepository } from '@address/repositories/address.repository';
 import { BaseEntity } from '@common/entities/base.entity';
-import {
-  Entity,
-  EntityData,
-  EntityRepositoryType,
-  ManyToOne,
-  Property,
-} from '@mikro-orm/core';
-import { AddressRepository } from '@collaborator/repositories/address.repository';
-import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
 
 @Entity({
   tableName: 'addresses',
@@ -50,10 +44,6 @@ export class AddressEntity extends BaseEntity {
    * ------------------------------------------------------
    * - define model relationships
    */
-  @ManyToOne(() => CollaboratorEntity, {
-    hidden: true,
-  })
-  collaborator: CollaboratorEntity;
 
   /**
    * ------------------------------------------------------
@@ -67,13 +57,7 @@ export class AddressEntity extends BaseEntity {
    * ------------------------------------------------------
    */
 
-  /**
-   * ------------------------------------------------------
-   * Query Scopes
-   * ------------------------------------------------------
-   */
-
-  constructor(data: EntityData<AddressEntity>) {
+  constructor(data: Partial<AddressEntity>) {
     super();
     Object.assign(this, data);
   }

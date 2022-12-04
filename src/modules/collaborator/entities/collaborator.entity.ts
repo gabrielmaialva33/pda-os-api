@@ -3,19 +3,22 @@ import {
   Cascade,
   Collection,
   Entity,
-  EntityData,
   EntityRepositoryType,
   Enum,
-  OneToMany,
+  LoadStrategy,
+  ManyToMany,
   OneToOne,
   Property,
 } from '@mikro-orm/core';
-import { CollaboratorRepository } from '@collaborator/repositories/collaborator.repository';
 import { DateTime } from 'luxon';
-import { Sexes, Status, WorkTypes, CivilStatus } from '@common/types/enums';
-import { PhoneEntity } from '@collaborator/entities/phone.entity';
-import { AddressEntity } from '@collaborator/entities/address.entity';
+
+import { CollaboratorRepository } from '@collaborator/repositories/collaborator.repository';
+import { CivilStatus, Sexes, Status, WorkTypes } from '@common/types/enums';
 import { UserEntity } from '@user/entities/user.entity';
+import { PhoneEntity } from '@phone/entities/phone.entity';
+import { PhoneCollaboratorEntity } from '@phone/entities/phone-collaborator.entity';
+import { AddressEntity } from '@address/entities/address.entity';
+import { AddressCollaboratorEntity } from '@address/entities/address-collaborator.entity';
 
 @Entity({
   tableName: 'collaborators',
@@ -84,13 +87,30 @@ export class CollaboratorEntity extends BaseEntity {
     cascade: [Cascade.ALL],
     orphanRemoval: true,
     inversedBy: (user) => user.collaborator,
+    nullable: false,
   })
-  user: UserEntity;
+  user!: UserEntity;
 
-  @OneToMany(() => PhoneEntity, (phone) => phone.collaborator)
+  @ManyToMany({
+    entity: () => PhoneEntity,
+    //pivotEntity: () => PhoneCollaboratorEntity,
+    pivotTable: 'phones_collaborators',
+    joinColumn: 'collaborator_id',
+    inverseJoinColumn: 'phone_id',
+    strategy: LoadStrategy.JOINED,
+    cascade: [Cascade.ALL],
+  })
   phones?: Collection<PhoneEntity> = new Collection<PhoneEntity>(this);
 
-  @OneToMany(() => AddressEntity, (address) => address.collaborator)
+  @ManyToMany({
+    entity: () => AddressEntity,
+    //pivotEntity: () => AddressCollaboratorEntity,
+    pivotTable: 'addresses_collaborators',
+    joinColumn: 'collaborator_id',
+    inverseJoinColumn: 'address_id',
+    strategy: LoadStrategy.JOINED,
+    cascade: [Cascade.ALL],
+  })
   addresses?: Collection<AddressEntity> = new Collection<AddressEntity>(this);
 
   /**
@@ -111,8 +131,9 @@ export class CollaboratorEntity extends BaseEntity {
    * ------------------------------------------------------
    */
 
-  constructor(data: EntityData<CollaboratorEntity>) {
+  constructor({ user, ...data }: Partial<CollaboratorEntity>) {
     super();
     Object.assign(this, data);
+    this.user = user ? new UserEntity(user) : null;
   }
 }

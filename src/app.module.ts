@@ -10,6 +10,8 @@ import { NestConfigModule } from '@src/lib/config/config.module';
 import { CommonModule } from '@common/common.module';
 import { RoleModule } from '@role/role.module';
 import { CollaboratorModule } from '@collaborator/collaborator.module';
+import { PhoneModule } from '@phone/phone.module';
+import { AddressModule } from '@address/address.module';
 
 @Module({
   imports: [
@@ -19,10 +21,12 @@ import { CollaboratorModule } from '@collaborator/collaborator.module';
     CollaboratorModule,
     HealthModule,
     LoggerModule,
+    NestConfigModule,
+    PhoneModule,
+    AddressModule,
     CommonModule,
     NestI18nModule,
     OrmModule,
-    NestConfigModule,
   ],
   exports: [],
 })
