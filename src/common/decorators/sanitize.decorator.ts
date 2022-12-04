@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { Transform } from 'class-transformer';
-import * as DOMPurify from 'dompurify';
+import DOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
 
 const window = new JSDOM('').window;

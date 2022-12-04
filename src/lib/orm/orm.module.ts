@@ -4,6 +4,7 @@ import { Logger, Module } from '@nestjs/common';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
+import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 
 import { UserEntity } from '@user/entities/user.entity';
 import { UserRoleEntity } from '@user/entities/user-role.entity';
@@ -29,20 +30,25 @@ const logger = new Logger('MikroORM');
         password: configService.get('database.password'),
         user: configService.get('database.username'),
         dbName: configService.get('database.dbName'),
-        entities: ['dist/**/*.entity.js'],
-        entitiesTs: ['src/**/*.entity.ts'],
-        debug: configService.get('database.debug') || true,
-        loadStrategy: LoadStrategy.JOINED,
-        highlighter: new SqlHighlighter(),
-        entityRepository: BaseRepository,
-        allowGlobalContext: true,
-        registerRequestContext: false,
-        pool: { min: 2, max: 10 },
         driverOptions: {
           connection: {
             ssl: configService.get('database.ssl') || false,
           },
         },
+        entities: ['dist/**/*.entity.js'],
+        entitiesTs: ['src/**/*.entity.ts'],
+        debug: configService.get('database.debug') || true,
+        loadStrategy: LoadStrategy.JOINED,
+        highlighter: new SqlHighlighter(),
+        metadataProvider: TsMorphMetadataProvider,
+        cache: {
+          enabled: true,
+          pretty: true,
+        },
+        entityRepository: BaseRepository,
+        allowGlobalContext: true,
+        registerRequestContext: false,
+        pool: { min: 2, max: 10 },
         logger: logger.log.bind(logger),
         migrations: {
           tableName: 'mikro_orm_migrations',
@@ -73,17 +79,19 @@ const logger = new Logger('MikroORM');
       inject: [ConfigService],
     }),
     MikroOrmModule.forFeature({
-      entities: Object.values([
-        UserEntity,
-        RoleEntity,
-        UserRoleEntity,
-        LoggerEntity,
-        CollaboratorEntity,
-        PhoneEntity,
-        PhoneCollaboratorEntity,
-        AddressEntity,
-        AddressCollaboratorEntity,
-      ]),
+      entities: [
+        ...Object.values([
+          UserEntity,
+          RoleEntity,
+          UserRoleEntity,
+          LoggerEntity,
+          CollaboratorEntity,
+          PhoneEntity,
+          PhoneCollaboratorEntity,
+          AddressEntity,
+          AddressCollaboratorEntity,
+        ]),
+      ],
     }),
   ],
   exports: [MikroOrmModule],

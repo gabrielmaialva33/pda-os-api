@@ -1,20 +1,13 @@
-import {
-  LoadStrategy,
-  ReflectMetadataProvider,
-  UnderscoreNamingStrategy,
-} from '@mikro-orm/core';
+import { Options, ReflectMetadataProvider } from '@mikro-orm/core';
 import { Logger } from '@nestjs/common';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
-import { MikroOrmModuleSyncOptions } from '@mikro-orm/nestjs/typings';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 
 const logger = new Logger('MikroORM-CLI');
 
 logger.log(`🛠️  Using env ${process.cwd()}/env/.env.${process.env.NODE_ENV}\n`);
 
-const MikroOrmConfig: MikroOrmModuleSyncOptions = {
-  entities: ['dist/**/*.entity.js'],
-  entitiesTs: ['src/**/*.entity.ts'],
+const MikroOrmConfig = {
   host: process.env.PG_HOST || 'localhost',
   port: parseInt(process.env.PG_PORT) || 5432,
   user: process.env.PG_USER || 'postgres',
@@ -25,17 +18,20 @@ const MikroOrmConfig: MikroOrmModuleSyncOptions = {
   driverOptions: {
     connection: { ssl: process.env.PG_SSL === 'true' || false },
   },
+  entities: ['dist/**/*.entity.js'],
+  entitiesTs: ['src/**/*.entity.ts'],
   filters: {
     deleted: {
       cond: { deleted_at: { $eq: null } },
     },
   },
   logger: logger.log.bind(logger),
-  namingStrategy: UnderscoreNamingStrategy,
   highlighter: new SqlHighlighter(),
-  forceEntityConstructor: true,
   metadataProvider: ReflectMetadataProvider,
-  loadStrategy: LoadStrategy.JOINED,
+  cache: {
+    enabled: true,
+    pretty: true,
+  },
   migrations: {
     tableName: 'mikro_orm_migrations',
     path: 'dist/src/common/database/migrations',
@@ -55,6 +51,6 @@ const MikroOrmConfig: MikroOrmModuleSyncOptions = {
     fileName: (className: string) =>
       className.toLowerCase().replace(/seeder$/, '.') + 'seeder',
   },
-};
+} as Options;
 
 export default MikroOrmConfig;
