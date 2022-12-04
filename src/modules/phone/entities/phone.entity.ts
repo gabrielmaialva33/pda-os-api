@@ -1,8 +1,18 @@
-import { Entity, EntityRepositoryType, Enum, Property } from '@mikro-orm/core';
+import {
+  Collection,
+  Entity,
+  EntityRepositoryType,
+  Enum,
+  LoadStrategy,
+  ManyToMany,
+  Property,
+} from '@mikro-orm/core';
 
 import { BaseEntity } from '@common/entities/base.entity';
 import { PhoneRepository } from '@phone/repositories/phone.repository';
 import { PhoneType } from '@common/types/enums/phone-type.enum';
+import { PhoneCollaboratorEntity } from '@phone/entities/phone-collaborator.entity';
+import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
 
 @Entity({
   tableName: 'phones',
@@ -34,6 +44,17 @@ export class PhoneEntity extends BaseEntity {
    * ------------------------------------------------------
    * - define model relationships
    */
+  @ManyToMany({
+    entity: () => CollaboratorEntity,
+    pivotEntity: () => PhoneCollaboratorEntity,
+    pivotTable: 'phones_collaborators',
+    joinColumn: 'collaborator_id',
+    inverseJoinColumn: 'phone_id',
+    strategy: LoadStrategy.JOINED,
+    hidden: true,
+  })
+  collaborators: Collection<CollaboratorEntity> =
+    new Collection<CollaboratorEntity>(this);
 
   /**
    * ------------------------------------------------------

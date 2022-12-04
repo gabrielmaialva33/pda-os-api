@@ -75,8 +75,8 @@ const logger = new Logger('MikroORM');
     MikroOrmModule.forFeature({
       entities: Object.values([
         UserEntity,
-        UserRoleEntity,
         RoleEntity,
+        UserRoleEntity,
         LoggerEntity,
         CollaboratorEntity,
         PhoneEntity,

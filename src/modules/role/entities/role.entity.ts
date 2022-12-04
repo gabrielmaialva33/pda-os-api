@@ -11,12 +11,12 @@ import {
 import { RoleRepository } from '@role/repositories/role.repository';
 import { UserEntity } from '@user/entities/user.entity';
 import { BaseEntity } from '@common/entities/base.entity';
+import { UserRoleEntity } from '@user/entities/user-role.entity';
 
 @Entity({
   tableName: 'roles',
-  collection: 'roles',
-  customRepository: () => RoleRepository,
   comment: 'Role Table',
+  customRepository: () => RoleRepository,
 })
 export class RoleEntity extends BaseEntity {
   [EntityRepositoryType]?: RoleRepository;
@@ -45,10 +45,10 @@ export class RoleEntity extends BaseEntity {
    */
   @ManyToMany({
     entity: () => UserEntity,
+    //pivotEntity: () => UserRoleEntity,
     pivotTable: 'users_roles',
     joinColumn: 'user_id',
     inverseJoinColumn: 'role_id',
-    strategy: LoadStrategy.JOINED,
     hidden: true,
   })
   users: Collection<UserEntity> = new Collection<UserEntity>(this);

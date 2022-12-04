@@ -16,9 +16,9 @@ import { CollaboratorRepository } from '@collaborator/repositories/collaborator.
 import { CivilStatus, Sexes, Status, WorkTypes } from '@common/types/enums';
 import { UserEntity } from '@user/entities/user.entity';
 import { PhoneEntity } from '@phone/entities/phone.entity';
-import { PhoneCollaboratorEntity } from '@phone/entities/phone-collaborator.entity';
 import { AddressEntity } from '@address/entities/address.entity';
 import { AddressCollaboratorEntity } from '@address/entities/address-collaborator.entity';
+import { PhoneCollaboratorEntity } from '@phone/entities/phone-collaborator.entity';
 
 @Entity({
   tableName: 'collaborators',
@@ -93,7 +93,7 @@ export class CollaboratorEntity extends BaseEntity {
 
   @ManyToMany({
     entity: () => PhoneEntity,
-    //pivotEntity: () => PhoneCollaboratorEntity,
+    pivotEntity: () => PhoneCollaboratorEntity,
     pivotTable: 'phones_collaborators',
     joinColumn: 'collaborator_id',
     inverseJoinColumn: 'phone_id',
@@ -104,7 +104,7 @@ export class CollaboratorEntity extends BaseEntity {
 
   @ManyToMany({
     entity: () => AddressEntity,
-    //pivotEntity: () => AddressCollaboratorEntity,
+    pivotEntity: () => AddressCollaboratorEntity,
     pivotTable: 'addresses_collaborators',
     joinColumn: 'collaborator_id',
     inverseJoinColumn: 'address_id',

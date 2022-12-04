@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Cascade,
   Entity,
   ManyToOne,
@@ -13,13 +14,14 @@ import { RoleEntity } from '@role/entities/role.entity';
 @Entity({
   tableName: 'users_roles',
   collection: 'users_roles',
-  comment: 'UserEntity Role Pivot Table',
+  comment: 'UserRoleEntity Pivot Table',
 })
-export class UserRoleEntity {
+export class UserRoleEntity extends BaseEntity<UserRoleEntity, 'id'> {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
   id: string;
 
-  @ManyToOne(() => UserEntity, {
+  @ManyToOne({
+    entity: () => UserEntity,
     primary: true,
     cascade: [Cascade.ALL],
     onDelete: 'cascade',
@@ -27,7 +29,8 @@ export class UserRoleEntity {
   })
   user: UserEntity;
 
-  @ManyToOne(() => RoleEntity, {
+  @ManyToOne({
+    entity: () => RoleEntity,
     primary: true,
     cascade: [Cascade.ALL],
     onDelete: 'cascade',

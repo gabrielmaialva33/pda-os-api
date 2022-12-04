@@ -1127,7 +1127,7 @@
           "updateRule": "cascade"
         }
       },
-      "comment": "UserEntity Role Pivot Table"
+      "comment": "UserRoleEntity Pivot Table"
     },
     {
       "columns": {
@@ -1175,7 +1175,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.roles",
+          "referencedTableName": "public.users",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         },
@@ -1188,7 +1188,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.users",
+          "referencedTableName": "public.roles",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }
