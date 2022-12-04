@@ -1,4 +1,5 @@
 import {
+  LoadStrategy,
   ReflectMetadataProvider,
   UnderscoreNamingStrategy,
 } from '@mikro-orm/core';
@@ -34,6 +35,7 @@ const MikroOrmConfig: MikroOrmModuleSyncOptions = {
   highlighter: new SqlHighlighter(),
   forceEntityConstructor: true,
   metadataProvider: ReflectMetadataProvider,
+  loadStrategy: LoadStrategy.JOINED,
   migrations: {
     tableName: 'mikro_orm_migrations',
     path: 'dist/src/common/database/migrations',
