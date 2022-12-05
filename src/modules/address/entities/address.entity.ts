@@ -1,4 +1,5 @@
 import {
+  Cascade,
   Collection,
   Entity,
   EntityRepositoryType,
@@ -60,6 +61,7 @@ export class AddressEntity extends BaseEntity {
     joinColumn: 'collaborator_id',
     inverseJoinColumn: 'address_id',
     strategy: LoadStrategy.JOINED,
+    cascade: [Cascade.ALL],
     hidden: true,
   })
   collaborators: Collection<CollaboratorEntity> =

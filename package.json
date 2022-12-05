@@ -21,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "start:migrate:prod": "mikro-orm migration:up && mikro-orm seeder:run && yarn start:prod",
     "db:setup": "mikro-orm migration:create && mikro-orm migration:up && mikro-orm seeder:run",
+    "db:migrate": "mikro-orm migration:up && mikro-orm seeder:run",
     "db:flush": "mikro-orm migration:fresh && mikro-orm seeder:run"
   },
   "dependencies": {
