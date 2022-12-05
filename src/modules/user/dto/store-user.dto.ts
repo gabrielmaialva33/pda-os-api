@@ -1,9 +1,24 @@
 import { UserEntity } from '@user/entities/user.entity';
-import { IsEmail, IsNotEmpty, IsObject, Length } from 'class-validator';
-import { IsPassword, IsStringMinMax, IsUnique } from '@common/validators';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsEmail,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  Length,
+} from 'class-validator';
+
+import {
+  IsExists,
+  IsPassword,
+  IsStringMinMax,
+  IsUnique,
+} from '@common/validators';
 import { i18nValidationMessage } from 'nestjs-i18n';
 
 import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
+import { RoleEntity } from '@role/entities/role.entity';
 
 export class StoreUserDto {
   @IsStringMinMax({ min: 2, max: 80, optional: false })
@@ -45,9 +60,16 @@ export class StoreUserDto {
   })
   password: string;
 
-  @IsNotEmpty()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsExists(() => RoleEntity, 'id', {
+    message: i18nValidationMessage('validation.isExists', {
+      field: 'role',
+    }),
+  })
   roles: string[];
 
+  @IsOptional()
   @IsObject()
-  collaborator: CollaboratorEntity;
+  collaborator?: CollaboratorEntity;
 }

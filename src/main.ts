@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import 'reflect-metadata';
 
 import { useContainer } from 'class-validator';
 import helmet from '@fastify/helmet';

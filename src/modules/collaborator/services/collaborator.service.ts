@@ -1,17 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { FilterQuery, wrap } from '@mikro-orm/core';
+import { wrap } from '@mikro-orm/core';
 import { DateTime } from 'luxon';
 
 import { EditCollaboratorDto, StoreCollaboratorDto } from '@collaborator/dto';
 import { CollaboratorRepository } from '@collaborator/repositories/collaborator.repository';
 import { PaginationOptions } from '@common/interfaces/pagination.interface';
-import { UserRepository } from '@user/repositories/user.repository';
 
 @Injectable()
 export class CollaboratorService {
   constructor(
     private readonly collaboratorRepository: CollaboratorRepository,
-    private readonly userRepository: UserRepository,
   ) {}
 
   async list({ page, per_page, search, sort, direction }: PaginationOptions) {

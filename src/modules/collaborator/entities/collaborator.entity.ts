@@ -84,9 +84,9 @@ export class CollaboratorEntity extends BaseEntity {
    */
   @OneToOne({
     entity: () => UserEntity,
+    inversedBy: (user) => user.collaborator,
     cascade: [Cascade.ALL],
     orphanRemoval: true,
-    inversedBy: (user) => user.collaborator,
     nullable: false,
   })
   user!: UserEntity;

@@ -11,6 +11,7 @@ import { Either } from 'nestjs-i18n/dist/types/either.type';
 import { formatI18nErrors } from 'nestjs-i18n/dist/utils/util';
 
 import { StringUtils } from '@common/helpers';
+import * as console from 'console';
 
 type I18nValidationExceptionFilterOptions = Either<
   I18nValidationExceptionFilterDetailedErrorsOption,
@@ -37,11 +38,12 @@ export class I18nValidationExceptionFilter implements ExceptionFilter {
     const errors: Array<{
       message: string;
       field: string;
+      children?: any[];
       property: string;
       validation: string;
     }> = [];
 
-    for (let i = 0; i < i18nErrors.length; i++)
+    for (let i = 0; i < i18nErrors.length; i++) {
       for (const key in i18nErrors[i].constraints)
         errors.push({
           message: i18nErrors[i].constraints[key],
@@ -49,6 +51,16 @@ export class I18nValidationExceptionFilter implements ExceptionFilter {
           property: i18nErrors[i].property,
           validation: StringUtils.CamelCaseToUnderscore(key),
         });
+
+      for (let j = 0; j < i18nErrors[i].children.length; j++)
+        for (const key in i18nErrors[i].children[j].constraints)
+          errors.push({
+            message: i18nErrors[i].children[j].constraints[key],
+            field: i18n.t(`common.${i18nErrors[i].children[j].property}`),
+            property: i18nErrors[i].children[j].property,
+            validation: StringUtils.CamelCaseToUnderscore(key),
+          });
+    }
 
     response
       .status(this.options.errorHttpStatusCode || exception.getStatus())

@@ -86,9 +86,9 @@ export class UserEntity extends BaseEntity {
 
   @OneToOne({
     entity: () => CollaboratorEntity,
-    nullable: true,
-    cascade: [Cascade.ALL],
     mappedBy: (collaborator) => collaborator.user,
+    cascade: [Cascade.ALL],
+    nullable: true,
     hidden: true,
   })
   collaborator?: CollaboratorEntity;

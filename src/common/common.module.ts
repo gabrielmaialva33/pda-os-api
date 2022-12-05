@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 
-import { IsUniqueConstraint } from '@common/validators';
+import { IsExistsConstraint, IsUniqueConstraint } from '@common/validators';
 import { OrmModule } from '@src/lib/orm/orm.module';
 
 @Module({
-  providers: [IsUniqueConstraint],
+  providers: [IsUniqueConstraint, IsExistsConstraint],
   imports: [OrmModule],
-  exports: [IsUniqueConstraint],
+  exports: [IsUniqueConstraint, IsExistsConstraint],
 })
 export class CommonModule {}
