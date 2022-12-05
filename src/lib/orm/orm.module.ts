@@ -41,10 +41,6 @@ const logger = new Logger('MikroORM');
         loadStrategy: LoadStrategy.JOINED,
         highlighter: new SqlHighlighter(),
         metadataProvider: TsMorphMetadataProvider,
-        cache: {
-          enabled: true,
-          pretty: true,
-        },
         entityRepository: BaseRepository,
         allowGlobalContext: true,
         registerRequestContext: false,
