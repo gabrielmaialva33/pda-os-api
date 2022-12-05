@@ -29,6 +29,7 @@
     "@mikro-orm/core": "^5.5.3",
     "@mikro-orm/nestjs": "^5.1.2",
     "@mikro-orm/postgresql": "^5.5.3",
+    "@mikro-orm/reflection": "^5.5.3",
     "@mikro-orm/seeder": "^5.5.3",
     "@mikro-orm/sql-highlighter": "^1.0.1",
     "@nestjs/axios": "^1.0.0",

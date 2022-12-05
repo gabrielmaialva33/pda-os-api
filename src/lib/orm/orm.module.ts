@@ -1,13 +1,10 @@
-import {
-  LoadStrategy,
-  ReflectMetadataProvider,
-  UnderscoreNamingStrategy,
-} from '@mikro-orm/core';
+import { LoadStrategy, UnderscoreNamingStrategy } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Logger, Module } from '@nestjs/common';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
+import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 
 import { UserEntity } from '@user/entities/user.entity';
 import { UserRoleEntity } from '@user/entities/user-role.entity';
@@ -26,6 +23,7 @@ const logger = new Logger('MikroORM');
   imports: [
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgresql',
         host: configService.get('database.host'),
@@ -43,12 +41,18 @@ const logger = new Logger('MikroORM');
         debug: configService.get('database.debug') || true,
         loadStrategy: LoadStrategy.JOINED,
         highlighter: new SqlHighlighter(),
-        metadataProvider: ReflectMetadataProvider,
+        metadataProvider: TsMorphMetadataProvider,
         entityRepository: BaseRepository,
         allowGlobalContext: true,
         registerRequestContext: false,
         pool: { min: 2, max: 10 },
         logger: logger.log.bind(logger),
+        namingStrategy: UnderscoreNamingStrategy,
+        filters: {
+          deleted: {
+            cond: { deleted_at: { $eq: null } },
+          },
+        },
         migrations: {
           tableName: 'mikro_orm_migrations',
           path: 'dist/src/database/migrations',
@@ -68,14 +72,7 @@ const logger = new Logger('MikroORM');
           fileName: (className: string) =>
             className.toLowerCase().replace(/seeder$/, '.') + 'seeder',
         },
-        namingStrategy: UnderscoreNamingStrategy,
-        filters: {
-          deleted: {
-            cond: { deleted_at: { $eq: null } },
-          },
-        },
       }),
-      inject: [ConfigService],
     }),
     MikroOrmModule.forFeature({
       entities: [
