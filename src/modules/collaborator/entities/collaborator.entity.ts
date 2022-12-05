@@ -93,7 +93,7 @@ export class CollaboratorEntity extends BaseEntity {
 
   @ManyToMany({
     entity: () => PhoneEntity,
-    pivotEntity: () => PhoneCollaboratorEntity,
+    //pivotEntity: () => PhoneCollaboratorEntity,
     pivotTable: 'phones_collaborators',
     joinColumn: 'collaborator_id',
     inverseJoinColumn: 'phone_id',
@@ -104,7 +104,7 @@ export class CollaboratorEntity extends BaseEntity {
 
   @ManyToMany({
     entity: () => AddressEntity,
-    pivotEntity: () => AddressCollaboratorEntity,
+    //pivotEntity: () => AddressCollaboratorEntity,
     pivotTable: 'addresses_collaborators',
     joinColumn: 'collaborator_id',
     inverseJoinColumn: 'address_id',

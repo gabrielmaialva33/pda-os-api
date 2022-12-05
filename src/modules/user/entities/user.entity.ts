@@ -89,6 +89,7 @@ export class UserEntity extends BaseEntity {
     nullable: true,
     cascade: [Cascade.ALL],
     mappedBy: (collaborator) => collaborator.user,
+    hidden: true,
   })
   collaborator?: CollaboratorEntity;
 

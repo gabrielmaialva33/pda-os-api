@@ -55,7 +55,7 @@ export class AddressEntity extends BaseEntity {
    */
   @ManyToMany({
     entity: () => CollaboratorEntity,
-    pivotEntity: () => AddressCollaboratorEntity,
+    //pivotEntity: () => AddressCollaboratorEntity,
     pivotTable: 'addresses_collaborators',
     joinColumn: 'collaborator_id',
     inverseJoinColumn: 'address_id',
