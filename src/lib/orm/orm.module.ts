@@ -1,10 +1,13 @@
-import { LoadStrategy, UnderscoreNamingStrategy } from '@mikro-orm/core';
+import {
+  LoadStrategy,
+  ReflectMetadataProvider,
+  UnderscoreNamingStrategy,
+} from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Logger, Module } from '@nestjs/common';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
-import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 
 import { UserEntity } from '@user/entities/user.entity';
 import { UserRoleEntity } from '@user/entities/user-role.entity';
@@ -40,7 +43,7 @@ const logger = new Logger('MikroORM');
         debug: configService.get('database.debug') || true,
         loadStrategy: LoadStrategy.JOINED,
         highlighter: new SqlHighlighter(),
-        metadataProvider: TsMorphMetadataProvider,
+        metadataProvider: ReflectMetadataProvider,
         entityRepository: BaseRepository,
         allowGlobalContext: true,
         registerRequestContext: false,
