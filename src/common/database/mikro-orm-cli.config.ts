@@ -1,8 +1,8 @@
-import { Options } from '@mikro-orm/core';
+import { Options, ReflectMetadataProvider } from '@mikro-orm/core';
 import { Logger } from '@nestjs/common';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
-import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
+//import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 
 const logger = new Logger('MikroORM-CLI');
 
@@ -28,7 +28,7 @@ const MikroOrmConfig = {
   },
   logger: logger.log.bind(logger),
   highlighter: new SqlHighlighter(),
-  metadataProvider: TsMorphMetadataProvider,
+  metadataProvider: ReflectMetadataProvider,
   migrations: {
     tableName: 'mikro_orm_migrations',
     path: 'dist/src/common/database/migrations',
