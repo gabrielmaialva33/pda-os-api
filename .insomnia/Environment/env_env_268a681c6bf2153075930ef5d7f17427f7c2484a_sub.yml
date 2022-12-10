@@ -1,14 +1,13 @@
 _id: env_env_268a681c6bf2153075930ef5d7f17427f7c2484a_sub
 type: Environment
 parentId: env_268a681c6bf2153075930ef5d7f17427f7c2484a
-modified: 1670091448169
+modified: 1670696256209
 created: 1668302622687
 name: OpenAPI env
 data:
   scheme: http
   base_path: ""
   host: 127.0.0.1:3333
-  bearerToken: bearerToken
 dataPropertyOrder:
   "&":
     - scheme

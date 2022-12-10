@@ -1,7 +1,7 @@
 _id: env_268a681c6bf2153075930ef5d7f17427f7c2484a
 type: Environment
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1670091444011
+modified: 1670696285017
 created: 1668302615248
 name: Base Environment
 data:
@@ -16,6 +16,9 @@ data:
     'b64::JC5kYXRhLjAuaWQ=::46b', 'never', 60 %}"
   userId: "{% response 'body', 'req_wrk_b084de0cdb4b4710bd5022395701401359487669',
     'b64::JC51c2VyLmlk::46b', 'never', 60 %}"
+  clientId: "{% response 'body',
+    'req_wrk_b084de0cdb4b4710bd5022395701401378c739fe',
+    'b64::JC5kYXRhLjAuaWQ=::46b', 'never', 60 %}"
 dataPropertyOrder:
   "&":
     - base_url
@@ -23,6 +26,7 @@ dataPropertyOrder:
     - roleId
     - collaboratorId
     - userId
+    - clientId
 color: null
 isPrivate: false
 metaSortKey: 1668302615248
