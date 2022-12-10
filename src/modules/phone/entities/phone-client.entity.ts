@@ -6,36 +6,35 @@ import {
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
+
+import { ClientEntity } from '@client/entities/client.entity';
+import { PhoneEntity } from '@phone/entities/phone.entity';
 import { DateTime } from 'luxon';
 
-import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
-import { PhoneEntity } from '@phone/entities/phone.entity';
-
 @Entity({
-  tableName: 'phones_collaborators',
-  collection: 'phones_collaborators',
-  comment: 'PhoneEntity Collaborator Pivot Table',
+  tableName: 'phones_clients',
+  collection: 'phones_clients',
+  comment: 'PhoneEntity Client Pivot Table',
 })
-export class PhoneCollaboratorEntity extends BaseEntity<
-  PhoneCollaboratorEntity,
-  'id'
-> {
+export class PhoneClientEntity extends BaseEntity<PhoneClientEntity, 'id'> {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
   id: string;
 
-  @ManyToOne(() => PhoneEntity, {
+  @ManyToOne({
+    entity: () => PhoneEntity,
     primary: true,
     onDelete: 'cascade',
     referencedColumnNames: ['id'],
   })
   phone: PhoneEntity;
 
-  @ManyToOne(() => CollaboratorEntity, {
+  @ManyToOne({
+    entity: () => ClientEntity,
     primary: true,
     onDelete: 'cascade',
     referencedColumnNames: ['id'],
   })
-  collaborator: CollaboratorEntity;
+  client: ClientEntity;
 
   @Property({
     name: 'assigned_at',

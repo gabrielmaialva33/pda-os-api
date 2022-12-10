@@ -7,5 +7,6 @@
   "password_confirmation": "Confirmação de Senha",
   "current_password": "Senha Atual",
   "slug": "Slug",
-  "roles": "Permissão"
+  "roles": "Permissão",
+  "collaborator": "Colaborador"
 }

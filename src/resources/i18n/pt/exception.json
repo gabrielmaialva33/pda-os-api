@@ -8,6 +8,5 @@
   "Bad Gateway": "Gateway inválido",
   "Service Unavailable": "Serviço indisponível",
   "not_found": "{0} não encontrado(a)",
-  "invalid_credentials": "Credenciais inválidas",
-  "role": "Pemissão"
+  "invalid_credentials": "Credenciais inválidas"
 }

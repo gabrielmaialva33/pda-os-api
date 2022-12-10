@@ -29,6 +29,12 @@ export class RolesSeeder extends Seeder {
       description: 'Collaborator user',
     });
 
+    const client = em.create(RoleEntity, {
+      slug: 'CLIENT',
+      name: 'client',
+      description: 'Client user',
+    });
+
     const user = em.create(RoleEntity, {
       slug: 'USER',
       name: 'user',
@@ -41,6 +47,6 @@ export class RolesSeeder extends Seeder {
       description: 'An guest user',
     });
 
-    return em.persistAndFlush([root, admin, collaborator, user, guest]);
+    return em.persistAndFlush([root, admin, collaborator, client, user, guest]);
   }
 }

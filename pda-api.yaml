@@ -25,6 +25,8 @@ tags:
     description: Operations about roles
   - name: Collaborator
     description: Operations about collaborators
+  - name: Client
+    description: Operations about clients
 
 
 paths:
@@ -506,6 +508,156 @@ paths:
         '404':
           description: Collaborator not found
 
+  /clients:
+    get:
+      tags:
+        - Client
+      summary: List clients
+      description: Use to request all clients
+      operationId: GetAllClients
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 10
+          description: Number of clients per page
+        - in: query
+          name: search
+          schema:
+            type: string
+            example: 'John'
+          description: Search by public fields
+        - in: query
+          name: sort
+          schema:
+            type: string
+            default: id
+          description: Sort by field
+        - in: query
+          name: direction
+          schema:
+            type: string
+            default: asc
+      security:
+        - bearerToken: [ ]
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+    post:
+      tags:
+        - Client
+      summary: Store client
+      description: Use to create a client
+      operationId: StoreClient
+      security:
+        - bearerToken: [ ]
+      requestBody:
+        description: Client object that needs to be added to the store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreClient'
+      responses:
+        '201':
+          description: Client created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          description: Invalid input
+  /clients/{clientId}:
+    get:
+      tags:
+        - Client
+      summary: Get client
+      description: Use to request a client
+      operationId: GetClient
+      parameters:
+        - name: clientId
+          in: path
+          description: ID of client to return
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerToken: [ ]
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '404':
+          description: Client not found
+    put:
+      tags:
+        - Client
+      summary: Edit client
+      description: Use to edit a client
+      operationId: EditClient
+      parameters:
+        - name: clientId
+          in: path
+          description: ID of client to update
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerToken: [ ]
+      requestBody:
+        description: Client object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreClient'
+      responses:
+        '200':
+          description: Client updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          description: Invalid input
+        '404':
+          description: Client not found
+    delete:
+      tags:
+        - Client
+      summary: Delete client
+      description: Use to delete a client
+      operationId: DeleteClient
+      parameters:
+        - name: clientId
+          in: path
+          description: ID of client to delete
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerToken: [ ]
+      responses:
+        '204':
+          description: Client deleted
+        '404':
+          description: Client not found
 components:
   securitySchemes:
     bearerToken:
@@ -539,6 +691,7 @@ components:
       example:
         uid: 'admin'
         password: 'Pda@551238'
+
     # user schemas
     User:
       type: object
@@ -730,6 +883,7 @@ components:
               state: 'SP'
               country: 'Brasil'
               zip_code: '12345-678'
+
     # role schemas
     Role:
       properties:
@@ -777,6 +931,7 @@ components:
       example:
         slug: USER
         description: 'An common user'
+
     # collaborator schemas
     Collaborator:
       type: object
@@ -1006,6 +1161,7 @@ components:
           email: john@pda.com
           user_name: john
           password: 'Pda@551238'
+
     # phone schemas
     Phone:
       type: object
@@ -1036,6 +1192,7 @@ components:
       example:
         phone: '(15) 99660-1742'
         type: 'home'
+
     # address schemas
     Address:
       type: object
@@ -1111,4 +1268,139 @@ components:
         city: 'São Paulo'
         state: 'SP'
         zip_code: '12345-678'
+
+    # client schemas
+    Client:
+      description: 'Client schema'
+      type: object
+      properties:
+        cpf:
+          type: string
+          example: '387.387.344-21'
+        rg:
+          type: string
+          example: '58.912.123-1'
+        birth_date:
+          type: string
+          format: date
+          example: '1998-01-01'
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phone'
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        user_id:
+          type: string
+          format: uuid
+          example: 6e7d8d28-ea9b-40ef-a1f6-f025a41d967a
+      example:
+        cpf: '387.387.344-21'
+        rg: '58.912.123-1'
+        birth_date: '1998-01-01'
+        phones:
+          - id: e051d2a5-3c22-481a-a175-8c59942c0c0e
+            phone: '(15) 99660-1742'
+            type: 'mobile'
+          - id: f2cad45f-b954-481f-98ca-fe76bec77ad5
+            phone: '(15) 99660-1742'
+            type: 'work'
+        addresses:
+          - id: 20d9704a-5f5c-4f72-bfc8-ac77727fd4f9
+            street: 'Rua 1'
+            number: '1'
+            complement: 'Casa 1'
+            neighborhood: 'Bairro 1'
+            city: 'São Paulo'
+            state: 'SP'
+            country: 'Brasil'
+            zip_code: '12345-678'
+          - id: 577a9251-a381-4216-b8cd-750d621f38d5
+            street: 'Rua 2'
+            number: '2'
+            complement: 'Casa 2'
+            neighborhood: 'Bairro 2'
+            city: 'São Paulo'
+            state: 'SP'
+            country: 'Brasil'
+            zip_code: '12345-678'
+        user_id: f3b19247-a0e9-4fb9-a24a-8b16df9a6ac8
+    StoreClient:
+      description: 'Store client schema'
+      type: object
+      properties:
+        cpf:
+          type: string
+          example: '387.387.344-21'
+        rg:
+          type: string
+          example: '58.912.123-1'
+        birth_date:
+          type: string
+          format: date
+          example: '1998-01-01'
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/StorePhone'
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/StoreAddress'
+        user:
+          type: object
+          properties:
+            first_name:
+              type: string
+              example: John
+            last_name:
+              type: string
+              example: Doe
+            email:
+              type: string
+              example: john.client@pda.com
+            user_name:
+              type: string
+              example: john.client
+            password:
+              type: string
+              example: 'Pda@551238'
+      example:
+        cpf: '387.387.344-21'
+        rg: '58.912.123-1'
+        birth_date: '1998-01-01'
+        phones:
+          - phone: '(15) 99660-1742'
+            type: 'home'
+          - phone: '(15) 99660-1742'
+            type: 'work'
+        addresses:
+          - street: 'Rua 1'
+            number: '1'
+            complement: 'Casa 1'
+            neighborhood: 'Bairro 1'
+            city: 'São Paulo'
+            state: 'SP'
+            country: 'Brasil'
+            zip_code: '12345-678'
+          - street: 'Rua 2'
+            number: '2'
+            complement: 'Casa 2'
+            neighborhood: 'Bairro 2'
+            city: 'São Paulo'
+            state: 'SP'
+            country: 'Brasil'
+            zip_code: '12345-678'
+        user:
+          first_name: John
+          last_name: Doe
+          email: john.client@pda.com
+          user_name: john.client
+          password: 'Pda@551238'
+
+
+
+
 

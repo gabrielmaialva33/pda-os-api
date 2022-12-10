@@ -51,7 +51,6 @@ export class PhoneEntity extends BaseEntity {
     pivotTable: 'phones_collaborators',
     joinColumn: 'collaborator_id',
     inverseJoinColumn: 'phone_id',
-    strategy: LoadStrategy.JOINED,
     cascade: [Cascade.REMOVE],
     hidden: true,
   })

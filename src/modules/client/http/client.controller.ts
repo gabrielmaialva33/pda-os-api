@@ -11,16 +11,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { CollaboratorService } from '@collaborator/services/collaborator.service';
-import { EditCollaboratorDto, StoreCollaboratorDto } from '@collaborator/dto';
+import { ClientService } from '@client/services/client.service';
+import { EditClientDto, StoreClientDto } from '@client/dto';
 import { I18nValidationExceptionFilter } from '@common/filters';
 import { JwtAuthGuard } from '@common/guards/jwt.auth.guard';
 
 @UseFilters(new I18nValidationExceptionFilter())
 @UseGuards(JwtAuthGuard)
-@Controller('collaborators')
-export class CollaboratorController {
-  constructor(private readonly collaboratorService: CollaboratorService) {}
+@Controller('clients')
+export class ClientController {
+  constructor(private readonly clientService: ClientService) {}
 
   @Get()
   list(
@@ -30,7 +30,7 @@ export class CollaboratorController {
     @Query('sort') sort?: string,
     @Query('direction') direction?: string,
   ) {
-    return this.collaboratorService.list({
+    return this.clientService.list({
       page,
       per_page,
       search,
@@ -41,21 +41,21 @@ export class CollaboratorController {
 
   @Get(':id')
   get(@Param('id') id: string) {
-    return this.collaboratorService.get(id);
+    return this.clientService.get(id);
   }
 
   @Post()
-  create(@Body() data: StoreCollaboratorDto) {
-    return this.collaboratorService.store(data);
+  create(@Body() data: StoreClientDto) {
+    return this.clientService.store(data);
   }
 
   @Put(':id')
-  edit(@Param('id') id: string, @Body() data: EditCollaboratorDto) {
-    return this.collaboratorService.save(id, data);
+  edit(@Param('id') id: string, @Body() data: EditClientDto) {
+    return this.clientService.save(id, data);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.collaboratorService.delete(id);
+  remove(@Param('id') id: string) {
+    return this.clientService.delete(id);
   }
 }

@@ -23,22 +23,20 @@ export class AddressCollaboratorEntity extends BaseEntity<
   id: string;
 
   @ManyToOne({
-    entity: () => CollaboratorEntity,
-    primary: true,
-    cascade: [Cascade.REMOVE],
-    onDelete: 'cascade',
-    referencedColumnNames: ['id'],
-  })
-  collaborator: CollaboratorEntity;
-
-  @ManyToOne({
     entity: () => AddressEntity,
     primary: true,
-    cascade: [Cascade.REMOVE],
     onDelete: 'cascade',
     referencedColumnNames: ['id'],
   })
   address: AddressEntity;
+
+  @ManyToOne({
+    entity: () => CollaboratorEntity,
+    primary: true,
+    onDelete: 'cascade',
+    referencedColumnNames: ['id'],
+  })
+  collaborator: CollaboratorEntity;
 
   @Property({
     name: 'assigned_at',

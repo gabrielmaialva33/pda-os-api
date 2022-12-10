@@ -12,6 +12,7 @@ import { RoleModule } from '@role/role.module';
 import { CollaboratorModule } from '@collaborator/collaborator.module';
 import { PhoneModule } from '@phone/phone.module';
 import { AddressModule } from '@address/address.module';
+import { ClientModule } from './modules/client/client.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AddressModule } from '@address/address.module';
     CommonModule,
     NestI18nModule,
     OrmModule,
+    ClientModule,
   ],
   exports: [],
 })

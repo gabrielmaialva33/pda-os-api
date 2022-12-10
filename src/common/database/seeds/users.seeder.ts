@@ -43,6 +43,30 @@ export class UsersSeeder extends Seeder {
         await em.persistAndFlush(admin);
       }
 
+      if (role.name === 'collaborator') {
+        const collaborator = em.create(UserEntity, {
+          first_name: 'Pda',
+          last_name: 'Collaborator',
+          email: 'collaborator@pda.com',
+          user_name: 'collaborator',
+          password: 'Pda@551238',
+        });
+        collaborator.roles.add(role);
+        await em.persistAndFlush(collaborator);
+      }
+
+      if (role.name === 'client') {
+        const client = em.create(UserEntity, {
+          first_name: 'Pda',
+          last_name: 'Client',
+          email: 'client@pda.com',
+          user_name: 'client',
+          password: 'Pda@551238',
+        });
+        client.roles.add(role);
+        await em.persistAndFlush(client);
+      }
+
       if (role.name === 'user') {
         const user = em.create(UserEntity, {
           first_name: 'Pda',

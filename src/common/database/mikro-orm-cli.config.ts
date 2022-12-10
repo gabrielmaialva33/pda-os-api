@@ -1,8 +1,8 @@
-import { defineConfig, ReflectMetadataProvider } from "@mikro-orm/core";
-import { Logger } from "@nestjs/common";
-import { TSMigrationGenerator } from "@mikro-orm/migrations";
-import { SqlHighlighter } from "@mikro-orm/sql-highlighter";
-import { PostgreSqlDriver } from "@mikro-orm/postgresql";
+import { defineConfig, ReflectMetadataProvider } from '@mikro-orm/core';
+import { Logger } from '@nestjs/common';
+import { TSMigrationGenerator } from '@mikro-orm/migrations';
+import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
+import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 //import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 
 const logger = new Logger('MikroORM-CLI');
