@@ -3,7 +3,9 @@
     "jsx": "react",
     "module": "commonjs",
     "declaration": true,
-    "lib": ["es2020"],
+    "lib": [
+      "es2020"
+    ],
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
@@ -49,7 +51,10 @@
       ]
     }
   },
-  "include": ["test/**/*", "src/**/*"],
+  "include": [
+    "test/**/*",
+    "src/**/*"
+  ],
   "strict": true,
   "noUnusedLocals": true,
   "noUnusedParameters": true,

@@ -23,7 +23,7 @@ export class UserRoleEntity extends BaseEntity<UserRoleEntity, 'id'> {
   @ManyToOne({
     entity: () => UserEntity,
     primary: true,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
     onDelete: 'cascade',
     referencedColumnNames: ['id'],
   })
@@ -32,7 +32,7 @@ export class UserRoleEntity extends BaseEntity<UserRoleEntity, 'id'> {
   @ManyToOne({
     entity: () => RoleEntity,
     primary: true,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
     onDelete: 'cascade',
     referencedColumnNames: ['id'],
   })

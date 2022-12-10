@@ -11,7 +11,6 @@ import { Either } from 'nestjs-i18n/dist/types/either.type';
 import { formatI18nErrors } from 'nestjs-i18n/dist/utils/util';
 
 import { StringUtils } from '@common/helpers';
-import * as console from 'console';
 
 type I18nValidationExceptionFilterOptions = Either<
   I18nValidationExceptionFilterDetailedErrorsOption,

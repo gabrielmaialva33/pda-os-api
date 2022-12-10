@@ -52,7 +52,7 @@ export class PhoneEntity extends BaseEntity {
     joinColumn: 'collaborator_id',
     inverseJoinColumn: 'phone_id',
     strategy: LoadStrategy.JOINED,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
     hidden: true,
   })
   collaborators: Collection<CollaboratorEntity> =

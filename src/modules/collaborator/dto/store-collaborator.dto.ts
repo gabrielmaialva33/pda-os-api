@@ -1,9 +1,7 @@
 import {
   IsArray,
   IsDateString,
-  IsDefined,
   IsEnum,
-  IsNotEmptyObject,
   IsObject,
   ValidateNested,
 } from 'class-validator';
@@ -16,7 +14,8 @@ import { IsStringMinMax } from '@common/validators';
 import { UserEntity } from '@user/entities/user.entity';
 import { PhoneEntity } from '@phone/entities/phone.entity';
 import { AddressEntity } from '@address/entities/address.entity';
-import { StoreUserDto } from '@user/dto';
+import { EditUserDto } from '@user/dto';
+import { BankEntity } from '@collaborator/entities/bank.entity';
 
 export class StoreCollaboratorDto {
   @IsStringMinMax({ min: 8, max: 8, optional: true })
@@ -46,15 +45,19 @@ export class StoreCollaboratorDto {
   @IsEnum(CivilStatus)
   civil_status: CivilStatus;
 
+  @IsStringMinMax({ min: 2, max: 255, optional: true })
   description: string;
 
-  @ValidateNested({ each: true })
-  @Type(() => StoreUserDto)
-  user: UserEntity;
+  @IsObject()
+  bank: BankEntity;
 
   @IsArray()
   phones: Collection<PhoneEntity>;
 
   @IsArray()
   addresses: Collection<AddressEntity>;
+
+  @ValidateNested({ each: true })
+  @Type(() => EditUserDto)
+  user: UserEntity;
 }

@@ -25,7 +25,7 @@ export class AddressCollaboratorEntity extends BaseEntity<
   @ManyToOne({
     entity: () => CollaboratorEntity,
     primary: true,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
     onDelete: 'cascade',
     referencedColumnNames: ['id'],
   })
@@ -34,7 +34,7 @@ export class AddressCollaboratorEntity extends BaseEntity<
   @ManyToOne({
     entity: () => AddressEntity,
     primary: true,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
     onDelete: 'cascade',
     referencedColumnNames: ['id'],
   })

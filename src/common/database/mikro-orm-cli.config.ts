@@ -1,20 +1,21 @@
-import { Options, ReflectMetadataProvider } from '@mikro-orm/core';
-import { Logger } from '@nestjs/common';
-import { TSMigrationGenerator } from '@mikro-orm/migrations';
-import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
+import { defineConfig, ReflectMetadataProvider } from "@mikro-orm/core";
+import { Logger } from "@nestjs/common";
+import { TSMigrationGenerator } from "@mikro-orm/migrations";
+import { SqlHighlighter } from "@mikro-orm/sql-highlighter";
+import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 //import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 
 const logger = new Logger('MikroORM-CLI');
 
 logger.log(`🛠️  Using env ${process.cwd()}/env/.env.${process.env.NODE_ENV}\n`);
 
-const MikroOrmConfig = {
+export default defineConfig<PostgreSqlDriver>({
+  driver: PostgreSqlDriver,
   host: process.env.PG_HOST || 'localhost',
   port: parseInt(process.env.PG_PORT) || 5432,
   user: process.env.PG_USER || 'postgres',
   password: process.env.PG_PASSWORD || 'postgres',
   dbName: process.env.PG_DB || 'pda_app_development',
-  type: 'postgresql',
   debug: process.env.PG_DEBUG === 'true' || false,
   driverOptions: {
     connection: { ssl: process.env.PG_SSL === 'true' || false },
@@ -48,6 +49,4 @@ const MikroOrmConfig = {
     fileName: (className: string) =>
       className.toLowerCase().replace(/seeder$/, '.') + 'seeder',
   },
-} as Options;
-
-export default MikroOrmConfig;
+});

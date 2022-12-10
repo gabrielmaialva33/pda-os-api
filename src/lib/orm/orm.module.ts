@@ -1,15 +1,15 @@
 import {
   LoadStrategy,
-  UnderscoreNamingStrategy,
   ReflectMetadataProvider,
+  UnderscoreNamingStrategy,
 } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Logger, Module } from '@nestjs/common';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TSMigrationGenerator } from '@mikro-orm/migrations';
+import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 //import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
-
 import { UserEntity } from '@user/entities/user.entity';
 import { UserRoleEntity } from '@user/entities/user-role.entity';
 import { RoleEntity } from '@role/entities/role.entity';
@@ -20,6 +20,7 @@ import { PhoneEntity } from '@phone/entities/phone.entity';
 import { PhoneCollaboratorEntity } from '@phone/entities/phone-collaborator.entity';
 import { AddressEntity } from '@address/entities/address.entity';
 import { AddressCollaboratorEntity } from '@address/entities/address-collaborator.entity';
+import { BankEntity } from '@collaborator/entities/bank.entity';
 
 const logger = new Logger('MikroORM');
 
@@ -29,7 +30,7 @@ const logger = new Logger('MikroORM');
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        type: 'postgresql',
+        driver: PostgreSqlDriver,
         host: configService.get('database.host'),
         port: configService.get<number>('database.port'),
         password: configService.get('database.password'),
@@ -86,6 +87,7 @@ const logger = new Logger('MikroORM');
           UserRoleEntity,
           LoggerEntity,
           CollaboratorEntity,
+          BankEntity,
           PhoneEntity,
           PhoneCollaboratorEntity,
           AddressEntity,

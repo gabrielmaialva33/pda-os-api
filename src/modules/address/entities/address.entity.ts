@@ -56,12 +56,12 @@ export class AddressEntity extends BaseEntity {
    */
   @ManyToMany({
     entity: () => CollaboratorEntity,
-    //pivotEntity: () => AddressCollaboratorEntity,
+    pivotEntity: () => AddressCollaboratorEntity,
     pivotTable: 'addresses_collaborators',
     joinColumn: 'collaborator_id',
     inverseJoinColumn: 'address_id',
     strategy: LoadStrategy.JOINED,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
     hidden: true,
   })
   collaborators: Collection<CollaboratorEntity> =

@@ -859,11 +859,75 @@
             "id"
           ],
           "referencedTableName": "public.users",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
+          "deleteRule": "cascade"
         }
       },
       "comment": "CollaboratorEntity Table"
+    },
+    {
+      "columns": {
+        "collaborator_id": {
+          "name": "collaborator_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "phone_id": {
+          "name": "phone_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "phones_collaborators",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "phones_collaborators_pkey",
+          "columnNames": [
+            "collaborator_id",
+            "phone_id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "phones_collaborators_collaborator_id_foreign": {
+          "constraintName": "phones_collaborators_collaborator_id_foreign",
+          "columnNames": [
+            "collaborator_id"
+          ],
+          "localTableName": "public.phones_collaborators",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.collaborators",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "phones_collaborators_phone_id_foreign": {
+          "constraintName": "phones_collaborators_phone_id_foreign",
+          "columnNames": [
+            "phone_id"
+          ],
+          "localTableName": "public.phones_collaborators",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.phones",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      }
     },
     {
       "columns": {
@@ -935,7 +999,7 @@
           ],
           "referencedTableName": "public.collaborators",
           "deleteRule": "cascade",
-          "updateRule": "cascade"
+          "updateRule": "remove"
         },
         "phones_collaborators_phone_id_foreign": {
           "constraintName": "phones_collaborators_phone_id_foreign",
@@ -948,10 +1012,208 @@
           ],
           "referencedTableName": "public.phones",
           "deleteRule": "cascade",
-          "updateRule": "cascade"
+          "updateRule": "remove"
         }
       },
       "comment": "PhoneEntity Collaborator Pivot Table"
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "uuid_generate_v4()",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "now()",
+          "mappedType": "datetime"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 100,
+          "mappedType": "string"
+        },
+        "agency": {
+          "name": "agency",
+          "type": "varchar(100)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 100,
+          "mappedType": "string"
+        },
+        "account": {
+          "name": "account",
+          "type": "varchar(100)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 100,
+          "mappedType": "string"
+        },
+        "pix": {
+          "name": "pix",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "collaborator_id": {
+          "name": "collaborator_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "banks",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "collaborator_id"
+          ],
+          "composite": false,
+          "keyName": "banks_collaborator_id_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "banks_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "banks_collaborator_id_foreign": {
+          "constraintName": "banks_collaborator_id_foreign",
+          "columnNames": [
+            "collaborator_id"
+          ],
+          "localTableName": "public.banks",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.collaborators",
+          "deleteRule": "cascade"
+        }
+      },
+      "comment": "BankEntity Table"
+    },
+    {
+      "columns": {
+        "collaborator_id": {
+          "name": "collaborator_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "address_id": {
+          "name": "address_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "addresses_collaborators",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "addresses_collaborators_pkey",
+          "columnNames": [
+            "collaborator_id",
+            "address_id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "addresses_collaborators_collaborator_id_foreign": {
+          "constraintName": "addresses_collaborators_collaborator_id_foreign",
+          "columnNames": [
+            "collaborator_id"
+          ],
+          "localTableName": "public.addresses_collaborators",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.collaborators",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "addresses_collaborators_address_id_foreign": {
+          "constraintName": "addresses_collaborators_address_id_foreign",
+          "columnNames": [
+            "address_id"
+          ],
+          "localTableName": "public.addresses_collaborators",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.addresses",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      }
     },
     {
       "columns": {
@@ -1022,8 +1284,7 @@
             "id"
           ],
           "referencedTableName": "public.collaborators",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
+          "deleteRule": "cascade"
         },
         "addresses_collaborators_address_id_foreign": {
           "constraintName": "addresses_collaborators_address_id_foreign",
@@ -1035,8 +1296,7 @@
             "id"
           ],
           "referencedTableName": "public.addresses",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
+          "deleteRule": "cascade"
         }
       },
       "comment": "AddressCollaboratorEntity Pivot Table"
@@ -1110,8 +1370,7 @@
             "id"
           ],
           "referencedTableName": "public.users",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
+          "deleteRule": "cascade"
         },
         "users_roles_role_id_foreign": {
           "constraintName": "users_roles_role_id_foreign",
@@ -1123,8 +1382,7 @@
             "id"
           ],
           "referencedTableName": "public.roles",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
+          "deleteRule": "cascade"
         }
       },
       "comment": "UserRoleEntity Pivot Table"

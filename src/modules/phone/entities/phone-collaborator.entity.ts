@@ -25,17 +25,17 @@ export class PhoneCollaboratorEntity extends BaseEntity<
 
   @ManyToOne(() => CollaboratorEntity, {
     primary: true,
-    cascade: [Cascade.ALL],
-    onDelete: 'cascade',
+    cascade: [Cascade.REMOVE],
     referencedColumnNames: ['id'],
+    onUpdateIntegrity: Cascade.REMOVE,
   })
   collaborator: CollaboratorEntity;
 
   @ManyToOne(() => PhoneEntity, {
     primary: true,
-    cascade: [Cascade.ALL],
-    onDelete: 'cascade',
+    cascade: [Cascade.REMOVE],
     referencedColumnNames: ['id'],
+    onUpdateIntegrity: Cascade.REMOVE,
   })
   phone: PhoneEntity;
 

@@ -80,14 +80,14 @@ export class UserEntity extends BaseEntity {
     joinColumn: 'user_id',
     inverseJoinColumn: 'role_id',
     strategy: LoadStrategy.JOINED,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
   })
   roles: Collection<RoleEntity> = new Collection<RoleEntity>(this);
 
   @OneToOne({
     entity: () => CollaboratorEntity,
     mappedBy: (collaborator) => collaborator.user,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
     nullable: true,
     hidden: true,
   })
