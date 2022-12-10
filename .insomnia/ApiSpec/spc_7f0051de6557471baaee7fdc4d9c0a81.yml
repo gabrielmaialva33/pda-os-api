@@ -1,7 +1,7 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1670125571366
+modified: 1670688854966
 created: 1668302615245
 fileName: pda-api
 contents: |+
@@ -23,6 +23,17 @@ contents: |+
       description: Azure server
     - url: https://pda-os-api.azurewebsites.net/
       description: Azure Web App
+  tags:
+    - name: Auth
+      description: Operations about auth
+    - name: User
+      description: Operations about users
+    - name: Role
+      description: Operations about roles
+    - name: Collaborator
+      description: Operations about collaborators
+
+
   paths:
     /sign_in:
       post:
@@ -501,15 +512,7 @@ contents: |+
             description: Collaborator deleted
           '404':
             description: Collaborator not found
-  tags:
-    - name: Auth
-      description: Operations about auth
-    - name: User
-      description: Operations about users
-    - name: Role
-      description: Operations about roles
-    - name: Collaborator
-      description: Operations about collaborators
+
   components:
     securitySchemes:
       bearerToken:
@@ -526,7 +529,24 @@ contents: |+
       '404':
         description: Not Found
     schemas:
-      # schemas can be referenced from a response or parameter in a path
+      ## schemas can be referenced from a response or parameter in a path
+      # auth schemas
+      SignIn:
+        type: object
+        properties:
+          uid:
+            type: string
+            example: 'admin'
+          password:
+            type: string
+            example: 'Pda@551238'
+        required:
+          - uid
+          - password
+        example:
+          uid: 'admin'
+          password: 'Pda@551238'
+      # user schemas
       User:
         type: object
         properties:
@@ -576,174 +596,6 @@ contents: |+
           code: '22108253'
           phone: '(15) 99660-1742'
           cpf: '387.387.348-69'
-      Role:
-        properties:
-          id:
-            type: string
-            format: uuid
-            example: 2885a01e-565e-4dec-8aa3-1f550acd8427
-          slug:
-            type: string
-            example: USER
-          description:
-            type: string
-            example: 'An common user'
-        required:
-          - slug
-          - description
-        example:
-          id: 948b0353-0bd4-4cfe-a443-f3204a91c86c
-          slug: USER
-          description: 'An common user'
-      Collaborator:
-        type: object
-        properties:
-          id:
-            type: string
-            format: uuid
-            example: 792b6982-61f8-444b-ad0f-45ae7924fb07
-          code:
-            type: string
-            example: '22108253'
-          cpf:
-            type: string
-            example: '387.387.344-21'
-          rg:
-            type: string
-            example: '58.912.123-1'
-          birth_date:
-            type: string
-            format: date
-            example: '1998-01-01'
-          job:
-            type: string
-            example: 'Developer'
-          sex:
-            type: string
-            example: 'male'
-          work_type:
-            type: string
-            example: 'clt'
-          status:
-            type: string
-            example: 'active'
-          civil_status:
-            type: string
-            example: 'single'
-          description:
-            type: string
-            example: 'A good developer'
-          phones:
-            type: array
-            items:
-              $ref: '#/components/schemas/Phone'
-          addresses:
-            type: array
-            items:
-              $ref: '#/components/schemas/Address'
-          user_id:
-            type: string
-            format: uuid
-            example: d40fdca1-5e38-4052-a3f3-0799bac39a48
-        example:
-          id: 0e10fdf0-bddd-45f5-9dc0-71966af963c8
-          code: '22108253'
-          cpf: '387.387.344-21'
-          rg: '58.912.123-1'
-          birth_date: '1998-01-01'
-          job: 'Developer'
-          sex: 'male'
-          work_type: 'clt'
-          status: 'active'
-          civil_status: 'single'
-          description: 'A good developer'
-          phones:
-            - id: e051d2a5-3c22-481a-a175-8c59942c0c0e
-              phone: '(15) 99660-1742'
-              type: 'mobile'
-            - id: f2cad45f-b954-481f-98ca-fe76bec77ad5
-              phone: '(15) 99660-1742'
-              type: 'work'
-          addresses:
-            - id: 1c0b0b9a-1b9a-4b0f-8b1f-1b9a4b0f8b1f
-              street: 'Rua 1'
-              number: '1'
-              complement: 'Casa 1'
-              neighborhood: 'Bairro 1'
-              city: 'São Paulo'
-              state: 'SP'
-              country: 'Brasil'
-              zip_code: '12345-678'
-            - id: 2c0b0b9a-1b9a-4b0f-8b1f-1b9a4b0f8b1f
-              street: 'Rua 2'
-              number: '2'
-              complement: 'Casa 2'
-              neighborhood: 'Bairro 2'
-              city: 'São Paulo'
-              state: 'SP'
-              country: 'Brasil'
-              zip_code: '12345-678'
-          user_id: 8dd0c5a6-a4f0-4189-8cb0-2852fb876a23
-      Phone:
-        type: object
-        properties:
-          id:
-            type: string
-            format: uuid
-            example: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
-          phone:
-              type: string
-              example: '(15) 99660-1742'
-          type:
-              type: string
-              example: 'mobile'
-        example:
-          id: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
-          phone: '(15) 99660-1742'
-          type: 'mobile'
-      Address:
-        type: object
-        properties:
-          id:
-            type: string
-            format: uuid
-            example: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
-          street:
-            type: string
-            example: 'Rua 1'
-          number:
-            type: string
-            example: '123'
-          complement:
-            type: string
-            example: 'Casa 1'
-          neighborhood:
-            type: string
-            example: 'Centro'
-          city:
-            type: string
-            example: 'São Paulo'
-          state:
-            type: string
-            example: 'SP'
-          zip_code:
-            type: string
-            example: '12345-678'
-          collaborator_id:
-            type: string
-            format: uuid
-            example: 5da76fd7-e945-4c87-98ff-a73be856e16e
-        example:
-          id: 8822ab54-950e-4204-adba-a43fcb2903b0
-          street: 'Rua 1'
-          number: '123'
-          complement: 'Casa 1'
-          neighborhood: 'Centro'
-          city: 'São Paulo'
-          state: 'SP'
-          zip_code: '12345-678'
-          collaborator_id: b8e1db41-195b-46f1-9024-08915b6a6833
-      # user request body
       StoreUser:
         type: object
         properties:
@@ -818,7 +670,6 @@ contents: |+
                 state: 'SP'
                 country: 'Brasil'
                 zip_code: '12345-678'
-
       EditUser:
         type: object
         properties:
@@ -886,7 +737,26 @@ contents: |+
                 state: 'SP'
                 country: 'Brasil'
                 zip_code: '12345-678'
-      # role request body
+      # role schemas
+      Role:
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: 2885a01e-565e-4dec-8aa3-1f550acd8427
+          slug:
+            type: string
+            example: USER
+          description:
+            type: string
+            example: 'An common user'
+        required:
+          - slug
+          - description
+        example:
+          id: 948b0353-0bd4-4cfe-a443-f3204a91c86c
+          slug: USER
+          description: 'An common user'
       StoreRole:
         type: object
         properties:
@@ -914,23 +784,116 @@ contents: |+
         example:
           slug: USER
           description: 'An common user'
-      # auth request body
-      SignIn:
+      # collaborator schemas
+      Collaborator:
         type: object
         properties:
-          uid:
+          id:
             type: string
-            example: 'admin'
-          password:
+            format: uuid
+            example: 792b6982-61f8-444b-ad0f-45ae7924fb07
+          code:
             type: string
-            example: 'Pda@551238'
-        required:
-          - uid
-          - password
+            example: '22108253'
+          cpf:
+            type: string
+            example: '387.387.344-21'
+          rg:
+            type: string
+            example: '58.912.123-1'
+          birth_date:
+            type: string
+            format: date
+            example: '1998-01-01'
+          job:
+            type: string
+            example: 'Developer'
+          sex:
+            type: string
+            example: 'male'
+          work_type:
+            type: string
+            example: 'clt'
+          status:
+            type: string
+            example: 'active'
+          civil_status:
+            type: string
+            example: 'single'
+          description:
+            type: string
+            example: 'A good developer'
+          phones:
+            type: array
+            items:
+              $ref: '#/components/schemas/Phone'
+          addresses:
+            type: array
+            items:
+              $ref: '#/components/schemas/Address'
+          bank:
+            type: object
+            properties:
+              name:
+                type: string
+                example: 'Itaú'
+              agency:
+                type: string
+                example: '1234'
+              account:
+                type: string
+                example: '123456'
+              pix:
+                type: string
+                example: 'john@pda.com.br'
+          user_id:
+            type: string
+            format: uuid
+            example: d40fdca1-5e38-4052-a3f3-0799bac39a48
         example:
-          uid: 'admin'
-          password: 'Pda@551238'
-      # collaborator request body
+          id: 0e10fdf0-bddd-45f5-9dc0-71966af963c8
+          code: '22108253'
+          cpf: '387.387.344-21'
+          rg: '58.912.123-1'
+          birth_date: '1998-01-01'
+          job: 'Developer'
+          sex: 'male'
+          work_type: 'clt'
+          status: 'active'
+          civil_status: 'single'
+          description: 'A good developer'
+          phones:
+            - id: e051d2a5-3c22-481a-a175-8c59942c0c0e
+              phone: '(15) 99660-1742'
+              type: 'mobile'
+            - id: f2cad45f-b954-481f-98ca-fe76bec77ad5
+              phone: '(15) 99660-1742'
+              type: 'work'
+          addresses:
+            - id: 1c0b0b9a-1b9a-4b0f-8b1f-1b9a4b0f8b1f
+              street: 'Rua 1'
+              number: '1'
+              complement: 'Casa 1'
+              neighborhood: 'Bairro 1'
+              city: 'São Paulo'
+              state: 'SP'
+              country: 'Brasil'
+              zip_code: '12345-678'
+            - id: 2c0b0b9a-1b9a-4b0f-8b1f-1b9a4b0f8b1f
+              street: 'Rua 2'
+              number: '2'
+              complement: 'Casa 2'
+              neighborhood: 'Bairro 2'
+              city: 'São Paulo'
+              state: 'SP'
+              country: 'Brasil'
+              zip_code: '12345-678'
+          bank:
+            name: 'Itaú'
+            agency: '1234'
+            account: '123456'
+            pix: 'john@pda.com.br'
+          user_id: 8dd0c5a6-a4f0-4189-8cb0-2852fb876a23
       StoreCollaborator:
         type: object
         properties:
@@ -973,6 +936,21 @@ contents: |+
             type: array
             items:
               $ref: '#/components/schemas/Address'
+          bank:
+            type: object
+            properties:
+              name:
+                type: string
+                example: 'Itaú'
+              agency:
+                type: string
+                example: '1234'
+              account:
+                type: string
+                example: '123456'
+              pix:
+                type: string
+                example: 'john@pda.com.br'
           user:
             type: object
             properties:
@@ -991,11 +969,6 @@ contents: |+
               password:
                 type: string
                 example: 'Pda@551238'
-              roles:
-                type: array
-                items:
-                  format: uuid
-                  example: 4b2b6ec4-6946-4b27-9dec-28b5b328f145
         example:
           code: '22108253'
           cpf: '387.387.344-21'
@@ -1029,15 +1002,35 @@ contents: |+
               state: 'SP'
               country: 'Brasil'
               zip_code: '12345-678'
+          bank:
+            name: 'Itaú'
+            agency: '1234'
+            account: '123456'
+            pix: 'john@pda.com.br'
           user:
             first_name: John
             last_name: Doe
             email: john@pda.com
             user_name: john
             password: 'Pda@551238'
-            roles:
-              - f9bfa8f2-67e0-4d0d-80ea-bd97be273285
-              - 3afab4c9-1ba6-4625-a345-c4b05b6087ff
+      # phone schemas
+      Phone:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
+          phone:
+            type: string
+            example: '(15) 99660-1742'
+          type:
+            type: string
+            example: 'mobile'
+        example:
+          id: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
+          phone: '(15) 99660-1742'
+          type: 'mobile'
       StorePhone:
         type: object
         properties:
@@ -1050,39 +1043,80 @@ contents: |+
         example:
           phone: '(15) 99660-1742'
           type: 'home'
+      # address schemas
+      Address:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
+          street:
+            type: string
+            example: 'Rua 1'
+          number:
+            type: string
+            example: '123'
+          complement:
+            type: string
+            example: 'Casa 1'
+          neighborhood:
+            type: string
+            example: 'Centro'
+          city:
+            type: string
+            example: 'São Paulo'
+          state:
+            type: string
+            example: 'SP'
+          zip_code:
+            type: string
+            example: '12345-678'
+          collaborator_id:
+            type: string
+            format: uuid
+            example: 5da76fd7-e945-4c87-98ff-a73be856e16e
+        example:
+          id: 8822ab54-950e-4204-adba-a43fcb2903b0
+          street: 'Rua 1'
+          number: '123'
+          complement: 'Casa 1'
+          neighborhood: 'Centro'
+          city: 'São Paulo'
+          state: 'SP'
+          zip_code: '12345-678'
+          collaborator_id: b8e1db41-195b-46f1-9024-08915b6a6833
       StoreAddress:
-          type: object
-          properties:
-              street:
-                type: string
-                example: 'Rua 1'
-              number:
-                type: string
-                example: '1'
-              complement:
-                type: string
-                example: 'Casa 1'
-              neighborhood:
-                type: string
-                example: 'Bairro 1'
-              city:
-                type: string
-                example: 'São Paulo'
-              state:
-                type: string
-                example: 'SP'
-              zip_code:
-                type: string
-                example: '12345-678'
-          example:
-              street: 'Rua 1'
-              number: '1'
-              complement: 'Casa 1'
-              neighborhood: 'Bairro 1'
-              city: 'São Paulo'
-              state: 'SP'
-              zip_code: '12345-678'
-
-
+        type: object
+        properties:
+          street:
+            type: string
+            example: 'Rua 1'
+          number:
+            type: string
+            example: '1'
+          complement:
+            type: string
+            example: 'Casa 1'
+          neighborhood:
+            type: string
+            example: 'Bairro 1'
+          city:
+            type: string
+            example: 'São Paulo'
+          state:
+            type: string
+            example: 'SP'
+          zip_code:
+            type: string
+            example: '12345-678'
+        example:
+          street: 'Rua 1'
+          number: '1'
+          complement: 'Casa 1'
+          neighborhood: 'Bairro 1'
+          city: 'São Paulo'
+          state: 'SP'
+          zip_code: '12345-678'
 
 contentType: yaml
