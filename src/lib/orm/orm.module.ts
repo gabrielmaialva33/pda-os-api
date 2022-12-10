@@ -21,6 +21,9 @@ import { PhoneCollaboratorEntity } from '@phone/entities/phone-collaborator.enti
 import { AddressEntity } from '@address/entities/address.entity';
 import { AddressCollaboratorEntity } from '@address/entities/address-collaborator.entity';
 import { BankEntity } from '@collaborator/entities/bank.entity';
+import { ClientEntity } from '@client/entities/client.entity';
+import { AddressClientEntity } from '@address/entities/address-client.entity';
+import { PhoneClientEntity } from '@phone/entities/phone-client.entity';
 
 const logger = new Logger('MikroORM');
 
@@ -92,6 +95,9 @@ const logger = new Logger('MikroORM');
           PhoneCollaboratorEntity,
           AddressEntity,
           AddressCollaboratorEntity,
+          ClientEntity,
+          AddressClientEntity,
+          PhoneClientEntity,
         ]),
       ],
     }),

@@ -19,6 +19,7 @@ import { RoleEntity } from '@role/entities/role.entity';
 import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
 
 import { Argon2Utils } from '@common/helpers';
+import { ClientEntity } from '@client/entities/client.entity';
 
 @Entity({
   tableName: 'users',
@@ -88,10 +89,21 @@ export class UserEntity extends BaseEntity {
     entity: () => CollaboratorEntity,
     mappedBy: (collaborator) => collaborator.user,
     cascade: [Cascade.REMOVE],
+    onDelete: 'cascade',
     nullable: true,
     hidden: true,
   })
   collaborator?: CollaboratorEntity;
+
+  @OneToOne({
+    entity: () => ClientEntity,
+    mappedBy: (client) => client.user,
+    cascade: [Cascade.REMOVE],
+    onDelete: 'cascade',
+    nullable: true,
+    hidden: true,
+  })
+  client?: ClientEntity;
 
   /**
    * ------------------------------------------------------
