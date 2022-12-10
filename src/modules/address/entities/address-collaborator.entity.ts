@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Cascade,
   Entity,
   ManyToOne,
@@ -14,21 +15,26 @@ import { AddressEntity } from '@address/entities/address.entity';
   tableName: 'addresses_collaborators',
   comment: 'AddressCollaboratorEntity Pivot Table',
 })
-export class AddressCollaboratorEntity {
+export class AddressCollaboratorEntity extends BaseEntity<
+  AddressCollaboratorEntity,
+  'id'
+> {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
   id: string;
 
-  @ManyToOne(() => CollaboratorEntity, {
+  @ManyToOne({
+    entity: () => CollaboratorEntity,
     primary: true,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
     onDelete: 'cascade',
     referencedColumnNames: ['id'],
   })
   collaborator: CollaboratorEntity;
 
-  @ManyToOne(() => AddressEntity, {
+  @ManyToOne({
+    entity: () => AddressEntity,
     primary: true,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
     onDelete: 'cascade',
     referencedColumnNames: ['id'],
   })

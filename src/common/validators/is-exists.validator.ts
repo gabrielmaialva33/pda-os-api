@@ -9,11 +9,11 @@ import {
 
 import { ValidationArguments } from '@common/interfaces/validation-arguments.interface';
 
-type IsUniqueValidationContext = ValidationArguments<
-  Parameters<typeof IsUnique>
+type IsExistsValidationContext = ValidationArguments<
+  Parameters<typeof IsExists>
 >;
 
-export const IsUnique =
+export const IsExists =
   <Entity>(
     entityType: () => Type<Entity>,
     field: keyof Entity,
@@ -25,26 +25,25 @@ export const IsUnique =
       target,
       options,
       propertyName,
-      validator: IsUniqueConstraint,
-      name: 'isUnique',
+      validator: IsExistsConstraint,
+      name: 'isExists',
       async: true,
     });
 
 @ValidatorConstraint({ async: true })
-export class IsUniqueConstraint implements ValidatorConstraintInterface {
+export class IsExistsConstraint implements ValidatorConstraintInterface {
   constructor(private em: EntityManager) {}
 
   async validate<Entity, Field extends keyof Entity>(
     value: Entity[Field],
-    context: IsUniqueValidationContext,
+    context: IsExistsValidationContext,
   ): Promise<boolean> {
     const [entityType, field] = context.constraints;
-    const result = await this.em.findOne(entityType(), { [field]: value });
-
-    return !result;
+    const result = await this.em.find(entityType(), { [field]: value });
+    return result.length > 0;
   }
 
-  defaultMessage(context: IsUniqueValidationContext): string {
-    return `${context.property} must be unique`;
+  defaultMessage(context: IsExistsValidationContext): string {
+    return `${context.property} is not exists`;
   }
 }

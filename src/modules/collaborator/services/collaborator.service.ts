@@ -5,11 +5,13 @@ import { DateTime } from 'luxon';
 import { EditCollaboratorDto, StoreCollaboratorDto } from '@collaborator/dto';
 import { CollaboratorRepository } from '@collaborator/repositories/collaborator.repository';
 import { PaginationOptions } from '@common/interfaces/pagination.interface';
+import { RoleRepository } from '@role/repositories/role.repository';
 
 @Injectable()
 export class CollaboratorService {
   constructor(
     private readonly collaboratorRepository: CollaboratorRepository,
+    private readonly roleRepository: RoleRepository,
   ) {}
 
   async list({ page, per_page, search, sort, direction }: PaginationOptions) {
@@ -26,12 +28,28 @@ export class CollaboratorService {
     return this.collaboratorRepository.get(id);
   }
 
-  async store(data: StoreCollaboratorDto) {
-    return this.collaboratorRepository.store(data);
+  async store({ user: userData, ...data }: StoreCollaboratorDto) {
+    const collaboratorRole = await this.roleRepository.findOneOrFail({
+      name: 'collaborator',
+    });
+
+    return this.collaboratorRepository.store({
+      user: {
+        ...userData,
+        roles: [collaboratorRole],
+      },
+      ...data,
+    });
   }
 
-  async save(id: string, data: EditCollaboratorDto) {
-    return this.collaboratorRepository.save(id, data);
+  async save(id: string, { user: userData, ...data }: EditCollaboratorDto) {
+    const collaborator = await this.collaboratorRepository.save(id, data);
+    const user = collaborator.user;
+
+    wrap(collaborator).assign(data);
+    wrap(user).assign(userData);
+
+    return collaborator;
   }
 
   async delete(id: string) {

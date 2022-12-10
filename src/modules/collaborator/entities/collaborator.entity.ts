@@ -16,9 +16,8 @@ import { CollaboratorRepository } from '@collaborator/repositories/collaborator.
 import { CivilStatus, Sexes, Status, WorkTypes } from '@common/types/enums';
 import { UserEntity } from '@user/entities/user.entity';
 import { PhoneEntity } from '@phone/entities/phone.entity';
-import { PhoneCollaboratorEntity } from '@phone/entities/phone-collaborator.entity';
 import { AddressEntity } from '@address/entities/address.entity';
-import { AddressCollaboratorEntity } from '@address/entities/address-collaborator.entity';
+import { BankEntity } from '@collaborator/entities/bank.entity';
 
 @Entity({
   tableName: 'collaborators',
@@ -84,12 +83,21 @@ export class CollaboratorEntity extends BaseEntity {
    */
   @OneToOne({
     entity: () => UserEntity,
-    cascade: [Cascade.ALL],
-    orphanRemoval: true,
     inversedBy: (user) => user.collaborator,
+    cascade: [Cascade.REMOVE],
+    orphanRemoval: true,
     nullable: false,
   })
   user!: UserEntity;
+
+  @OneToOne({
+    entity: () => BankEntity,
+    mappedBy: (bank) => bank.collaborator,
+    cascade: [Cascade.REMOVE],
+    onDelete: 'cascade',
+    orphanRemoval: true,
+  })
+  bank: BankEntity;
 
   @ManyToMany({
     entity: () => PhoneEntity,
@@ -98,7 +106,7 @@ export class CollaboratorEntity extends BaseEntity {
     joinColumn: 'collaborator_id',
     inverseJoinColumn: 'phone_id',
     strategy: LoadStrategy.JOINED,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
   })
   phones?: Collection<PhoneEntity> = new Collection<PhoneEntity>(this);
 
@@ -109,7 +117,7 @@ export class CollaboratorEntity extends BaseEntity {
     joinColumn: 'collaborator_id',
     inverseJoinColumn: 'address_id',
     strategy: LoadStrategy.JOINED,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
   })
   addresses?: Collection<AddressEntity> = new Collection<AddressEntity>(this);
 
@@ -121,19 +129,20 @@ export class CollaboratorEntity extends BaseEntity {
 
   /**
    * ------------------------------------------------------
-   * Methods
+   * Query Scopes
    * ------------------------------------------------------
    */
 
   /**
    * ------------------------------------------------------
-   * Query Scopes
+   * Methods
    * ------------------------------------------------------
    */
 
-  constructor({ user, ...data }: Partial<CollaboratorEntity>) {
+  constructor({ user, bank, ...data }: Partial<CollaboratorEntity>) {
     super();
     Object.assign(this, data);
     this.user = user ? new UserEntity(user) : null;
+    this.bank = bank ? new BankEntity(bank) : null;
   }
 }

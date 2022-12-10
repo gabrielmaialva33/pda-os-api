@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20221204032838 extends Migration {
+export class Migration20221210161100 extends Migration {
   async up(): Promise<void> {
     this.addSql(
       'create table "addresses" ("id" uuid not null default uuid_generate_v4(), "created_at" timestamptz(0) not null default now(), "updated_at" timestamptz(0) not null default now(), "deleted_at" timestamptz(0) null, "street" varchar(100) null, "number" varchar(10) null, "complement" varchar(100) null, "neighborhood" varchar(100) null, "city" varchar(100) null, "state" varchar(2) null, "zip_code" varchar(10) null, constraint "addresses_pkey" primary key ("id"));',
@@ -63,24 +63,26 @@ export class Migration20221204032838 extends Migration {
     );
 
     this.addSql(
-      'create table "phones_collaborators" ("id" uuid not null default uuid_generate_v4(), "collaborator_id" uuid null, "phone_id" uuid null, "assigned_at" timestamptz(0) not null default now(), constraint "phones_collaborators_pkey" primary key ("id", "collaborator_id", "phone_id"));',
-    );
-    this.addSql(
-      'comment on table "phones_collaborators" is \'PhoneEntity Collaborator Pivot Table\';',
+      'create table "phones_collaborators" ("collaborator_id" uuid not null, "phone_id" uuid not null, constraint "phones_collaborators_pkey" primary key ("collaborator_id", "phone_id"));',
     );
 
     this.addSql(
-      'create table "addresses_collaborators" ("id" uuid not null default uuid_generate_v4(), "collaborator_id" uuid null, "address_id" uuid null, "assigned_at" timestamptz(0) not null default now(), constraint "addresses_collaborators_pkey" primary key ("id", "collaborator_id", "address_id"));',
+      'create table "banks" ("id" uuid not null default uuid_generate_v4(), "created_at" timestamptz(0) not null default now(), "updated_at" timestamptz(0) not null default now(), "deleted_at" timestamptz(0) null, "name" varchar(100) null, "agency" varchar(100) null, "account" varchar(100) null, "pix" varchar(255) null, "collaborator_id" uuid null, constraint "banks_pkey" primary key ("id"));',
     );
+    this.addSql('comment on table "banks" is \'BankEntity Table\';');
     this.addSql(
-      'comment on table "addresses_collaborators" is \'AddressCollaboratorEntity Pivot Table\';',
+      'alter table "banks" add constraint "banks_collaborator_id_unique" unique ("collaborator_id");',
+    );
+
+    this.addSql(
+      'create table "addresses_collaborators" ("collaborator_id" uuid not null, "address_id" uuid not null, constraint "addresses_collaborators_pkey" primary key ("collaborator_id", "address_id"));',
     );
 
     this.addSql(
       'create table "users_roles" ("id" uuid not null default uuid_generate_v4(), "user_id" uuid null, "role_id" uuid null, "assigned_at" timestamptz(0) not null default now(), constraint "users_roles_pkey" primary key ("id", "user_id", "role_id"));',
     );
     this.addSql(
-      'comment on table "users_roles" is \'UserEntity Role Pivot Table\';',
+      'comment on table "users_roles" is \'UserRoleEntity Pivot Table\';',
     );
 
     this.addSql(
@@ -88,7 +90,7 @@ export class Migration20221204032838 extends Migration {
     );
 
     this.addSql(
-      'alter table "collaborators" add constraint "collaborators_user_id_foreign" foreign key ("user_id") references "users" ("id") on update cascade on delete cascade;',
+      'alter table "collaborators" add constraint "collaborators_user_id_foreign" foreign key ("user_id") references "users" ("id") on delete cascade;',
     );
 
     this.addSql(
@@ -99,6 +101,10 @@ export class Migration20221204032838 extends Migration {
     );
 
     this.addSql(
+      'alter table "banks" add constraint "banks_collaborator_id_foreign" foreign key ("collaborator_id") references "collaborators" ("id") on delete cascade;',
+    );
+
+    this.addSql(
       'alter table "addresses_collaborators" add constraint "addresses_collaborators_collaborator_id_foreign" foreign key ("collaborator_id") references "collaborators" ("id") on update cascade on delete cascade;',
     );
     this.addSql(
@@ -106,16 +112,24 @@ export class Migration20221204032838 extends Migration {
     );
 
     this.addSql(
-      'alter table "users_roles" add constraint "users_roles_user_id_foreign" foreign key ("user_id") references "users" ("id") on update cascade on delete cascade;',
+      'alter table "users_roles" add constraint "users_roles_user_id_foreign" foreign key ("user_id") references "users" ("id") on delete cascade;',
     );
     this.addSql(
-      'alter table "users_roles" add constraint "users_roles_role_id_foreign" foreign key ("role_id") references "roles" ("id") on update cascade on delete cascade;',
+      'alter table "users_roles" add constraint "users_roles_role_id_foreign" foreign key ("role_id") references "roles" ("id") on delete cascade;',
     );
   }
 
   async down(): Promise<void> {
     this.addSql(
       'alter table "addresses_collaborators" drop constraint "addresses_collaborators_address_id_foreign";',
+    );
+
+    this.addSql(
+      'alter table "addresses_collaborators" drop constraint "addresses_collaborators_address_id_foreign";',
+    );
+
+    this.addSql(
+      'alter table "phones_collaborators" drop constraint "phones_collaborators_phone_id_foreign";',
     );
 
     this.addSql(
@@ -149,6 +163,18 @@ export class Migration20221204032838 extends Migration {
     );
 
     this.addSql(
+      'alter table "phones_collaborators" drop constraint "phones_collaborators_collaborator_id_foreign";',
+    );
+
+    this.addSql(
+      'alter table "banks" drop constraint "banks_collaborator_id_foreign";',
+    );
+
+    this.addSql(
+      'alter table "addresses_collaborators" drop constraint "addresses_collaborators_collaborator_id_foreign";',
+    );
+
+    this.addSql(
       'alter table "addresses_collaborators" drop constraint "addresses_collaborators_collaborator_id_foreign";',
     );
 
@@ -165,6 +191,8 @@ export class Migration20221204032838 extends Migration {
     this.addSql('drop table if exists "collaborators" cascade;');
 
     this.addSql('drop table if exists "phones_collaborators" cascade;');
+
+    this.addSql('drop table if exists "banks" cascade;');
 
     this.addSql('drop table if exists "addresses_collaborators" cascade;');
 

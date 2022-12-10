@@ -1,12 +1,21 @@
-import { IsArray, IsDateString, IsEnum, IsObject } from 'class-validator';
+import {
+  IsArray,
+  IsDateString,
+  IsEnum,
+  IsObject,
+  ValidateNested,
+} from 'class-validator';
 import { DateTime } from 'luxon';
 import { Collection } from '@mikro-orm/core';
+import { Type } from 'class-transformer';
 
 import { CivilStatus, Sexes, Status, WorkTypes } from '@common/types/enums';
 import { IsStringMinMax } from '@common/validators';
 import { UserEntity } from '@user/entities/user.entity';
 import { PhoneEntity } from '@phone/entities/phone.entity';
 import { AddressEntity } from '@address/entities/address.entity';
+import { EditUserDto } from '@user/dto';
+import { BankEntity } from '@collaborator/entities/bank.entity';
 
 export class StoreCollaboratorDto {
   @IsStringMinMax({ min: 8, max: 8, optional: true })
@@ -36,14 +45,19 @@ export class StoreCollaboratorDto {
   @IsEnum(CivilStatus)
   civil_status: CivilStatus;
 
+  @IsStringMinMax({ min: 2, max: 255, optional: true })
   description: string;
 
   @IsObject()
-  user: UserEntity;
+  bank: BankEntity;
 
   @IsArray()
   phones: Collection<PhoneEntity>;
 
   @IsArray()
   addresses: Collection<AddressEntity>;
+
+  @ValidateNested({ each: true })
+  @Type(() => EditUserDto)
+  user: UserEntity;
 }

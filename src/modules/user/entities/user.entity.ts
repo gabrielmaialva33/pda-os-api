@@ -17,7 +17,6 @@ import { BaseEntity } from '@src/common/entities/base.entity';
 import { UserRepository } from '@user/repositories/user.repository';
 import { RoleEntity } from '@role/entities/role.entity';
 import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
-import { UserRoleEntity } from '@user/entities/user-role.entity';
 
 import { Argon2Utils } from '@common/helpers';
 
@@ -81,15 +80,16 @@ export class UserEntity extends BaseEntity {
     joinColumn: 'user_id',
     inverseJoinColumn: 'role_id',
     strategy: LoadStrategy.JOINED,
-    cascade: [Cascade.ALL],
+    cascade: [Cascade.REMOVE],
   })
   roles: Collection<RoleEntity> = new Collection<RoleEntity>(this);
 
   @OneToOne({
     entity: () => CollaboratorEntity,
-    nullable: true,
-    cascade: [Cascade.ALL],
     mappedBy: (collaborator) => collaborator.user,
+    cascade: [Cascade.REMOVE],
+    nullable: true,
+    hidden: true,
   })
   collaborator?: CollaboratorEntity;
 

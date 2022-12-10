@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Cascade,
   Entity,
   ManyToOne,
@@ -15,23 +16,26 @@ import { PhoneEntity } from '@phone/entities/phone.entity';
   collection: 'phones_collaborators',
   comment: 'PhoneEntity Collaborator Pivot Table',
 })
-export class PhoneCollaboratorEntity {
+export class PhoneCollaboratorEntity extends BaseEntity<
+  PhoneCollaboratorEntity,
+  'id'
+> {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
   id: string;
 
   @ManyToOne(() => CollaboratorEntity, {
     primary: true,
-    cascade: [Cascade.ALL],
-    onDelete: 'cascade',
+    cascade: [Cascade.REMOVE],
     referencedColumnNames: ['id'],
+    onUpdateIntegrity: Cascade.REMOVE,
   })
   collaborator: CollaboratorEntity;
 
   @ManyToOne(() => PhoneEntity, {
     primary: true,
-    cascade: [Cascade.ALL],
-    onDelete: 'cascade',
+    cascade: [Cascade.REMOVE],
     referencedColumnNames: ['id'],
+    onUpdateIntegrity: Cascade.REMOVE,
   })
   phone: PhoneEntity;
 
