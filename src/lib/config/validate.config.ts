@@ -22,7 +22,7 @@ export const ValidateSchema = z.object({
     .transform((value) => Number(value)),
   PG_USER: z.string().trim().min(1).default('postgres'),
   PG_PASSWORD: z.string().trim().min(1).default('postgres'),
-  PG_DB: z.string().trim().min(1).default('pda_app_development'),
+  PG_DB: z.string().trim().min(1),
   PG_DEBUG: z
     .string()
     .trim()

@@ -1,6 +1,8 @@
-import { registerAs } from '@nestjs/config';
-import { ValidateSchema } from '@lib/config/validate.config';
+import 'dotenv/config';
 import { Knex } from 'knex';
+import { registerAs } from '@nestjs/config';
+
+import { ValidateSchema } from '@lib/config/validate.config';
 
 const environment = ValidateSchema.parse(process.env);
 
