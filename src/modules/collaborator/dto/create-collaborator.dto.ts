@@ -5,7 +5,7 @@ import { isUnique } from '@lib/zod/refine.zod';
 import { User } from '@modules/user/entities/user.entity';
 import { CreatePhoneSchema } from '@modules/phone/dto';
 import { CreateAddressSchema } from '@modules/address/dto';
-import { CreateBankDto, CreateBankSchema } from '@modules/bank/dto';
+import { CreateBankSchema } from '@modules/bank/dto';
 
 const CreateCollaboratorSchema = z.object({
   cpf: z.string().trim(),
