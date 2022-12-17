@@ -28,6 +28,12 @@ export class BaseRepository<Entity extends BaseEntity>
               for (const relation of options.context.populate)
                 query.withGraphFetched(relation);
 
+          if (options.search) {
+            const fields = this.orm.jsonAttributes;
+            for (const field of fields)
+              query.orWhere(field, 'ilike', `%${options.search}%`);
+          }
+
           /**
            * if exists page and per_page we want to paginate
            */

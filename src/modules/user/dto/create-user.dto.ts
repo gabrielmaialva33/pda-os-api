@@ -22,7 +22,7 @@ export const CreateUserSchema = z.object({
     .superRefine(async (value, ctx) =>
       isUnique<User>({ model: User, field: 'user_name', value, ctx }),
     ),
-  password: z.string().min(1).max(118),
+  password: z.password().min(6).max(30),
   avatar: z.string().min(1).max(255).optional(),
   roles: z
     .array(z.string().uuid().trim())

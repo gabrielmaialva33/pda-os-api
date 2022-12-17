@@ -6,6 +6,17 @@ import { User } from '@modules/user/entities/user.entity';
 const sorts = [...Object.keys(User.jsonSchema.properties)] as const;
 
 export const ListUserSchema = z.object({
+  page: z
+    .string()
+    .trim()
+    .optional()
+    .transform((v) => parseInt(v, 10)),
+  per_page: z
+    .string()
+    .trim()
+    .optional()
+    .transform((v) => parseInt(v, 10)),
+  search: z.string().trim().optional(),
   sort: z
     .enum(sorts as any)
     .optional()

@@ -76,6 +76,7 @@ export type ModelAttributes<T extends BaseEntity> = { [k in keyof T]?: T[k] };
 export interface ListOptions<T extends BaseEntity> {
   page?: number;
   per_page?: number;
+  search?: string;
   sort?: ModelProps<T>;
   order?: 'asc' | 'desc';
   context?: QueryContext<T>;
