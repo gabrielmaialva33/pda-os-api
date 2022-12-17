@@ -16,6 +16,8 @@ import { PhoneCollaborator } from '@modules/phone/entities/phone-collaborator.en
 import { AddressCollaborator } from '@modules/address/entities/address-collaborator.entity';
 import { Bank } from '@modules/bank/entities/bank.entity';
 import { Client } from '@modules/client/entities/client.entity';
+import { PhoneClient } from '@modules/phone/entities/phone-client.entity';
+import { AddressClient } from '@modules/address/entities/address-client.entity';
 
 @Module({
   imports: [
@@ -42,6 +44,8 @@ import { Client } from '@modules/client/entities/client.entity';
       AddressCollaborator,
       Bank,
       Client,
+      PhoneClient,
+      AddressClient,
     ]),
   ],
   exports: [ObjectionModule],

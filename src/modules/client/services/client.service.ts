@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { from, map, switchMap, forkJoin } from 'rxjs';
+import { forkJoin, from, map, switchMap } from 'rxjs';
 import { DateTime } from 'luxon';
 import { I18nService } from 'nestjs-i18n';
 
