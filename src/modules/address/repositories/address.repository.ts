@@ -1,4 +1,8 @@
 import { BaseRepository } from '@common/repositories/base.repository';
-import { AddressEntity } from '@address/entities/address.entity';
+import { Address } from '@modules/address/entities/address.entity';
 
-export class AddressRepository extends BaseRepository<AddressEntity> {}
+export class AddressRepository extends BaseRepository<Address> {
+  constructor() {
+    super(Address);
+  }
+}

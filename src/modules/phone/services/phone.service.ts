@@ -1,42 +1,93 @@
-import { Injectable } from '@nestjs/common';
-import { wrap } from '@mikro-orm/core';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { from, map, switchMap } from 'rxjs';
+import { I18nService } from 'nestjs-i18n';
 import { DateTime } from 'luxon';
 
-import { EditPhoneDto, StorePhoneDto } from '@phone/dto';
-import { PaginationOptions } from '@common/interfaces/pagination.interface';
-import { PhoneRepository } from '@phone/repositories/phone.repository';
+import { PaginationObject } from '@lib/pagination';
+import { ListOptions } from '@common/interfaces/base-repository.interface';
+
+import { CreatePhoneDto, UpdatePhoneDto } from '@modules/phone/dto';
+import { Phone } from '@modules/phone/entities/phone.entity';
+import { PhoneRepository } from '@modules/phone/repositories/phone.repository';
 
 @Injectable()
 export class PhoneService {
-  constructor(private readonly phoneRepository: PhoneRepository) {}
+  constructor(
+    private readonly phoneRepository: PhoneRepository,
+    private readonly i18nService: I18nService,
+  ) {}
 
-  async list({ page, per_page, search, sort, direction }: PaginationOptions) {
-    return this.phoneRepository.paginate({
-      page,
-      per_page,
-      search,
-      sort,
-      direction,
-    });
+  paginate({ page, per_page, order, sort }: ListOptions<Phone>) {
+    return from(
+      this.phoneRepository.paginate({ page, per_page, order, sort }),
+    ).pipe(
+      map(({ total, results }) =>
+        PaginationObject<Phone>({
+          data: results,
+          total,
+          page,
+          per_page,
+          route: '/phones',
+        }),
+      ),
+    );
   }
 
-  async get(id: string) {
-    return this.phoneRepository.get(id);
+  list({ sort, order }: ListOptions<Phone>) {
+    return from(this.phoneRepository.list({ sort, order })).pipe(
+      map((phones) => phones),
+    );
   }
 
-  async store(data: StorePhoneDto) {
-    return this.phoneRepository.store(data);
+  get(id: string) {
+    return from(
+      this.phoneRepository.getBy(['id'], id, {
+        populate: ['collaborators'],
+      }),
+    ).pipe(
+      map((phone) => {
+        if (!phone)
+          throw new NotFoundException(
+            this.i18nService.t('exception.not_found', {
+              args: { entity: this.i18nService.t('model.phone.entity') },
+            }),
+          );
+
+        return phone;
+      }),
+    );
   }
 
-  async save(id: string, data: EditPhoneDto) {
-    return this.phoneRepository.save(id, data);
+  create(data: CreatePhoneDto) {
+    return from(this.phoneRepository.create(data)).pipe(map((phone) => phone));
   }
 
-  async delete(id: string) {
-    const phone = await this.phoneRepository.get(id);
-    wrap(phone).assign({
-      deleted_at: DateTime.local(),
-    });
-    await this.phoneRepository.flush();
+  createMany(data: CreatePhoneDto[]) {
+    return from(this.phoneRepository.createMany(data)).pipe(
+      map((phones) => phones),
+    );
+  }
+
+  update(id: string, data: UpdatePhoneDto) {
+    return this.get(id).pipe(
+      switchMap((phone) =>
+        from(this.phoneRepository.update(phone.id, data)).pipe(
+          map(() => phone),
+        ),
+      ),
+    );
+  }
+
+  remove(id: string) {
+    return this.get(id).pipe(
+      switchMap((phone) =>
+        from(
+          this.phoneRepository.update(phone.id, {
+            is_deleted: true,
+            deleted_at: DateTime.local().toISO(),
+          }),
+        ).pipe(map(() => phone)),
+      ),
+    );
   }
 }

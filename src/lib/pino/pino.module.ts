@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 
 @Module({
-  exports: [LoggerModule],
   imports: [
     LoggerModule.forRootAsync({
       useFactory: () => {
@@ -11,7 +10,6 @@ import { LoggerModule } from 'nestjs-pino';
             serializers: {
               req(request) {
                 request.body = request.raw.body;
-
                 return request;
               },
             },
@@ -23,19 +21,18 @@ import { LoggerModule } from 'nestjs-pino';
             redact: {
               paths: ['req.headers.authorization'],
             },
-            transport:
-              process.env.NODE_ENV === 'production'
-                ? undefined
-                : {
-                    target: 'pino-pretty',
-                    options: {
-                      forceColor: true,
-                    },
-                  },
+            transport: {
+              target: 'pino-pretty',
+              options: {
+                forceColor: true,
+                singleLine: true,
+              },
+            },
           },
         };
       },
     }),
   ],
+  exports: [LoggerModule],
 })
 export class NestPinoModule {}

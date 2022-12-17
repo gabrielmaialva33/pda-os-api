@@ -1,71 +1,44 @@
-import {
-  Cascade,
-  Collection,
-  Entity,
-  EntityRepositoryType,
-  LoadStrategy,
-  ManyToMany,
-  Property,
-} from '@mikro-orm/core';
+import { Pojo } from 'objection';
+import { pick } from 'helper-fns';
 
-import { AddressRepository } from '@address/repositories/address.repository';
 import { BaseEntity } from '@common/entities/base.entity';
-import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
-import { AddressCollaboratorEntity } from '@address/entities/address-collaborator.entity';
+import { Collaborator } from '@modules/collaborator/entities/collaborator.entity';
 
-@Entity({
-  tableName: 'addresses',
-  comment: 'AddressEntity Table',
-  customRepository: () => AddressRepository,
-})
-export class AddressEntity extends BaseEntity {
-  [EntityRepositoryType]?: AddressRepository;
+export class Address extends BaseEntity {
+  static tableName = 'addresses';
 
   /**
    * ------------------------------------------------------
    * Columns
    * ------------------------------------------------------
-   * - column typing struct
    */
-  @Property({ nullable: true, length: 100 })
   street: string;
-
-  @Property({ nullable: true, length: 10 })
   number: string;
-
-  @Property({ nullable: true, length: 100 })
   complement: string;
-
-  @Property({ nullable: true, length: 100 })
   neighborhood: string;
-
-  @Property({ nullable: true, length: 100 })
   city: string;
-
-  @Property({ nullable: true, length: 2 })
   state: string;
-
-  @Property({ nullable: true, length: 10 })
   zip_code: string;
 
   /**
    * ------------------------------------------------------
    * Relationships
    * ------------------------------------------------------
-   * - define model relationships
    */
-  @ManyToMany({
-    entity: () => CollaboratorEntity,
-    pivotEntity: () => AddressCollaboratorEntity,
-    pivotTable: 'addresses_collaborators',
-    joinColumn: 'collaborator_id',
-    inverseJoinColumn: 'address_id',
-    strategy: LoadStrategy.JOINED,
-    cascade: [Cascade.REMOVE],
-    hidden: true,
-  })
-  collaborators: Collection<CollaboratorEntity> =
-    new Collection<CollaboratorEntity>(this);
+  static relationMappings = {
+    collaborators: {
+      relation: BaseEntity.ManyToManyRelation,
+      modelClass: Collaborator,
+      join: {
+        from: 'addresses.id',
+        through: {
+          from: 'address_collaborators.address_id',
+          to: 'address_collaborators.collaborator_id',
+        },
+        to: 'collaborators.id',
+      },
+    },
+  };
 
   /**
    * ------------------------------------------------------
@@ -78,9 +51,48 @@ export class AddressEntity extends BaseEntity {
    * Methods
    * ------------------------------------------------------
    */
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: [
+        'street',
+        'number',
+        'neighborhood',
+        'city',
+        'state',
+        'zip_code',
+      ],
+      properties: {
+        id: { type: 'string' },
+        street: { type: 'string', minLength: 1, maxLength: 100 },
+        number: { type: 'string', minLength: 1, maxLength: 10 },
+        complement: { type: 'string', minLength: 1, maxLength: 100 },
+        neighborhood: { type: 'string', minLength: 1, maxLength: 100 },
+        city: { type: 'string', minLength: 1, maxLength: 100 },
+        state: { type: 'string', minLength: 2, maxLength: 2 },
+        zip_code: { type: 'string', minLength: 1, maxLength: 10 },
+      },
+    };
+  }
 
-  constructor(data: Partial<AddressEntity>) {
-    super();
-    Object.assign(this, data);
+  /**
+   * ------------------------------------------------------
+   * Serializer
+   * ------------------------------------------------------
+   */
+  $formatJson(json: Pojo) {
+    json = super.$formatJson(json);
+    json = pick(json, [
+      'id',
+      'street',
+      'number',
+      'complement',
+      'neighborhood',
+      'city',
+      'state',
+      'zip_code',
+      'collaborators',
+    ]);
+    return json;
   }
 }

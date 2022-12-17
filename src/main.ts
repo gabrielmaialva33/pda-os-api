@@ -1,31 +1,20 @@
 import 'dotenv/config';
-import 'reflect-metadata';
-
-import { useContainer } from 'class-validator';
-import helmet from '@fastify/helmet';
-import compression from '@fastify/compress';
+import * as process from 'process';
 
 import { NestFactory } from '@nestjs/core';
-import { FastifyReply, FastifyRequest } from 'fastify';
+
+import { Logger } from '@nestjs/common';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { Logger } from '@nestjs/common';
-
-import { ValidationPipeConfig } from '@src/lib/config/nest/validation.pipe.config';
-
-import { LoggerMiddleware } from '@src/common/middleware/logger.middleware';
-
-import { AppModule } from '@src/app.module';
-
-import { LoggerModule } from '@logger/logger.module';
-import { LoggerService } from '@logger/services/logger.service';
-import { UserModule } from '@user/user.module';
-import { UserService } from '@user/services/user.service';
+import helmet from '@fastify/helmet';
+import compression from '@fastify/compress';
 import { I18nValidationExceptionFilter } from 'nestjs-i18n';
+
+import { AppModule } from '@/app.module';
 import { AppUtils } from '@common/helpers';
-import { ValidationPipe } from '@common/pipes';
+import { ZodValidationPipe } from '@lib/zod/pipe.zod';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -33,6 +22,7 @@ async function bootstrap() {
     new FastifyAdapter(),
     { bufferLogs: true },
   );
+
   AppUtils.killAppWithGrace(app);
 
   /**
@@ -46,22 +36,6 @@ async function bootstrap() {
 
   /**
    * ------------------------------------------------------
-   * Middleware
-   * ------------------------------------------------------
-   */
-  const fastify = app.getHttpAdapter().getInstance();
-  fastify.addHook(
-    'onRequest',
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      await new LoggerMiddleware(
-        app.select(LoggerModule).get(LoggerService),
-        app.select(UserModule).get(UserService),
-      ).onRequest(request, reply);
-    },
-  );
-
-  /**
-   * ------------------------------------------------------
    * Global Config
    * ------------------------------------------------------
    */
@@ -71,10 +45,9 @@ async function bootstrap() {
     new I18nValidationExceptionFilter({ detailedErrors: false }),
   );
 
-  app.useGlobalPipes(new ValidationPipe(ValidationPipeConfig));
-  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  app.useGlobalPipes(new ZodValidationPipe());
 
-  await app.listen(process.env.PORT || 3333, process.env.HOST || '0.0.0.0');
+  await app.listen(process.env.PORT || 3333, '0.0.0.0');
 }
 
 (async () =>

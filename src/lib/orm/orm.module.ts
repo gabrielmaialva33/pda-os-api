@@ -1,107 +1,47 @@
-import {
-  LoadStrategy,
-  ReflectMetadataProvider,
-  UnderscoreNamingStrategy,
-} from '@mikro-orm/core';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { Logger, Module } from '@nestjs/common';
-import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TSMigrationGenerator } from '@mikro-orm/migrations';
-import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-//import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
-import { UserEntity } from '@user/entities/user.entity';
-import { UserRoleEntity } from '@user/entities/user-role.entity';
-import { RoleEntity } from '@role/entities/role.entity';
-import { LoggerEntity } from '@logger/entities/logger.entity';
-import { BaseRepository } from '@common/repositories/base.repository';
-import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
-import { PhoneEntity } from '@phone/entities/phone.entity';
-import { PhoneCollaboratorEntity } from '@phone/entities/phone-collaborator.entity';
-import { AddressEntity } from '@address/entities/address.entity';
-import { AddressCollaboratorEntity } from '@address/entities/address-collaborator.entity';
-import { BankEntity } from '@collaborator/entities/bank.entity';
-import { ClientEntity } from '@client/entities/client.entity';
-import { AddressClientEntity } from '@address/entities/address-client.entity';
-import { PhoneClientEntity } from '@phone/entities/phone-client.entity';
+import { ObjectionModule } from '@willsoto/nestjs-objection';
+import { Module } from '@nestjs/common';
+import { Knex } from 'knex';
 
-const logger = new Logger('MikroORM');
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+import { BaseEntity } from '@common/entities/base.entity';
+
+import { User } from '@modules/user/entities/user.entity';
+import { Role } from '@modules/role/entities/role.entity';
+import { UserRole } from '@modules/user/entities/user-role.entity';
+import { Phone } from '@modules/phone/entities/phone.entity';
+import { Address } from '@modules/address/entities/address.entity';
+import { Collaborator } from '@modules/collaborator/entities/collaborator.entity';
+import { PhoneCollaborator } from '@modules/phone/entities/phone.collaborator';
+import { AddressCollaborator } from '@modules/address/entities/address-collaborator.entity';
+import { Bank } from '@modules/bank/entities/bank.entity';
 
 @Module({
   imports: [
-    MikroOrmModule.forRootAsync({
+    ObjectionModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        driver: PostgreSqlDriver,
-        host: configService.get('database.host'),
-        port: configService.get<number>('database.port'),
-        password: configService.get('database.password'),
-        user: configService.get('database.username'),
-        dbName: configService.get('database.dbName'),
-        driverOptions: {
-          connection: {
-            ssl: configService.get('database.ssl') || false,
+      useFactory(config: ConfigService) {
+        return {
+          Model: BaseEntity,
+          config: {
+            ...config.get<Knex.Config>('database'),
           },
-        },
-        entities: ['dist/**/*.entity.js'],
-        entitiesTs: ['src/**/*.entity.ts'],
-        debug: configService.get('database.debug') || true,
-        loadStrategy: LoadStrategy.JOINED,
-        highlighter: new SqlHighlighter(),
-        metadataProvider: ReflectMetadataProvider,
-        entityRepository: BaseRepository,
-        allowGlobalContext: true,
-        registerRequestContext: false,
-        pool: { min: 2, max: 10 },
-        logger: logger.log.bind(logger),
-        namingStrategy: UnderscoreNamingStrategy,
-        filters: {
-          deleted: {
-            cond: { deleted_at: { $eq: null } },
-          },
-        },
-        migrations: {
-          tableName: 'mikro_orm_migrations',
-          path: 'dist/src/database/migrations',
-          pathTs: 'src/database/migrations',
-          glob: '!(*.d).{js,ts}',
-          transactional: true,
-          emit: 'ts',
-          generator: TSMigrationGenerator,
-          fileName: (timestamp: string) => `migration.${timestamp}`,
-        },
-        seeder: {
-          path: 'dist/src/database/seeds',
-          pathTs: 'src/database/seeds',
-          defaultSeeder: 'DatabaseSeeder',
-          glob: '!(*.d).{js,ts}',
-          emit: 'ts',
-          fileName: (className: string) =>
-            className.toLowerCase().replace(/seeder$/, '.') + 'seeder',
-        },
-      }),
+        };
+      },
     }),
-    MikroOrmModule.forFeature({
-      entities: [
-        ...Object.values([
-          UserEntity,
-          RoleEntity,
-          UserRoleEntity,
-          LoggerEntity,
-          CollaboratorEntity,
-          BankEntity,
-          PhoneEntity,
-          PhoneCollaboratorEntity,
-          AddressEntity,
-          AddressCollaboratorEntity,
-          ClientEntity,
-          AddressClientEntity,
-          PhoneClientEntity,
-        ]),
-      ],
-    }),
+    ObjectionModule.forFeature([
+      User,
+      Role,
+      UserRole,
+      Phone,
+      Address,
+      Collaborator,
+      PhoneCollaborator,
+      AddressCollaborator,
+      Bank,
+    ]),
   ],
-  exports: [MikroOrmModule],
+  exports: [ObjectionModule],
 })
 export class OrmModule {}

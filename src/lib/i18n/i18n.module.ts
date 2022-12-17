@@ -16,6 +16,10 @@ import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
         AcceptLanguageResolver,
         { use: QueryResolver, options: ['lang'] },
       ],
+      typesOutputPath: path.join(
+        __dirname,
+        '../../resources/i18n/generated/i18n.generated.ts',
+      ),
     }),
   ],
   exports: [I18nModule],

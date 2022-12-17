@@ -1,46 +1,63 @@
-import {
-  BaseEntity,
-  Cascade,
-  Entity,
-  ManyToOne,
-  PrimaryKey,
-  Property,
-} from '@mikro-orm/core';
-import { DateTime } from 'luxon';
+import Objection, { Model, Pojo } from 'objection';
 
-import { UserEntity } from '@user/entities/user.entity';
-import { RoleEntity } from '@role/entities/role.entity';
+import { User } from '@modules/user/entities/user.entity';
+import { Role } from '@modules/role/entities/role.entity';
 
-@Entity({
-  tableName: 'users_roles',
-  collection: 'users_roles',
-  comment: 'UserRoleEntity Pivot Table',
-})
-export class UserRoleEntity extends BaseEntity<UserRoleEntity, 'id'> {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
+export class UserRole extends Model {
+  static tableName = 'user_roles';
+
   id: string;
+  user_id: string;
+  role_id: string;
+  created_at: string;
+  updated_at: string;
 
-  @ManyToOne({
-    entity: () => UserEntity,
-    primary: true,
-    onDelete: 'cascade',
-    referencedColumnNames: ['id'],
-  })
-  user: UserEntity;
+  static get relationMappings() {
+    return {
+      user: {
+        relation: Model.HasOneRelation,
+        modelClass: User,
+        join: {
+          from: 'user_roles.user_id',
+          to: 'users.id',
+        },
+      },
+      role: {
+        relation: Model.HasOneRelation,
+        modelClass: Role,
+        join: {
+          from: 'user_roles.role_id',
+          to: 'roles.id',
+        },
+      },
+    };
+  }
 
-  @ManyToOne({
-    entity: () => RoleEntity,
-    primary: true,
-    onDelete: 'cascade',
-    referencedColumnNames: ['id'],
-  })
-  role: RoleEntity;
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: ['user_id', 'role_id'],
 
-  @Property({
-    name: 'assigned_at',
-    type: 'datetime',
-    defaultRaw: 'now()',
-    onCreate: () => DateTime.local().toISO(),
-  })
-  assigned_at: DateTime;
+      properties: {
+        id: { type: 'integer' },
+        user_id: { type: 'string' },
+        role_id: { type: 'string' },
+        created_at: { type: 'string' },
+        updated_at: { type: 'string' },
+      },
+    };
+  }
+
+  $beforeUpdate(
+    opt: Objection.ModelOptions,
+    queryContext: Objection.QueryContext,
+  ): Promise<any> | void {
+    super.$beforeUpdate(opt, queryContext);
+    this.updated_at = new Date().toISOString();
+  }
+
+  $formatJson(json: Pojo) {
+    json = super.$formatJson(json);
+    return json;
+  }
 }

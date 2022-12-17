@@ -1,0 +1,57 @@
+{
+  "user": {
+    "entity": "Usuário",
+    "field": {
+      "first_name": "Primeiro Nome",
+      "last_name": "Último Nome",
+      "email": "E-mail",
+      "password": "Senha",
+      "password_confirmation": "Confirmação de Senha"
+    }
+  },
+  "role": {
+    "entity": "Perfil",
+    "field": {
+      "name": "Nome",
+      "description": "Descrição"
+    }
+  },
+  "phone": {
+    "entity": "Telefone",
+    "field": {
+      "number": "Número",
+      "type": "Tipo"
+    }
+  },
+  "address": {
+    "entity": "Endereço",
+    "field": {
+      "street": "Rua",
+      "number": "Número",
+      "complement": "Complemento",
+      "neighborhood": "Bairro",
+      "city": "Cidade",
+      "state": "Estado",
+      "zip_code": "CEP"
+    }
+  },
+  "collaborator": {
+    "entity": "Colaborador",
+    "field": {
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "address": "Endereço",
+      "role": "Perfil"
+    }
+  },
+  "bank": {
+    "entity": "Banco",
+    "field": {
+      "name": "Nome",
+      "agency": "Agência",
+      "account": "Conta",
+      "pix": "Pix"
+    }
+  }
+}

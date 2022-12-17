@@ -1,48 +1,62 @@
-import {
-  BaseEntity,
-  Cascade,
-  Entity,
-  ManyToOne,
-  PrimaryKey,
-  Property,
-} from '@mikro-orm/core';
-import { DateTime } from 'luxon';
+import Objection, { Model, Pojo } from 'objection';
+import { Address } from '@modules/address/entities/address.entity';
+import { Collaborator } from '@modules/collaborator/entities/collaborator.entity';
 
-import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
-import { AddressEntity } from '@address/entities/address.entity';
+export class AddressCollaborator extends Model {
+  static tableName = 'address_collaborators';
 
-@Entity({
-  tableName: 'addresses_collaborators',
-  comment: 'AddressCollaboratorEntity Pivot Table',
-})
-export class AddressCollaboratorEntity extends BaseEntity<
-  AddressCollaboratorEntity,
-  'id'
-> {
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
   id: string;
+  address_id: string;
+  collaborator_id: string;
+  created_at: string;
+  updated_at: string;
 
-  @ManyToOne({
-    entity: () => AddressEntity,
-    primary: true,
-    onDelete: 'cascade',
-    referencedColumnNames: ['id'],
-  })
-  address: AddressEntity;
+  static get relationMappings() {
+    return {
+      address: {
+        relation: Model.HasOneRelation,
+        modelClass: Address,
+        join: {
+          from: 'address_collaborators.address_id',
+          to: 'addresses.id',
+        },
+      },
+      collaborator: {
+        relation: Model.HasOneRelation,
+        modelClass: Collaborator,
+        join: {
+          from: 'address_collaborators.collaborator_id',
+          to: 'collaborators.id',
+        },
+      },
+    };
+  }
 
-  @ManyToOne({
-    entity: () => CollaboratorEntity,
-    primary: true,
-    onDelete: 'cascade',
-    referencedColumnNames: ['id'],
-  })
-  collaborator: CollaboratorEntity;
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: ['address_id', 'collaborator_id'],
 
-  @Property({
-    name: 'assigned_at',
-    type: 'datetime',
-    defaultRaw: 'now()',
-    onCreate: () => DateTime.local().toISO(),
-  })
-  assigned_at: DateTime;
+      properties: {
+        id: { type: 'integer' },
+        address_id: { type: 'string' },
+        collaborator_id: { type: 'string' },
+        created_at: { type: 'string' },
+        updated_at: { type: 'string' },
+      },
+    };
+  }
+
+  $beforeUpdate(
+    opt: Objection.ModelOptions,
+    queryContext: Objection.QueryContext,
+  ): Promise<any> | void {
+    super.$beforeUpdate(opt, queryContext);
+    this.updated_at = new Date().toISOString();
+  }
+
+  $formatJson(json: Pojo) {
+    json = super.$formatJson(json);
+    return json;
+  }
 }

@@ -1,76 +1,75 @@
-import {
-  Cascade,
-  Collection,
-  Entity,
-  EntityRepositoryType,
-  Enum,
-  LoadStrategy,
-  ManyToMany,
-  Property,
-} from '@mikro-orm/core';
+import { DateTime } from 'luxon';
+import { pick } from 'helper-fns';
+import { Pojo } from 'objection';
 
 import { BaseEntity } from '@common/entities/base.entity';
-import { PhoneRepository } from '@phone/repositories/phone.repository';
-import { PhoneType } from '@common/types/enums/phone-type.enum';
-import { PhoneCollaboratorEntity } from '@phone/entities/phone-collaborator.entity';
-import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
+import { PhoneType } from '@modules/phone/enum/phone-type.enum';
+import { Collaborator } from '@modules/collaborator/entities/collaborator.entity';
 
-@Entity({
-  tableName: 'phones',
-  comment: 'PhoneEntity Table',
-  customRepository: () => PhoneRepository,
-})
-export class PhoneEntity extends BaseEntity {
-  [EntityRepositoryType]?: PhoneRepository;
+export class Phone extends BaseEntity {
+  static tableName = 'phones';
 
   /**
    * ------------------------------------------------------
    * Columns
    * ------------------------------------------------------
-   * - column typing struct
    */
-
-  @Property({ nullable: true, length: 20 })
   phone: string;
-
-  @Enum({
-    items: () => PhoneType,
-    default: PhoneType.NOT_INFORMED,
-  })
-  type: PhoneType;
+  type: string = PhoneType.NOT_INFORMED;
 
   /**
    * ------------------------------------------------------
    * Relationships
    * ------------------------------------------------------
-   * - define model relationships
    */
-  @ManyToMany({
-    entity: () => CollaboratorEntity,
-    pivotEntity: () => PhoneCollaboratorEntity,
-    pivotTable: 'phones_collaborators',
-    joinColumn: 'collaborator_id',
-    inverseJoinColumn: 'phone_id',
-    cascade: [Cascade.REMOVE],
-    hidden: true,
-  })
-  collaborators: Collection<CollaboratorEntity> =
-    new Collection<CollaboratorEntity>(this);
+  static relationMappings = {
+    collaborators: {
+      relation: BaseEntity.ManyToManyRelation,
+      modelClass: Collaborator,
+      join: {
+        from: 'phones.id',
+        through: {
+          from: 'phone_collaborators.phone_id',
+          to: 'phone_collaborators.collaborator_id',
+        },
+        to: 'collaborators.id',
+      },
+    },
+  };
 
   /**
    * ------------------------------------------------------
    * Hooks
    * ------------------------------------------------------
    */
+  async $beforeUpdate() {
+    this.updated_at = DateTime.local().toISO();
+  }
 
   /**
    * ------------------------------------------------------
    * Methods
    * ------------------------------------------------------
    */
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: ['phone'],
+      properties: {
+        phone: { type: 'string' },
+        type: { type: 'string' },
+      },
+    };
+  }
 
-  constructor(data: Partial<PhoneEntity>) {
-    super();
-    Object.assign(this, data);
+  /**
+   * ------------------------------------------------------
+   * Serializer
+   * ------------------------------------------------------
+   */
+  $formatJson(json: Pojo) {
+    json = super.$formatJson(json);
+    json = pick(json, ['id', 'phone', 'type', 'collaborators']);
+    return json;
   }
 }

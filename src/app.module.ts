@@ -1,35 +1,33 @@
 import { Module } from '@nestjs/common';
 
-import { UserModule } from '@user/user.module';
-import { AuthModule } from '@auth/auth.module';
-import { HealthModule } from '@health/health.module';
-import { LoggerModule } from '@logger/logger.module';
-import { NestI18nModule } from '@src/lib/i18n/i18n.module';
-import { OrmModule } from '@src/lib/orm/orm.module';
-import { NestConfigModule } from '@src/lib/config/config.module';
-import { CommonModule } from '@common/common.module';
-import { RoleModule } from '@role/role.module';
-import { CollaboratorModule } from '@collaborator/collaborator.module';
-import { PhoneModule } from '@phone/phone.module';
-import { AddressModule } from '@address/address.module';
-import { ClientModule } from './modules/client/client.module';
+import { NestConfigModule } from '@lib/config/config.module';
+import { NestPinoModule } from '@lib/pino/pino.module';
+import { NestI18nModule } from '@lib/i18n/i18n.module';
+import { OrmModule } from '@lib/orm/orm.module';
+import { NestJwtModule } from '@lib/jwt/jwt.module';
+
+import { UserModule } from '@modules/user/user.module';
+import { AuthModule } from '@modules/auth/auth.module';
+import { RoleModule } from '@modules/role/role.module';
+import { PhoneModule } from '@modules/phone/phone.module';
+import { AddressModule } from '@modules/address/address.module';
+import { CollaboratorModule } from '@modules/collaborator/collaborator.module';
+import { BankModule } from '@modules/bank/bank.module';
 
 @Module({
   imports: [
+    NestConfigModule,
+    NestPinoModule,
+    NestI18nModule,
+    NestJwtModule,
+    OrmModule,
     UserModule,
     AuthModule,
     RoleModule,
-    CollaboratorModule,
-    HealthModule,
-    LoggerModule,
-    NestConfigModule,
     PhoneModule,
     AddressModule,
-    CommonModule,
-    NestI18nModule,
-    OrmModule,
-    ClientModule,
+    CollaboratorModule,
+    BankModule,
   ],
-  exports: [],
 })
 export class AppModule {}

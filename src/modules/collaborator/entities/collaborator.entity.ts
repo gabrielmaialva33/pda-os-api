@@ -1,135 +1,87 @@
 import { BaseEntity } from '@common/entities/base.entity';
-import {
-  Cascade,
-  Collection,
-  Entity,
-  EntityRepositoryType,
-  Enum,
-  LoadStrategy,
-  ManyToMany,
-  OneToOne,
-  Property,
-} from '@mikro-orm/core';
 import { DateTime } from 'luxon';
+import { Pojo } from 'objection';
 
-import { CollaboratorRepository } from '@collaborator/repositories/collaborator.repository';
-import { CivilStatus, Sexes, Status, WorkTypes } from '@common/types/enums';
-import { UserEntity } from '@user/entities/user.entity';
-import { PhoneEntity } from '@phone/entities/phone.entity';
-import { AddressEntity } from '@address/entities/address.entity';
-import { BankEntity } from '@collaborator/entities/bank.entity';
-
-@Entity({
-  tableName: 'collaborators',
-  comment: 'CollaboratorEntity Table',
-  customRepository: () => CollaboratorRepository,
-})
-export class CollaboratorEntity extends BaseEntity {
-  [EntityRepositoryType]?: CollaboratorRepository;
+export class Collaborator extends BaseEntity {
+  static tableName = 'collaborators';
 
   /**
    * ------------------------------------------------------
    * Columns
    * ------------------------------------------------------
-   * - column typing struct
    */
-  @Property({ nullable: true, length: 8 })
   code: string;
-
-  @Property({ nullable: true, length: 14 })
   cpf: string;
-
-  @Property({ nullable: true, length: 18 })
   rg: string;
-
-  @Property({ nullable: true })
-  birth_date: DateTime;
-
-  @Property({ nullable: true, length: 100 })
+  birth_date: string;
   job: string;
-
-  @Enum({
-    items: () => Sexes,
-    default: Sexes.NOT_INFORMED,
-  })
-  sex: Sexes = Sexes.NOT_INFORMED;
-
-  @Enum({
-    items: () => WorkTypes,
-    default: WorkTypes.NOT_INFORMED,
-  })
-  work_type: WorkTypes = WorkTypes.NOT_INFORMED;
-
-  @Enum({
-    items: () => Status,
-    default: Status.ACTIVE,
-  })
-  status: Status = Status.ACTIVE;
-
-  @Enum({
-    items: () => CivilStatus,
-    default: CivilStatus.NOT_INFORMED,
-  })
-  civil_status: string = CivilStatus.NOT_INFORMED;
-
-  @Property({ nullable: true, type: 'text' })
-  description: string;
+  sex: string;
+  work_type: string;
+  status: string;
+  civil_status: string;
+  note: string;
+  user_id: string;
 
   /**
    * ------------------------------------------------------
    * Relationships
    * ------------------------------------------------------
-   * - define model relationships
    */
-  @OneToOne({
-    entity: () => UserEntity,
-    inversedBy: (user) => user.collaborator,
-    cascade: [Cascade.REMOVE],
-    orphanRemoval: true,
-    nullable: false,
-  })
-  user!: UserEntity;
-
-  @OneToOne({
-    entity: () => BankEntity,
-    mappedBy: (bank) => bank.collaborator,
-    cascade: [Cascade.REMOVE],
-    onDelete: 'cascade',
-    orphanRemoval: true,
-  })
-  bank: BankEntity;
-
-  @ManyToMany({
-    entity: () => PhoneEntity,
-    //pivotEntity: () => PhoneCollaboratorEntity,
-    pivotTable: 'phones_collaborators',
-    joinColumn: 'collaborator_id',
-    inverseJoinColumn: 'phone_id',
-    strategy: LoadStrategy.JOINED,
-    cascade: [Cascade.REMOVE],
-  })
-  phones?: Collection<PhoneEntity> = new Collection<PhoneEntity>(this);
-
-  @ManyToMany({
-    entity: () => AddressEntity,
-    //pivotEntity: () => AddressCollaboratorEntity,
-    pivotTable: 'addresses_collaborators',
-    joinColumn: 'collaborator_id',
-    inverseJoinColumn: 'address_id',
-    strategy: LoadStrategy.JOINED,
-    cascade: [Cascade.REMOVE],
-  })
-  addresses?: Collection<AddressEntity> = new Collection<AddressEntity>(this);
+  static relationMappings = {
+    phones: {
+      relation: BaseEntity.ManyToManyRelation,
+      modelClass: `${__dirname}/../../phone/entities/phone.entity`,
+      join: {
+        from: 'collaborators.id',
+        through: {
+          from: 'phone_collaborators.collaborator_id',
+          to: 'phone_collaborators.phone_id',
+        },
+        to: 'phones.id',
+      },
+    },
+    addresses: {
+      relation: BaseEntity.ManyToManyRelation,
+      modelClass: `${__dirname}/../../address/entities/address.entity`,
+      join: {
+        from: 'collaborators.id',
+        through: {
+          from: 'address_collaborators.collaborator_id',
+          to: 'address_collaborators.address_id',
+        },
+        to: 'addresses.id',
+      },
+    },
+    bank: {
+      relation: BaseEntity.HasOneRelation,
+      modelClass: `${__dirname}/../../bank/entities/bank.entity`,
+      join: {
+        from: 'collaborators.id',
+        to: 'banks.collaborator_id',
+      },
+    },
+    user: {
+      relation: BaseEntity.BelongsToOneRelation,
+      modelClass: `${__dirname}/../../user/entities/user.entity`,
+      join: {
+        from: 'collaborators.user_id',
+        to: 'users.id',
+      },
+    },
+  };
 
   /**
    * ------------------------------------------------------
    * Hooks
    * ------------------------------------------------------
    */
+  async $beforeUpdate() {
+    this.updated_at = DateTime.local().toISO();
+  }
 
   /**
    * ------------------------------------------------------
-   * Query Scopes
+   * Scopes
    * ------------------------------------------------------
    */
 
@@ -138,11 +90,45 @@ export class CollaboratorEntity extends BaseEntity {
    * Methods
    * ------------------------------------------------------
    */
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: [
+        'code',
+        'cpf',
+        'rg',
+        'birth_date',
+        'job',
+        'sex',
+        'work_type',
+        'status',
+        'civil_status',
+        'note',
+      ],
 
-  constructor({ user, bank, ...data }: Partial<CollaboratorEntity>) {
-    super();
-    Object.assign(this, data);
-    this.user = user ? new UserEntity(user) : null;
-    this.bank = bank ? new BankEntity(bank) : null;
+      properties: {
+        code: { type: 'string', minLength: 8, maxLength: 8 },
+        cpf: { type: 'string', minLength: 10, maxLength: 14 },
+        rg: { type: 'string', minLength: 10, maxLength: 18 },
+        birth_date: { type: 'string' },
+        job: { type: 'string' },
+        sex: { type: 'string' },
+        work_type: { type: 'string' },
+        status: { type: 'string' },
+        civil_status: { type: 'string' },
+        note: { type: 'string' },
+        user_id: { type: 'string' },
+      },
+    };
+  }
+
+  /**
+   * ------------------------------------------------------
+   * Serializer
+   * ------------------------------------------------------
+   */
+  $formatJson(json: Pojo) {
+    json = super.$formatJson(json);
+    return json;
   }
 }

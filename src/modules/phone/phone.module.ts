@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
-import { PhoneController } from '@phone/http/phone.controller';
-import { PhoneService } from '@phone/services/phone.service';
-import { OrmModule } from '@src/lib/orm/orm.module';
+import { OrmModule } from '@lib/orm/orm.module';
+
+import { PhoneController } from '@modules/phone/controllers/phone.controller';
+import { PhoneService } from '@modules/phone/services/phone.service';
+import { PhoneRepository } from '@modules/phone/repositories/phone.repository';
 
 @Module({
   imports: [OrmModule],
   controllers: [PhoneController],
+  providers: [PhoneService, PhoneRepository],
   exports: [PhoneService],
-  providers: [PhoneService],
 })
 export class PhoneModule {}

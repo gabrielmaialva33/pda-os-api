@@ -1,68 +1,35 @@
-import {
-  BaseEntity as MikroBaseEntity,
-  Entity,
-  Filter,
-  OptionalProps,
-  PrimaryKey,
-  Property,
-} from '@mikro-orm/core';
-import { DateTime } from 'luxon';
+import { Model, ModelOptions, QueryContext } from 'objection';
 
-@Entity({ abstract: true, comment: 'An abstract base entity' })
-@Filter({ name: 'deleted', cond: { deleted_at: { $ne: null } } })
-export class BaseEntity extends MikroBaseEntity<BaseEntity, 'id'> {
-  [OptionalProps]?: 'created_at' | 'updated_at' | 'deleted_at';
+export class BaseEntity extends Model {
+  static idColumn = 'id';
 
   /**
    * ------------------------------------------------------
    * Columns
    * ------------------------------------------------------
-   * - column typing struct
    */
-  @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
-  id: string;
+  readonly id!: string;
+  is_deleted: boolean;
+  readonly created_at: string;
+  updated_at: string;
+  deleted_at?: string;
 
-  @Property({
-    name: 'created_at',
-    type: 'datetime',
-    defaultRaw: 'now()',
-    hidden: true,
-    onCreate: () => DateTime.local().toISO(),
-  })
-  created_at!: DateTime;
-
-  @Property({
-    name: 'updated_at',
-    type: 'datetime',
-    defaultRaw: 'now()',
-    hidden: true,
-    onCreate: () => DateTime.local().toISO(),
-  })
-  updated_at!: DateTime;
-
-  @Property({
-    name: 'deleted_at',
-    type: 'datetime',
-    nullable: true,
-    hidden: true,
-  })
-  deleted_at?: DateTime;
+  /**
+   * ------------------------------------------------------
+   * Relationships
+   * ------------------------------------------------------
+   */
 
   /**
    * ------------------------------------------------------
    * Hooks
    * ------------------------------------------------------
    */
+  async $beforeInsert(query: QueryContext) {
+    super.$beforeInsert(query);
+  }
 
-  /**
-   * ------------------------------------------------------
-   * Methods
-   * ------------------------------------------------------
-   */
-
-  /**
-   * ------------------------------------------------------
-   * Query Scopes
-   * ------------------------------------------------------
-   */
+  async $beforeUpdate(opt: ModelOptions, query: QueryContext) {
+    super.$beforeUpdate(opt, query);
+  }
 }

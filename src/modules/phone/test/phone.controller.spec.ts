@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PhoneController } from '@phone/http/phone.controller';
-import { PhoneService } from '@phone/services/phone.service';
+
+import { PhoneController } from '@modules/phone/controllers/phone.controller';
+import { PhoneService } from '@modules/phone/services/phone.service';
 
 describe('PhoneController', () => {
   let controller: PhoneController;

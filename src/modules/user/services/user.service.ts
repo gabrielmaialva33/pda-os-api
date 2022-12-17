@@ -1,77 +1,116 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { wrap } from '@mikro-orm/core';
+import { from, map, switchMap } from 'rxjs';
 import { DateTime } from 'luxon';
 import { I18nService } from 'nestjs-i18n';
+import { ModelProps } from 'objection';
 
-import { EditUserDto, StoreUserDto } from '@user/dto';
-import { UserRepository } from '@user/repositories/user.repository';
-import { PaginationOptions } from '@common/interfaces/pagination.interface';
-import { RoleRepository } from '@role/repositories/role.repository';
-import { RoleEntity } from '@role/entities/role.entity';
+import { PaginationObject } from '@lib/pagination';
+import { ListOptions } from '@common/interfaces/base-repository.interface';
+
+import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
+import { UserRepository } from '@modules/user/repositories/user.repository';
+import { User } from '@modules/user/entities/user.entity';
+import { I18nTranslations } from '@/resources/i18n/generated/i18n.generated';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly roleRepository: RoleRepository,
-    private readonly i18n: I18nService,
+    private readonly i18nService: I18nService<I18nTranslations>,
   ) {}
 
-  async list({ page, per_page, search, sort, direction }: PaginationOptions) {
-    return this.userRepository.paginate({
-      page,
-      per_page,
-      search,
-      sort,
-      direction,
-    });
+  paginate({ page, per_page, sort, order }: ListOptions<User>) {
+    return from(
+      this.userRepository.paginate({
+        page,
+        per_page,
+        sort,
+        order,
+        context: { populate: ['roles'] },
+      }),
+    ).pipe(
+      map(({ total, results: data }) =>
+        PaginationObject<User>({
+          data,
+          total,
+          page,
+          per_page,
+          route: '/users',
+        }),
+      ),
+    );
   }
 
-  async get(id: string) {
-    return this.userRepository.get(id);
+  list({ sort, order }: ListOptions<User>) {
+    return from(this.userRepository.list({ sort, order })).pipe(
+      map((users) => users),
+    );
   }
 
-  async store({ roles, collaborator, ...data }: StoreUserDto) {
-    const collection: RoleEntity[] = [];
+  get(id: string) {
+    return from(
+      this.userRepository.getBy(['id'], id, {
+        populate: ['roles'],
+      }),
+    ).pipe(
+      map((user) => {
+        if (!user)
+          throw new NotFoundException(
+            this.i18nService.t('exception.not_found', {
+              args: { entity: this.i18nService.t('model.user.entity') },
+            }),
+          );
 
-    for (const id of roles) {
-      const role = await this.roleRepository.get(id);
-      if (!role) {
-        throw new NotFoundException({
-          message: this.i18n.t(`exception.not_found`, {
-            args: [this.i18n.t(`exception.role`)],
-          }),
-          status: 401,
-          display: true,
-        });
-      }
-      collection.push(role);
-    }
-
-    return this.userRepository.store({
-      ...data,
-      roles: collection,
-      collaborator: {
-        ...collaborator,
-      },
-    });
+        return user;
+      }),
+    );
   }
 
-  async save(id: string, data: EditUserDto) {
-    return this.userRepository.save(id, data);
+  getBy(keys: ModelProps<User>[], value: any) {
+    return from(
+      this.userRepository.getBy(keys, value, {
+        populate: ['roles'],
+      }),
+    ).pipe(
+      map((user) => {
+        if (!user)
+          throw new NotFoundException(
+            this.i18nService.t('exception.not_found', {
+              args: { entity: this.i18nService.t('model.user.entity') },
+            }),
+          );
+
+        return user;
+      }),
+    );
   }
 
-  async delete(id: string) {
-    const model = await this.userRepository.get(id);
-    wrap(model).assign({
-      email: `${model.email}:deleted:${model.id.split('-')[0]}`,
-      user_name: `${model.user_name}:deleted:${model.id.split('-')[0]}`,
-      deleted_at: DateTime.local(),
-    });
-    await this.userRepository.flush();
+  create({ roles: roleIds, ...data }: CreateUserDto) {
+    return from(
+      this.userRepository.create(data).pipe(
+        switchMap(async (user) => {
+          await user.$relatedQuery('roles').relate(roleIds);
+          return user;
+        }),
+      ),
+    );
   }
 
-  async getBy(fields: string[], values: string[]) {
-    return this.userRepository.getBy(fields, values);
+  update(id: string, { roles, ...data }: UpdateUserDto) {
+    return this.get(id).pipe(
+      switchMap(async (user) => {
+        this.userRepository.update(user.id, data);
+
+        if (roles && roles.length > 0) {
+          await user.$relatedQuery('roles').unrelate();
+          await user.$relatedQuery('roles').relate(roles);
+        }
+        return user.$query().withGraphFetched('roles');
+      }),
+    );
+  }
+
+  remove(id: string) {
+    this.update(id, { deleted_at: DateTime.local().toISO() } as any);
   }
 }

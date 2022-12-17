@@ -1,130 +1,61 @@
-import {
-  BeforeCreate,
-  BeforeUpdate,
-  Cascade,
-  Collection,
-  Entity,
-  EntityRepositoryType,
-  Enum,
-  EventArgs,
-  LoadStrategy,
-  ManyToMany,
-  OneToOne,
-  Property,
-} from '@mikro-orm/core';
-
-import { BaseEntity } from '@src/common/entities/base.entity';
-import { UserRepository } from '@user/repositories/user.repository';
-import { RoleEntity } from '@role/entities/role.entity';
-import { CollaboratorEntity } from '@collaborator/entities/collaborator.entity';
+import { ModelProps, Pojo } from 'objection';
+import { DateTime } from 'luxon';
 
 import { Argon2Utils } from '@common/helpers';
-import { ClientEntity } from '@client/entities/client.entity';
+import { BaseEntity } from '@common/entities/base.entity';
 
-@Entity({
-  tableName: 'users',
-  collection: 'users',
-  comment: 'UserEntity Table',
-  customRepository: () => UserRepository,
-})
-export class UserEntity extends BaseEntity {
-  [EntityRepositoryType]?: UserRepository;
+import { Role } from '@modules/role/entities/role.entity';
+
+export class User extends BaseEntity {
+  static tableName = 'users';
+  static uids: ModelProps<User>[] = ['user_name', 'email'];
 
   /**
    * ------------------------------------------------------
    * Columns
    * ------------------------------------------------------
-   * - column typing struct
    */
-  @Property({ length: 80 })
   first_name: string;
-
-  @Property({ length: 80 })
   last_name: string;
-
-  @Property({
-    columnType:
-      "varchar(160) generated always as (first_name || ' ' || last_name) stored",
-    ignoreSchemaChanges: ['type', 'extra'],
-    nullable: true,
-  })
   full_name: string;
-
-  @Property({ unique: true })
   email: string;
-
-  @Property({ length: 50, unique: true })
   user_name: string;
-
-  @Property({ hidden: true, length: 118 })
   password: string;
-
-  @Property({
-    length: 255,
-    nullable: true,
-  })
   avatar: string;
-
-  @Property({ type: 'boolean', default: false })
   is_online: boolean;
 
   /**
    * ------------------------------------------------------
    * Relationships
    * ------------------------------------------------------
-   * - define model relationships
    */
-  @ManyToMany({
-    entity: () => RoleEntity,
-    //pivotEntity: () => UserRoleEntity,
-    pivotTable: 'users_roles',
-    joinColumn: 'user_id',
-    inverseJoinColumn: 'role_id',
-    strategy: LoadStrategy.JOINED,
-    cascade: [Cascade.REMOVE],
-  })
-  roles: Collection<RoleEntity> = new Collection<RoleEntity>(this);
-
-  @OneToOne({
-    entity: () => CollaboratorEntity,
-    mappedBy: (collaborator) => collaborator.user,
-    cascade: [Cascade.REMOVE],
-    onDelete: 'cascade',
-    nullable: true,
-    hidden: true,
-  })
-  collaborator?: CollaboratorEntity;
-
-  @OneToOne({
-    entity: () => ClientEntity,
-    mappedBy: (client) => client.user,
-    cascade: [Cascade.REMOVE],
-    onDelete: 'cascade',
-    nullable: true,
-    hidden: true,
-  })
-  client?: ClientEntity;
+  static relationMappings = {
+    roles: {
+      relation: BaseEntity.ManyToManyRelation,
+      modelClass: Role,
+      join: {
+        from: 'users.id',
+        through: {
+          from: 'user_roles.user_id',
+          to: 'user_roles.role_id',
+        },
+        to: 'roles.id',
+      },
+    },
+  };
 
   /**
    * ------------------------------------------------------
    * Hooks
    * ------------------------------------------------------
    */
-  @BeforeCreate()
-  @BeforeUpdate()
-  async hashPassword(arguments_: EventArgs<this>) {
-    if (arguments_.changeSet.payload?.password)
-      this.password = await Argon2Utils.hash(this.password);
+  async $beforeInsert() {
+    this.password = await Argon2Utils.hash(this.password);
   }
 
-  @BeforeCreate()
-  async attachGuestRole(arguments_: EventArgs<this>) {
-    if (arguments_.changeSet.entity.roles.getItems().length === 0) {
-      const guestRole = await arguments_.em.getRepository(RoleEntity).findOne({
-        name: 'guest',
-      });
-      this.roles.add(guestRole);
-    }
+  async $beforeUpdate() {
+    if (this.password) this.password = await Argon2Utils.hash(this.password);
+    this.updated_at = DateTime.local().toISO();
   }
 
   /**
@@ -132,35 +63,41 @@ export class UserEntity extends BaseEntity {
    * Methods
    * ------------------------------------------------------
    */
-  @Enum({
-    items: () => [
-      'first_name',
-      'last_name',
-      'email',
-      'user_name',
-      'code',
-      'phone',
-      'cpf',
-    ],
-    persist: false,
-    hidden: true,
-  })
-  search_fields: string[];
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: ['first_name', 'last_name', 'email', 'user_name', 'password'],
+
+      properties: {
+        id: { type: 'string' },
+        first_name: { type: 'string', minLength: 1, maxLength: 80 },
+        last_name: { type: 'string', minLength: 1, maxLength: 80 },
+        full_name: { type: 'string', minLength: 1, maxLength: 160 },
+        email: { type: 'string', minLength: 1, maxLength: 160 },
+        user_name: { type: 'string', minLength: 1, maxLength: 50 },
+        password: { type: 'string', minLength: 1, maxLength: 118 },
+        avatar: { type: 'string', minLength: 1, maxLength: 255 },
+        is_online: { type: 'boolean' },
+        created_at: { type: 'string' },
+        updated_at: { type: 'string' },
+      },
+    };
+  }
 
   /**
    * ------------------------------------------------------
-   * Query Scopes
+   * Serializer
    * ------------------------------------------------------
    */
+  $formatJson(json: Pojo) {
+    json = super.$formatJson(json);
 
-  constructor({ collaborator, ...data }: Partial<UserEntity>) {
-    super();
-    Object.assign(this, {
-      ...data,
-      avatar: `https://api.multiavatar.com/${data.user_name.toLowerCase()}.svg`,
-    });
-    this.collaborator = collaborator
-      ? new CollaboratorEntity(collaborator)
-      : null;
+    delete json.password;
+    delete json.is_deleted;
+    delete json.deleted_at;
+
+    json.avatar = `https://api.multiavatar.com/${json.user_name.toLowerCase()}.svg`;
+
+    return json;
   }
 }

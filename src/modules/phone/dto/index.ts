@@ -1,2 +1,2 @@
-export * from './store-phone.dto';
-export * from './edit-phone.dto';
+export * from './create-phone.dto';
+export * from './update-phone.dto';

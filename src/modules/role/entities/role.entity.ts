@@ -1,77 +1,63 @@
-import {
-  Collection,
-  Entity,
-  EntityRepositoryType,
-  Enum,
-  ManyToMany,
-  Property,
-} from '@mikro-orm/core';
+import { pick } from 'helper-fns';
+import { DateTime } from 'luxon';
+import { Pojo } from 'objection';
 
-import { RoleRepository } from '@role/repositories/role.repository';
-import { UserEntity } from '@user/entities/user.entity';
 import { BaseEntity } from '@common/entities/base.entity';
 
-@Entity({
-  tableName: 'roles',
-  comment: 'Role Table',
-  customRepository: () => RoleRepository,
-})
-export class RoleEntity extends BaseEntity {
-  [EntityRepositoryType]?: RoleRepository;
+export class Role extends BaseEntity {
+  static tableName = 'roles';
 
   /**
    * ------------------------------------------------------
    * Columns
    * ------------------------------------------------------
-   * - column typing struct
    */
-
-  @Property({ length: 50, hidden: true, unique: true, comment: 'Role Name' })
-  name: string;
-
-  @Property({ length: 50 })
   slug: string;
-
-  @Property({ length: 255 })
+  name: string;
   description: string;
 
   /**
    * ------------------------------------------------------
    * Relationships
    * ------------------------------------------------------
-   * - define model relationships
    */
-  @ManyToMany({
-    entity: () => UserEntity,
-    //pivotEntity: () => UserRoleEntity,
-    pivotTable: 'users_roles',
-    joinColumn: 'user_id',
-    inverseJoinColumn: 'role_id',
-    hidden: true,
-  })
-  users: Collection<UserEntity> = new Collection<UserEntity>(this);
 
   /**
    * ------------------------------------------------------
    * Hooks
    * ------------------------------------------------------
    */
+  async $beforeUpdate() {
+    this.updated_at = DateTime.local().toISO();
+  }
 
   /**
    * ------------------------------------------------------
    * Methods
    * ------------------------------------------------------
    */
-  @Enum({
-    items: () => ['slug', 'description'],
-    persist: false,
-    hidden: true,
-  })
-  search_fields: string[];
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      required: ['name', 'slug'],
+
+      properties: {
+        id: { type: 'string' },
+        name: { type: 'string', minLength: 1, maxLength: 80 },
+        slug: { type: 'string', minLength: 1, maxLength: 80 },
+        description: { type: 'string', minLength: 1, maxLength: 160 },
+      },
+    };
+  }
 
   /**
    * ------------------------------------------------------
-   * Query Scopes
+   * Serializer
    * ------------------------------------------------------
    */
+  $formatJson(json: Pojo) {
+    json = super.$formatJson(json);
+    json = pick(json, ['id', 'slug', 'description']);
+    return json;
+  }
 }

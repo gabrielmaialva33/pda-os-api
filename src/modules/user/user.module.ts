@@ -1,15 +1,14 @@
 import { Module } from '@nestjs/common';
+import { OrmModule } from '@lib/orm/orm.module';
 
-import { UserController } from '@user/http/user.controller';
-import { UserService } from '@user/services/user.service';
-
-import { OrmModule } from '@src/lib/orm/orm.module';
-import { RoleModule } from '@role/role.module';
+import { UserRepository } from '@modules/user/repositories/user.repository';
+import { UserController } from '@modules/user/controllers/user.controller';
+import { UserService } from '@modules/user/services/user.service';
 
 @Module({
-  imports: [OrmModule, RoleModule],
+  imports: [OrmModule],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, UserRepository],
   exports: [UserService],
 })
 export class UserModule {}

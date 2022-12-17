@@ -1,18 +1,21 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { database, jwt } from '@src/lib/config/configs';
-import { ValidationSchema } from '@src/lib/config/validate.config';
+
+import { validateEnv, ValidateSchema } from '@lib/config/validate.config';
+import { database } from '@lib/config/database.config';
+import { jwt } from '@lib/config/jwt.config';
 
 @Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [`env/.env.${process.env.NODE_ENV}`],
+      envFilePath: ['.env'],
       load: [database, jwt],
       cache: true,
       isGlobal: true,
       expandVariables: true,
-      validationSchema: ValidationSchema,
+      validationSchema: ValidateSchema,
+      validate: validateEnv,
       validationOptions: {
         abortEarly: true,
       },

@@ -1,2 +1,2 @@
-export * from './edit-address.dto';
-export * from './store-address.dto';
+export * from './create-address.dto';
+export * from './update-address.dto';

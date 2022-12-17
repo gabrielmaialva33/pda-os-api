@@ -1,42 +1,33 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from '@user/services/user.service';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { UserEntity } from '@user/entities/user.entity';
-import { EntityManager } from '@mikro-orm/core';
+import { I18nService } from 'nestjs-i18n';
+
+import { UserService } from '@modules/user/services/user.service';
+import { UserRepository } from '@modules/user/repositories/user.repository';
+import { createMock } from '@golevelup/ts-jest';
 
 describe('UserService', () => {
   let service: UserService;
 
+  const mockI18n = createMock<I18nService>();
+  const mockUserRepository = createMock<UserRepository>();
+
   beforeEach(async () => {
+    jest.clearAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        MikroOrmModule.forFeature({
-          entities: [UserEntity],
-        }),
-      ],
       providers: [
-        {
-          provide: EntityManager,
-          useFactory: jest.fn(() => ({
-            flush: jest.fn(),
-          })),
-        },
-        {
-          provide: 'UserRepository',
-          useFactory: jest.fn(() => ({
-            findAll: jest.fn(),
-            findOne: jest.fn(),
-            persist: jest.fn(),
-          })),
-        },
         UserService,
+        {
+          provide: UserRepository,
+          useValue: mockUserRepository,
+        },
+        {
+          provide: I18nService,
+          useValue: mockI18n,
+        },
       ],
     }).compile();
 
     service = module.get<UserService>(UserService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
   });
 });

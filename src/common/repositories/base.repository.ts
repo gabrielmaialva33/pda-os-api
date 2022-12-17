@@ -1,112 +1,127 @@
+import { from, map, Observable } from 'rxjs';
+
 import {
-  EntityData,
-  FilterQuery,
-  Loaded,
-  ObjectQuery,
-  wrap,
-} from '@mikro-orm/core';
-import {
-  Pagination,
-  PaginationOptions,
-} from '@common/interfaces/pagination.interface';
+  IBaseRepository,
+  ListOptions,
+  ModelAttributes,
+  QueryContext,
+} from '@common/interfaces/base-repository.interface';
 import { BaseEntity } from '@common/entities/base.entity';
-import { EntityDTO, RequiredEntityData } from '@mikro-orm/core/typings';
-import { RepositoryInterface } from '@common/interfaces/repository.interface';
-import { EntityRepository } from '@mikro-orm/postgresql';
-import * as console from 'console';
+import { ModelProps } from 'objection';
 
-export class BaseRepository<Model extends BaseEntity>
-  extends EntityRepository<Model>
-  implements RepositoryInterface<Model>
+export class BaseRepository<Entity extends BaseEntity>
+  implements IBaseRepository<Entity>
 {
-  private UUID_REGEX =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  constructor(protected orm: typeof BaseEntity) {}
 
-  async paginate({
-    page,
-    per_page,
-    search,
-    sort,
-    direction,
-  }: PaginationOptions): Promise<Pagination<Model>> {
-    const filter: any = [];
-    if (search) {
-      const fields = this._em.getMetadata().get<Model>(String(this.entityName))
-        .properties['search_fields'].items;
-      fields.forEach((field) =>
-        filter.push({ [field]: { $ilike: `%${search}%` } }),
-      );
-    }
+  paginate(options?: ListOptions<Entity>) {
+    return from(
+      this.orm.transaction(async (trx) => {
+        const query = this.orm.query(trx);
 
-    if (!page) page = 1;
-    if (!per_page) per_page = 10;
-    if (!sort) sort = 'created_at';
-    if (!direction) direction = 'desc';
+        if (options) {
+          /**
+           * if exists cotext is for the case when we want to paginate
+           */
+          if (options.context)
+            if (options.context.populate && options.context.populate.length > 0)
+              for (const relation of options.context.populate)
+                query.withGraphFetched(relation);
 
-    const [data, total] = await this.findAndCount(
-      {
-        $or: [...filter],
-      } as ObjectQuery<Model>,
-      {
-        limit: Number(per_page),
-        offset: Math.abs(Number(per_page) * (Number(page) - 1)),
-        orderBy: {
-          [sort]: direction,
-        } as ObjectQuery<Model>,
-        populate: true,
-      },
+          /**
+           * if exists page and per_page we want to paginate
+           */
+          if (options.page || options.per_page) {
+            if (options.page < 1) options.page = 1;
+            if (options.per_page < 1) options.per_page = 10;
+
+            query.page(options.page - 1 || 0, options.per_page || 10);
+          } else query.page(0, 10);
+
+          /**
+           * if exists sort and order we want to sort
+           */
+          if (options.sort || options.order)
+            query.orderBy(
+              (options.sort as string) || 'created_at',
+              options.order || 'desc',
+            );
+          else query.orderBy('created_at', options.order || 'desc');
+        }
+
+        return query;
+      }),
+    ).pipe(
+      map(
+        (result) =>
+          ({
+            results: result['results'] as Entity[],
+            total: result['total'] as number,
+          } as { results: Entity[]; total: number }),
+      ),
     );
-
-    return {
-      meta: {
-        total,
-        per_page: Number(per_page),
-        current_page: Number(page),
-        last_page: Math.ceil(total / Number(per_page)),
-        first_page: 1,
-        first_page_url: '/?page=1',
-        last_page_url: `/?page=${Math.ceil(total / Number(per_page))}`,
-        next_page_url: `/?page=${Number(page) + 1}`,
-        previous_page_url:
-          Number(page) > 1 ? `/?page=${Number(page) - 1}` : null,
-        sorted_by: sort,
-        direction,
-      },
-      data,
-    };
   }
 
-  async get(id: string): Promise<Loaded<Model>> {
-    return this.findOne(id as FilterQuery<Model>);
+  list(options?: ListOptions<Entity>): Observable<Entity[]> {
+    return from(
+      this.orm.transaction(async (trx) => {
+        const query = this.orm.query(trx);
+
+        if (options?.sort)
+          query.orderBy(options.sort as string, options.order || 'desc');
+
+        return query.orderBy('created_at', options.order || 'desc');
+      }),
+    ).pipe(map((result) => result as Entity[]));
   }
 
-  async store(data: RequiredEntityData<Model>): Promise<Model> {
-    const model = this.create(data);
-    await this.persistAndFlush(model);
-    return model;
+  create(data: ModelAttributes<Entity>): Observable<Entity> {
+    return from(
+      this.orm.transaction(async (trx) =>
+        this.orm.query(trx).insert(data).returning('*'),
+      ),
+    ).pipe(map((result) => result as Entity));
   }
 
-  async save(
-    id: string,
-    data: EntityData<Loaded<Model>> | Partial<EntityDTO<Loaded<Model>>>,
-  ): Promise<Loaded<Model>> {
-    console.log(data);
-    const model = await this.findOneOrFail(id as FilterQuery<Model>);
-
-    wrap(model).assign(data);
-
-    return model;
+  createMany(data: ModelAttributes<Entity>[]): Observable<Entity[]> {
+    return from(
+      this.orm.transaction(async (trx) =>
+        this.orm.query(trx).insert(data).returning('*'),
+      ),
+    ).pipe(map((result) => result as Entity[]));
   }
 
-  async getBy(keys: string[], values: string[]) {
-    const filters: any = [];
+  getBy(
+    keys: ModelProps<Entity>[],
+    value: any,
+    context?: QueryContext<Entity>,
+  ): Observable<Entity> {
+    return from(
+      this.orm.transaction(async (trx) => {
+        for (let i = 0; i < keys.length; i++) {
+          const query = this.orm.query(trx).where(keys[i] as string, value);
 
-    for (let i = 0; i < keys.length; i++)
-      for (let j = 0; j < values.length; j++)
-        if (values[j]) filters.push({ [keys[i]]: values[j] });
+          if (context) {
+            if (context.populate && context.populate.length > 0)
+              for (const relation of context.populate)
+                query.withGraphFetched(relation);
 
-    return this.findOne({
-      $or: [...filters],
-    } as unknown as ObjectQuery<Model>);
+            if (context.where) query.where(context.where);
+          }
+
+          const result = await query.first();
+
+          if (result) return result;
+        }
+      }),
+    ).pipe(map((result) => result as Entity));
+  }
+
+  update(id: string, data: ModelAttributes<Entity>): Observable<Entity> {
+    return from(
+      this.orm.transaction(async (trx) =>
+        this.orm.query(trx).patchAndFetchById(id, data).returning('*'),
+      ),
+    ).pipe(map((result) => result as Entity));
   }
 }

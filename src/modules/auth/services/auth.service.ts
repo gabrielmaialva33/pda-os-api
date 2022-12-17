@@ -1,10 +1,13 @@
 import { DateTime } from 'luxon';
+import { pick } from 'helper-fns';
 import { Injectable } from '@nestjs/common';
-
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from '@user/services/user.service';
-import { UserEntity } from '@user/entities/user.entity';
+
 import { Argon2Utils } from '@common/helpers';
+import { UserService } from '@modules/user/services/user.service';
+import { User } from '@modules/user/entities/user.entity';
+import { from, map, switchMap } from 'rxjs';
+import { SignInUserDto } from '@modules/auth/dto';
 
 @Injectable()
 export class AuthService {
@@ -13,25 +16,41 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validate(uid: string, password: string): Promise<any> {
-    const user = await this.userService.getBy(['email', 'user_name'], [uid]);
-    if (user && (await Argon2Utils.verify(user.password, password)))
-      return user;
-    return null;
+  validate(uid: string, password: string) {
+    return from(this.userService.getBy(User.uids, uid)).pipe(
+      switchMap((user) => {
+        if (!user) return null;
+        return Argon2Utils.verify(user.password, password).pipe(
+          map((isValid) => (isValid ? user : null)),
+        );
+      }),
+    );
   }
 
-  async login(user: UserEntity) {
-    return {
-      user,
-      auth: {
-        token: this.jwtService.sign(
-          { sub: user.id },
-          {
-            expiresIn: '1d',
-          },
-        ),
-        expires_at: DateTime.local().plus({ days: 1 }).toISO(),
-      },
-    };
+  login({ uid, password }: SignInUserDto) {
+    return this.validate(uid, password).pipe(
+      switchMap((user) => {
+        if (!user) return null;
+        const payload = { sub: user.id };
+        return from(this.jwtService.signAsync(payload)).pipe(
+          map((token) => {
+            const expiresAt = DateTime.local().plus({ hours: 1 });
+            return {
+              user: {
+                ...pick(user.$toJson(), [
+                  'id',
+                  'first_name',
+                  'last_name',
+                  'email',
+                  'user_name',
+                  'avatar',
+                ]),
+              },
+              auth: { token, expires_at: expiresAt },
+            };
+          }),
+        );
+      }),
+    );
   }
 }

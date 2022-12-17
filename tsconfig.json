@@ -1,68 +1,39 @@
 {
   "compilerOptions": {
-    "jsx": "react",
     "module": "commonjs",
     "declaration": true,
-    "lib": [
-      "es2020"
-    ],
     "removeComments": true,
     "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2020",
-    "moduleResolution": "node",
-    "sourceMap": false,
+    "target": "es2017",
+    "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "moduleResolution": "node",
+    "baseUrl": "./src",
     "incremental": true,
     "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@src/*": [
-        "src/*"
+      "@/*": [
+        "./*"
       ],
       "@common/*": [
-        "src/common/*"
+        "./common/*"
       ],
-      "@address/*": [
-        "src/modules/address/*"
+      "@lib/*": [
+        "./lib/*"
       ],
-      "@auth/*": [
-        "src/modules/auth/*"
-      ],
-      "@client/*": [
-        "src/modules/client/*"
-      ],
-      "@collaborator/*": [
-        "src/modules/collaborator/*"
-      ],
-      "@health/*": [
-        "src/modules/health/*"
-      ],
-      "@logger/*": [
-        "src/modules/logger/*"
-      ],
-      "@phone/*": [
-        "src/modules/phone/*"
-      ],
-      "@role/*": [
-        "src/modules/role/*"
-      ],
-      "@user/*": [
-        "src/modules/user/*"
+      "@modules/*": [
+        "./modules/*"
       ]
     }
   },
   "include": [
-    "test/**/*",
     "src/**/*"
-  ],
-  "strict": true,
-  "noUnusedLocals": true,
-  "noUnusedParameters": true,
-  "noImplicitReturns": true,
-  "noFallthroughCasesInSwitch": true,
-  "noUncheckedIndexedAccess": true,
-  "noPropertyAccessFromIndexSignature": true
+  ]
 }
