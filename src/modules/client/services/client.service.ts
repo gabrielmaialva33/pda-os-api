@@ -122,11 +122,30 @@ export class ClientService {
     );
   }
 
-  update(id: string, data: UpdateClientDto) {
+  update(id: string, { phones, addresses, ...data }: UpdateClientDto) {
     return this.get(id).pipe(
       switchMap((client) => {
-        return from(this.clientRepository.update(client.id, data)).pipe(
-          map((client) => client),
+        const phones$ = from(this.phoneService.createMany(phones));
+        const addresses$ = from(this.addressService.createMany(addresses));
+
+        return forkJoin([phones$, addresses$]).pipe(
+          switchMap(([phones, addresses]) => {
+            return forkJoin([
+              from(
+                this.clientRepository.update(client.id, {
+                  ...data,
+                }),
+              ),
+              this.syncPhones(
+                client,
+                phones.map((phone) => phone.id),
+              ),
+              this.syncAddresses(
+                client,
+                addresses.map((address) => address.id),
+              ),
+            ]).pipe(map(() => client));
+          }),
         );
       }),
     );

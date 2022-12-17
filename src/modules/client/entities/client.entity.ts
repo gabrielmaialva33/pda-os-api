@@ -1,7 +1,6 @@
 import { BaseEntity } from '@common/entities/base.entity';
 import { Pojo } from 'objection';
 import { DateTime } from 'luxon';
-import { pick } from 'helper-fns';
 
 export class Client extends BaseEntity {
   static tableName = 'clients';
