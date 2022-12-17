@@ -1,10 +1,10 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1670700342478
+modified: 1671291830314
 created: 1668302615245
 fileName: pda-api
-contents: |+
+contents: |
   openapi: 3.0.3
   info:
     version: 1.0.0
@@ -19,9 +19,9 @@ contents: |+
       description: Local server
     - url: http://127.0.0.1:3000
       description: Docker server
-    - url: https://pda.os.api.mrootx.xyz/
+    - url: https://pda.os.api.mrootx.xyz
       description: Azure server
-    - url: https://pda-os-api.azurewebsites.net/
+    - url: https://pda-os-api.azurewebsites.net
       description: Azure Web App
   tags:
     - name: Auth
@@ -34,7 +34,10 @@ contents: |+
       description: Operations about collaborators
     - name: Client
       description: Operations about clients
-
+    - name: Phone
+      description: Operations about phones
+    - name: Address
+      description: Operations about addresses
 
   paths:
     /sign_in:
@@ -43,6 +46,7 @@ contents: |+
           - Auth
         summary: Sign in
         description: Use to sign in
+        operationId: signIn
         requestBody:
           description: User object that needs to be signed in
           required: true
@@ -95,7 +99,7 @@ contents: |+
               default: id
             description: Sort by field
           - in: query
-            name: direction
+            name: order
             schema:
               type: string
               default: asc
@@ -246,7 +250,7 @@ contents: |+
               default: id
             description: Sort by field
           - in: query
-            name: direction
+            name: order
             schema:
               type: string
               default: asc
@@ -397,7 +401,7 @@ contents: |+
               default: id
             description: Sort by field
           - in: query
-            name: direction
+            name: order
             schema:
               type: string
               default: asc
@@ -548,7 +552,7 @@ contents: |+
               default: id
             description: Sort by field
           - in: query
-            name: direction
+            name: order
             schema:
               type: string
               default: asc
@@ -665,21 +669,314 @@ contents: |+
             description: Client deleted
           '404':
             description: Client not found
+
+    /phones:
+      get:
+        tags:
+          - Phone
+        summary: List phones
+        description: Use to request all phones
+        operationId: GetAllPhones
+        parameters:
+          - in: query
+            name: page
+            schema:
+              type: integer
+              default: 1
+            description: Page number
+          - in: query
+            name: per_page
+            schema:
+              type: integer
+              default: 10
+            description: Number of phones per page
+          - in: query
+            name: search
+            schema:
+              type: string
+              example: 'John'
+            description: Search by public fields
+          - in: query
+            name: sort
+            schema:
+              type: string
+              default: id
+            description: Sort by field
+          - in: query
+            name: order
+            schema:
+              type: string
+              default: asc
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Phone'
+      post:
+        tags:
+          - Phone
+        summary: Store phone
+        description: Use to create a phone
+        operationId: StorePhone
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Phone object that needs to be added to the store
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorePhone'
+        responses:
+          '201':
+            description: Phone created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Phone'
+          '400':
+            description: Invalid input
+    /phones/{phoneId}:
+      get:
+        tags:
+          - Phone
+        summary: Get phone
+        description: Use to request a phone
+        operationId: GetPhone
+        parameters:
+          - name: phoneId
+            in: path
+            description: ID of phone to return
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Phone'
+          '404':
+            description: Phone not found
+      put:
+        tags:
+          - Phone
+        summary: Edit phone
+        description: Use to edit a phone
+        operationId: EditPhone
+        parameters:
+          - name: phoneId
+            in: path
+            description: ID of phone to update
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Phone object that needs to be updated
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorePhone'
+        responses:
+          '200':
+            description: Phone updated
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Phone'
+          '400':
+            description: Invalid input
+          '404':
+            description: Phone not found
+      delete:
+        tags:
+          - Phone
+        summary: Delete phone
+        description: Use to delete a phone
+        operationId: DeletePhone
+        parameters:
+          - name: phoneId
+            in: path
+            description: ID of phone to delete
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '204':
+            description: Phone deleted
+          '404':
+            description: Phone not found
+
+    /addresses:
+      get:
+        tags:
+          - Address
+        summary: List addresses
+        description: Use to request all addresses
+        operationId: GetAllAddresses
+        parameters:
+          - in: query
+            name: page
+            schema:
+              type: integer
+              default: 1
+            description: Page number
+          - in: query
+            name: per_page
+            schema:
+              type: integer
+              default: 10
+            description: Number of addresses per page
+          - in: query
+            name: search
+            schema:
+              type: string
+              example: 'John'
+            description: Search by public fields
+          - in: query
+            name: sort
+            schema:
+              type: string
+              default: id
+            description: Sort by field
+          - in: query
+            name: order
+            schema:
+              type: string
+              default: asc
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Address'
+      post:
+        tags:
+          - Address
+        summary: Store address
+        description: Use to create an address
+        operationId: StoreAddress
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Address object that needs to be added to the store
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreAddress'
+        responses:
+          '201':
+            description: Address created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Address'
+          '400':
+            description: Invalid input
+    /addresses/{addressId}:
+      get:
+        tags:
+          - Address
+        summary: Get address
+        description: Use to request an address
+        operationId: GetAddress
+        parameters:
+          - name: addressId
+            in: path
+            description: ID of address to return
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Address'
+          '404':
+            description: Address not found
+      put:
+        tags:
+          - Address
+        summary: Edit address
+        description: Use to edit an address
+        operationId: EditAddress
+        parameters:
+          - name: addressId
+            in: path
+            description: ID of address to update
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Address object that needs to be updated
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreAddress'
+        responses:
+          '200':
+            description: Address updated
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Address'
+          '400':
+            description: Invalid input
+          '404':
+            description: Address not found
+      delete:
+        tags:
+          - Address
+        summary: Delete address
+        description: Use to delete an address
+        operationId: DeleteAddress
+        parameters:
+          - name: addressId
+            in: path
+            description: ID of address to delete
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '204':
+            description: Address deleted
+          '404':
+            description: Address not found
   components:
     securitySchemes:
       bearerToken:
         type: http
         scheme: bearer
         bearerFormat: JWT
-    responses:
-      '200':
-        description: OK
-      '401':
-        description: Unauthorized
-      '422':
-        description: Unprocessable Entity
-      '404':
-        description: Not Found
     schemas:
       ## schemas can be referenced from a response or parameter in a path
       # auth schemas
@@ -975,7 +1272,7 @@ contents: |+
           civil_status:
             type: string
             example: 'single'
-          description:
+          note:
             type: string
             example: 'A good developer'
           phones:
@@ -1080,7 +1377,7 @@ contents: |+
           civil_status:
             type: string
             example: 'single'
-          description:
+          note:
             type: string
             example: 'A good developer'
           phones:
@@ -1134,7 +1431,7 @@ contents: |+
           work_type: 'clt'
           status: 'active'
           civil_status: 'single'
-          description: 'A good developer'
+          note: 'A good developer'
           phones:
             - phone: '(15) 99660-1742'
               type: 'home'
@@ -1229,10 +1526,6 @@ contents: |+
           zip_code:
             type: string
             example: '12345-678'
-          collaborator_id:
-            type: string
-            format: uuid
-            example: 5da76fd7-e945-4c87-98ff-a73be856e16e
         example:
           id: 8822ab54-950e-4204-adba-a43fcb2903b0
           street: 'Rua 1'
@@ -1242,7 +1535,6 @@ contents: |+
           city: 'São Paulo'
           state: 'SP'
           zip_code: '12345-678'
-          collaborator_id: b8e1db41-195b-46f1-9024-08915b6a6833
       StoreAddress:
         type: object
         properties:
@@ -1406,9 +1698,4 @@ contents: |+
             email: john.client@pda.com
             user_name: john.client
             password: 'Pda@551238'
-
-
-
-
-
 contentType: yaml

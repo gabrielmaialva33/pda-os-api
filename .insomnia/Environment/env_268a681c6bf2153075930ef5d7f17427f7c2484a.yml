@@ -1,13 +1,13 @@
 _id: env_268a681c6bf2153075930ef5d7f17427f7c2484a
 type: Environment
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1670696285017
+modified: 1671141746834
 created: 1668302615248
 name: Base Environment
 data:
   base_url: "{{ scheme }}://{{ host }}{{ base_path }}"
   bearerToken: "{% response 'body',
-    'req_wrk_b084de0cdb4b4710bd5022395701401359487669',
+    'req_wrk_b084de0cdb4b4710bd5022395701401379e18923',
     'b64::JC5hdXRoLnRva2Vu::46b', 'never', 60 %}"
   roleId: "{% response 'body', 'req_wrk_b084de0cdb4b4710bd5022395701401366e2bf60',
     'b64::JC5kYXRhLjAuaWQ=::46b', 'never', 60 %}"
@@ -19,6 +19,12 @@ data:
   clientId: "{% response 'body',
     'req_wrk_b084de0cdb4b4710bd5022395701401378c739fe',
     'b64::JC5kYXRhLjAuaWQ=::46b', 'never', 60 %}"
+  addressId: "{% response 'body',
+    'req_wrk_b084de0cdb4b4710bd502239570140131c5e38d8',
+    'b64::JC5kYXRhLjAuaWQ=::46b', 'never', 60 %}"
+  phoneId: "{% response 'body',
+    'req_wrk_b084de0cdb4b4710bd50223957014013b7f2d6dd',
+    'b64::JC5kYXRhLjAuaWQ=::46b', 'never', 60 %}"
 dataPropertyOrder:
   "&":
     - base_url
@@ -27,6 +33,8 @@ dataPropertyOrder:
     - collaboratorId
     - userId
     - clientId
+    - addressId
+    - phoneId
 color: null
 isPrivate: false
 metaSortKey: 1668302615248
