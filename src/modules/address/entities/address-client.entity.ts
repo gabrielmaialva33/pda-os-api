@@ -1,32 +1,33 @@
 import Objection, { Model, Pojo } from 'objection';
-import { Phone } from '@modules/phone/entities/phone.entity';
-import { Collaborator } from '@modules/collaborator/entities/collaborator.entity';
 
-export class PhoneCollaborator extends Model {
-  static tableName = 'phone_collaborators';
+import { Address } from '@modules/address/entities/address.entity';
+import { Client } from '@modules/client/entities/client.entity';
+
+export class AddressClient extends Model {
+  static tableName = 'address_clients';
 
   id: string;
-  phone_id: string;
-  collaborator_id: string;
+  address_id: string;
+  client_id: string;
   created_at: string;
   updated_at: string;
 
   static get relationMappings() {
     return {
-      phone: {
+      address: {
         relation: Model.HasOneRelation,
-        modelClass: Phone,
+        modelClass: Address,
         join: {
-          from: 'phone_collaborators.phone_id',
-          to: 'phones.id',
+          from: 'address_clients.address_id',
+          to: 'addresses.id',
         },
       },
-      collaborator: {
+      client: {
         relation: Model.HasOneRelation,
-        modelClass: Collaborator,
+        modelClass: Client,
         join: {
-          from: 'phone_collaborators.collaborator_id',
-          to: 'collaborators.id',
+          from: 'address_clients.client_id',
+          to: 'clients.id',
         },
       },
     };
@@ -35,12 +36,12 @@ export class PhoneCollaborator extends Model {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['phone_id', 'collaborator_id'],
+      required: ['address_id', 'client_id'],
 
       properties: {
         id: { type: 'integer' },
-        phone_id: { type: 'string' },
-        collaborator_id: { type: 'string' },
+        address_id: { type: 'string' },
+        client_id: { type: 'string' },
         created_at: { type: 'string' },
         updated_at: { type: 'string' },
       },

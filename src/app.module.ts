@@ -13,6 +13,7 @@ import { PhoneModule } from '@modules/phone/phone.module';
 import { AddressModule } from '@modules/address/address.module';
 import { CollaboratorModule } from '@modules/collaborator/collaborator.module';
 import { BankModule } from '@modules/bank/bank.module';
+import { ClientModule } from '@modules/client/client.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BankModule } from '@modules/bank/bank.module';
     AddressModule,
     CollaboratorModule,
     BankModule,
+    ClientModule,
   ],
 })
 export class AppModule {}

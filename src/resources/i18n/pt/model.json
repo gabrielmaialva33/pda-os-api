@@ -4,6 +4,7 @@
     "field": {
       "first_name": "Primeiro Nome",
       "last_name": "Último Nome",
+      "full_name": "Nome Completo",
       "email": "E-mail",
       "password": "Senha",
       "password_confirmation": "Confirmação de Senha"
@@ -38,11 +39,16 @@
   "collaborator": {
     "entity": "Colaborador",
     "field": {
-      "name": "Nome",
-      "email": "E-mail",
-      "phone": "Telefone",
-      "address": "Endereço",
-      "role": "Perfil"
+      "code": "Código",
+      "cpf": "CPF",
+      "rg": "RG",
+      "birth_date": "Data de Nascimento",
+      "job": "Cargo",
+      "sex": "Sexo",
+      "work_type": "Tipo de Contrato",
+      "status": "Status",
+      "civil_status": "Estado Civil",
+      "note": "Observação"
     }
   },
   "bank": {
@@ -52,6 +58,14 @@
       "agency": "Agência",
       "account": "Conta",
       "pix": "Pix"
+    }
+  },
+  "client": {
+    "entity": "Cliente",
+    "field": {
+      "cpf": "CPF",
+      "rg": "RG",
+      "birth_date": "Data de Nascimento"
     }
   }
 }

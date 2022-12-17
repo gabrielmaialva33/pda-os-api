@@ -1,13 +1,13 @@
 import { Knex } from 'knex';
 
-import { PhoneCollaborator } from '@modules/phone/entities/phone-collaborator.entity';
+import { PhoneClient } from '@modules/phone/entities/phone-client.entity';
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.createTable(PhoneCollaborator.tableName, (table) => {
+  await knex.schema.createTable(PhoneClient.tableName, (table) => {
     table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));
 
     table.uuid('phone_id').notNullable();
-    table.uuid('collaborator_id').notNullable();
+    table.uuid('client_id').notNullable();
 
     table
       .foreign('phone_id')
@@ -17,9 +17,9 @@ export async function up(knex: Knex): Promise<void> {
       .onUpdate('CASCADE');
 
     table
-      .foreign('collaborator_id')
+      .foreign('client_id')
       .references('id')
-      .inTable('collaborators')
+      .inTable('clients')
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
 
@@ -29,5 +29,5 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.dropTable(PhoneCollaborator.tableName);
+  await knex.schema.dropTable(PhoneClient.tableName);
 }

@@ -41,6 +41,7 @@ export class AuthService {
                   'id',
                   'first_name',
                   'last_name',
+                  'full_name',
                   'email',
                   'user_name',
                   'avatar',

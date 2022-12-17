@@ -12,9 +12,10 @@ import { UserRole } from '@modules/user/entities/user-role.entity';
 import { Phone } from '@modules/phone/entities/phone.entity';
 import { Address } from '@modules/address/entities/address.entity';
 import { Collaborator } from '@modules/collaborator/entities/collaborator.entity';
-import { PhoneCollaborator } from '@modules/phone/entities/phone.collaborator';
+import { PhoneCollaborator } from '@modules/phone/entities/phone-collaborator.entity';
 import { AddressCollaborator } from '@modules/address/entities/address-collaborator.entity';
 import { Bank } from '@modules/bank/entities/bank.entity';
+import { Client } from '@modules/client/entities/client.entity';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { Bank } from '@modules/bank/entities/bank.entity';
       PhoneCollaborator,
       AddressCollaborator,
       Bank,
+      Client,
     ]),
   ],
   exports: [ObjectionModule],
