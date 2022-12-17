@@ -12,13 +12,13 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: '16.x'
+          versionSpec: '19.x'
         displayName: 'Install Node.js'
 
       - script: |
-          npm install
+          yarn
         displayName: 'Install'
 
       - script: |
-          npm run build
+          yarn build
         displayName: 'Build'

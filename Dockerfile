@@ -1,7 +1,7 @@
 FROM node:18 AS builder
 
 # Create app directory
-WORKDIR /home/app
+WORKDIR /home/pda.os.api
 
 # Install app dependencies
 COPY package*.json ./
@@ -17,10 +17,10 @@ RUN yarn build
 
 FROM node:18 AS runner
 
-WORKDIR /home/app
+WORKDIR /home/pda.os.api
 
 # Copy the build files
-COPY --from=builder /home/app .
+COPY --from=builder /home/pda.os.api .
 
 EXPOSE 3333
 
