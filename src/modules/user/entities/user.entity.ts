@@ -96,7 +96,8 @@ export class User extends BaseEntity {
   $formatJson(json: Pojo) {
     json = super.$formatJson(json);
     json.avatar = `https://api.multiavatar.com/${json.user_name.toLowerCase()}.svg`;
-    json.role = json.roles[0].slug.toLowerCase();
+
+    if (json.roles) json.role = json.roles[0].slug.toLowerCase();
 
     delete json.password;
     delete json.is_deleted;

@@ -12,8 +12,6 @@ servers:
     description: Local server
   - url: http://127.0.0.1:3000
     description: Docker server
-  - url: https://pda.os.api.mrootx.xyz
-    description: Azure server
   - url: https://pda-os-api.azurewebsites.net
     description: Azure Web App
 tags:

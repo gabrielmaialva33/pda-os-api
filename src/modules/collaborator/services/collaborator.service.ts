@@ -93,52 +93,55 @@ export class CollaboratorService {
   }
 
   create({ phones, addresses, user, bank, ...data }: CreateCollaboratorDto) {
-    const user$ = from(
+    const collaborator$ = from(
       this.userService.create({
         ...user,
         role: RoleType.COLLABORATOR,
       }),
-    );
-
-    const collaborator$ = user$.pipe(
+    ).pipe(
       switchMap((user) => {
-        return from(
-          this.collaboratorRepository.create({
-            ...data,
-            user_id: user.id,
-            code: crypto.randomBytes(4).toString('hex').toUpperCase(),
-          }),
-        );
+        return this.collaboratorRepository.create({
+          ...data,
+          user_id: user.id,
+          code: crypto.randomBytes(4).toString('hex').toUpperCase(),
+        });
       }),
     );
 
-    const phones$ = from(this.phoneService.createMany(phones));
-    const addresses$ = from(this.addressService.createMany(addresses));
+    return from(collaborator$).pipe(
+      switchMap((collaborator) => {
+        const phones$ = from(this.phoneService.createMany(phones)).pipe(
+          switchMap((phones) => {
+            return this.syncPhones(
+              collaborator,
+              phones.map((phone) => phone.id),
+            );
+          }),
+        );
 
-    return forkJoin([collaborator$, phones$, addresses$]).pipe(
-      switchMap(([collaborator, phones, addresses]) => {
-        from(
+        const addresses$ = from(this.addressService.createMany(addresses)).pipe(
+          switchMap((addresses) => {
+            return this.syncAddresses(
+              collaborator,
+              addresses.map((address) => address.id),
+            );
+          }),
+        );
+
+        const bank$ = from(
           this.backService.create({
             ...bank,
             collaborator_id: collaborator.id,
           }),
-        ).subscribe();
+        ).pipe(
+          map((bank) => {
+            return this.syncBank(collaborator, bank.id);
+          }),
+        );
 
-        from(
-          this.syncPhones(
-            collaborator.id,
-            phones.map((phone) => phone.id),
-          ),
-        ).subscribe();
-
-        from(
-          this.syncAddresses(
-            collaborator.id,
-            addresses.map((address) => address.id),
-          ),
-        ).subscribe();
-
-        return of(collaborator);
+        return forkJoin([phones$, addresses$, bank$]).pipe(
+          switchMap(() => this.get(collaborator.id)),
+        );
       }),
     );
   }
@@ -149,43 +152,37 @@ export class CollaboratorService {
   ) {
     return this.get(id).pipe(
       switchMap((collaborator) => {
-        from(collaborator.$relatedQuery('bank').delete())
-          .pipe(
-            switchMap(() =>
-              this.backService.create({ ...bank, collaborator_id: id }),
-            ),
-          )
-          .subscribe();
+        const collaborator$ = from(
+          this.collaboratorRepository.update(id, data),
+        ).pipe(map(() => collaborator));
 
-        if (phones && phones.length > 0) {
-          from(this.phoneService.createMany(phones))
-            .pipe(
-              switchMap((phones) => {
-                return this.syncPhones(
-                  collaborator.id,
-                  phones.map((phone) => phone.id),
-                );
-              }),
-            )
-            .subscribe();
-        }
+        const phones$ = from(this.phoneService.createMany(phones)).pipe(
+          switchMap((phones) => {
+            return this.syncPhones(
+              collaborator,
+              phones.map((phone) => phone.id),
+            );
+          }),
+        );
 
-        if (addresses && addresses.length > 0) {
-          from(this.addressService.createMany(addresses))
-            .pipe(
-              switchMap((addresses) => {
-                return this.syncAddresses(
-                  collaborator.id,
-                  addresses.map((address) => address.id),
-                );
-              }),
-            )
-            .subscribe();
-        }
+        const addresses$ = from(this.addressService.createMany(addresses)).pipe(
+          switchMap((addresses) => {
+            return this.syncAddresses(
+              collaborator,
+              addresses.map((address) => address.id),
+            );
+          }),
+        );
 
-        return this.collaboratorRepository.update(collaborator.id, {
-          ...data,
-        });
+        const bank$ = from(this.backService.create(bank)).pipe(
+          switchMap((bank) => {
+            return this.syncBank(collaborator, bank.id);
+          }),
+        );
+
+        return forkJoin([collaborator$, phones$, addresses$, bank$]).pipe(
+          switchMap(() => this.get(id)),
+        );
       }),
     );
   }
@@ -199,26 +196,28 @@ export class CollaboratorService {
     );
   }
 
-  syncPhones(collaboratorId: string, phonesIds: string[]) {
-    return this.get(collaboratorId).pipe(
-      switchMap((collaborator) => {
-        return from(collaborator.$relatedQuery('phones').delete()).pipe(
-          switchMap(() =>
-            collaborator.$relatedQuery('phones').relate(phonesIds),
-          ),
+  syncPhones(collaborator: Collaborator, phonesIds: string[]) {
+    return from(collaborator.$relatedQuery('phones').unrelate()).pipe(
+      switchMap(() => {
+        return from(collaborator.$relatedQuery('phones').relate(phonesIds));
+      }),
+    );
+  }
+
+  syncAddresses(collaborator: Collaborator, addressesIds: string[]) {
+    return from(collaborator.$relatedQuery('addresses').unrelate()).pipe(
+      switchMap(() => {
+        return from(
+          collaborator.$relatedQuery('addresses').relate(addressesIds),
         );
       }),
     );
   }
 
-  syncAddresses(collaboratorId: string, addressesIds: string[]) {
-    return this.get(collaboratorId).pipe(
-      switchMap((collaborator) => {
-        return from(collaborator.$relatedQuery('addresses').delete()).pipe(
-          switchMap(() =>
-            collaborator.$relatedQuery('addresses').relate(addressesIds),
-          ),
-        );
+  syncBank(collaborator: Collaborator, bankId: string) {
+    return from(collaborator.$relatedQuery('bank').unrelate()).pipe(
+      switchMap(() => {
+        return from(collaborator.$relatedQuery('bank').relate(bankId));
       }),
     );
   }
