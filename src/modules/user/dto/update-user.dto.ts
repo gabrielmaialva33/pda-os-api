@@ -4,6 +4,7 @@ import { isExists, isUnique } from '@lib/zod/refine.zod';
 
 import { User } from '@modules/user/entities/user.entity';
 import { Role } from '@modules/role/entities/role.entity';
+import { RoleType } from '@modules/role/enum/role-type.enum';
 
 export const UpdateUserSchema = z.object({
   first_name: z.string().min(1).max(80).optional(),
@@ -26,11 +27,7 @@ export const UpdateUserSchema = z.object({
     .optional(),
   password: z.string().min(1).max(118).optional(),
   avatar: z.string().min(1).max(255).optional(),
-  roles: z
-    .array(z.string().trim().uuid())
-    .superRefine((value, ctx) =>
-      isExists<Role>({ model: Role, field: 'id', value, ctx }),
-    ),
+  role: z.nativeEnum(RoleType),
 });
 
 export class UpdateUserDto extends CreateZodDto(UpdateUserSchema) {}

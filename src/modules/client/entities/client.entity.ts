@@ -10,6 +10,7 @@ export class Client extends BaseEntity {
    * Columns
    * ------------------------------------------------------
    */
+  full_name: string;
   cpf: string;
   rg: string;
   birth_date: string;
@@ -45,14 +46,6 @@ export class Client extends BaseEntity {
         to: 'addresses.id',
       },
     },
-    user: {
-      relation: BaseEntity.HasOneRelation,
-      modelClass: `${__dirname}/../../user/entities/user.entity`,
-      join: {
-        from: 'clients.user_id',
-        to: 'users.id',
-      },
-    },
   };
 
   /**
@@ -72,14 +65,14 @@ export class Client extends BaseEntity {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['cpf', 'rg', 'birth_date'],
+      required: ['full_name', 'cpf', 'rg', 'birth_date'],
 
       properties: {
         id: { type: 'string' },
+        full_name: { type: 'string', minLength: 3, maxLength: 255 },
         cpf: { type: 'string' },
         rg: { type: 'string' },
         birth_date: { type: 'string' },
-        user_id: { type: 'string' },
         created_at: { type: 'string' },
         updated_at: { type: 'string' },
       },

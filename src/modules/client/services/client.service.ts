@@ -34,7 +34,7 @@ export class ClientService {
           sort,
           order,
           context: {
-            populate: ['phones', 'addresses', 'user'],
+            populate: ['phones', 'addresses'],
           },
         })
         .pipe(
@@ -56,7 +56,7 @@ export class ClientService {
       this.clientRepository.list({
         sort,
         order,
-        context: { populate: ['phones', 'addresses', 'user'] },
+        context: { populate: ['phones', 'addresses'] },
       }),
     ).pipe(map((clients) => clients));
   }
@@ -64,7 +64,7 @@ export class ClientService {
   get(id: string) {
     return from(
       this.clientRepository.getBy(['id'], id, {
-        populate: ['phones', 'addresses', 'user'],
+        populate: ['phones', 'addresses'],
       }),
     ).pipe(
       map((client) => {
@@ -82,26 +82,8 @@ export class ClientService {
     );
   }
 
-  create({ user, phones, addresses, ...data }: CreateClientDto) {
-    const user$ = from(this.roleService.getBy(['name'], 'client')).pipe(
-      switchMap((role) => {
-        return this.userService.create({
-          ...user,
-          roles: [role.id],
-        });
-      }),
-    );
-
-    const client$ = user$.pipe(
-      switchMap((user) => {
-        return from(
-          this.clientRepository.create({
-            ...data,
-            user_id: user.id,
-          }),
-        );
-      }),
-    );
+  create({ phones, addresses, ...data }: CreateClientDto) {
+    const client$ = from(this.clientRepository.create(data));
 
     const phones$ = from(this.phoneService.createMany(phones));
     const addresses$ = from(this.addressService.createMany(addresses));
@@ -117,7 +99,7 @@ export class ClientService {
             client,
             addresses.map((address) => address.id),
           ),
-        ]).pipe(map(() => client));
+        ]).pipe(switchMap(() => this.get(client.id)));
       }),
     );
   }
@@ -144,7 +126,7 @@ export class ClientService {
                 client,
                 addresses.map((address) => address.id),
               ),
-            ]).pipe(map(() => client));
+            ]).pipe(switchMap(() => this.get(client.id)));
           }),
         );
       }),

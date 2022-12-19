@@ -19,6 +19,7 @@ import { RoleService } from '@modules/role/services/role.service';
 import { PhoneService } from '@modules/phone/services/phone.service';
 import { AddressService } from '@modules/address/services/address.service';
 import { BankService } from '@modules/bank/services/bank.service';
+import { RoleType } from '@modules/role/enum/role-type.enum';
 
 @Injectable()
 export class CollaboratorService {
@@ -92,12 +93,10 @@ export class CollaboratorService {
   }
 
   create({ phones, addresses, user, bank, ...data }: CreateCollaboratorDto) {
-    const user$ = from(this.rolesService.getBy(['name'], 'collaborator')).pipe(
-      switchMap((role) => {
-        return this.userService.create({
-          ...user,
-          roles: [role.id],
-        });
+    const user$ = from(
+      this.userService.create({
+        ...user,
+        role: RoleType.COLLABORATOR,
       }),
     );
 

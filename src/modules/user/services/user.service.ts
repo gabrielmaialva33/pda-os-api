@@ -4,18 +4,20 @@ import { DateTime } from 'luxon';
 import { I18nService } from 'nestjs-i18n';
 import { ModelProps } from 'objection';
 
+import { I18nTranslations } from '@/resources/i18n/generated/i18n.generated';
 import { PaginationObject } from '@lib/pagination';
 import { ListOptions } from '@common/interfaces/base-repository.interface';
 
 import { CreateUserDto, UpdateUserDto } from '@modules/user/dto';
 import { UserRepository } from '@modules/user/repositories/user.repository';
 import { User } from '@modules/user/entities/user.entity';
-import { I18nTranslations } from '@/resources/i18n/generated/i18n.generated';
+import { RoleService } from '@modules/role/services/role.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly roleService: RoleService,
     private readonly i18nService: I18nService<I18nTranslations>,
   ) {}
 
@@ -85,32 +87,44 @@ export class UserService {
     );
   }
 
-  create({ roles: roleIds, ...data }: CreateUserDto) {
-    return from(
-      this.userRepository.create(data).pipe(
-        switchMap(async (user) => {
-          await user.$relatedQuery('roles').relate(roleIds);
-          return user;
-        }),
-      ),
+  create({ role, ...data }: CreateUserDto) {
+    return from(this.roleService.getBy(['name'], role)).pipe(
+      switchMap((role) => {
+        return this.userRepository.create(data).pipe(
+          switchMap(async (user) => {
+            await user.$relatedQuery('roles').relate([role.id]);
+            return user.$query().withGraphFetched('roles');
+          }),
+        );
+      }),
     );
   }
 
-  update(id: string, { roles, ...data }: UpdateUserDto) {
+  update(id: string, { role: roleName, ...data }: UpdateUserDto) {
     return this.get(id).pipe(
-      switchMap(async (user) => {
+      switchMap((user) => {
         this.userRepository.update(user.id, data);
 
-        if (roles && roles.length > 0) {
-          await user.$relatedQuery('roles').unrelate();
-          await user.$relatedQuery('roles').relate(roles);
-        }
-        return user.$query().withGraphFetched('roles');
+        if (roleName)
+          return this.roleService
+            .getBy(['name'], roleName)
+            .pipe(switchMap((role) => this.syncRoles(user, [role.id])));
+
+        return this.get(id);
       }),
     );
   }
 
   remove(id: string) {
     this.update(id, { deleted_at: DateTime.local().toISO() } as any);
+  }
+
+  syncRoles(user: User, roleIds: string[]) {
+    return from(
+      user
+        .$relatedQuery('roles')
+        .unrelate()
+        .then(() => user.$relatedQuery('roles').relate(roleIds)),
+    ).pipe(switchMap(() => this.get(user.id)));
   }
 }

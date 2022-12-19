@@ -5,6 +5,7 @@ import { CreatePhoneSchema } from '@modules/phone/dto';
 import { CreateAddressSchema } from '@modules/address/dto';
 
 export const UpdateClientSchema = z.object({
+  full_name: z.string().min(3).max(255),
   cpf: z.string().trim(),
   rg: z.string().trim(),
   birth_date: z.string().trim(),

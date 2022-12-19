@@ -1,9 +1,9 @@
 import { z } from '@lib/zod/z';
 import { CreateZodDto } from '@lib/zod';
-import { isExists, isUnique } from '@lib/zod/refine.zod';
+import { isUnique } from '@lib/zod/refine.zod';
 
 import { User } from '@modules/user/entities/user.entity';
-import { Role } from '@modules/role/entities/role.entity';
+import { RoleType } from '@modules/role/enum/role-type.enum';
 
 export const CreateUserSchema = z.object({
   first_name: z.string().min(1).max(80),
@@ -24,11 +24,7 @@ export const CreateUserSchema = z.object({
     ),
   password: z.string().min(1).max(118),
   avatar: z.string().min(1).max(255).optional(),
-  roles: z
-    .array(z.string().uuid().trim())
-    .superRefine((value, ctx) =>
-      isExists<Role>({ model: Role, field: 'id', value, ctx }),
-    ),
+  role: z.nativeEnum(RoleType),
 });
 
 export class CreateUserDto extends CreateZodDto(CreateUserSchema) {}
