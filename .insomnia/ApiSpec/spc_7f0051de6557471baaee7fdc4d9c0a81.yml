@@ -1,7 +1,7 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1671293914531
+modified: 1671466124733
 created: 1668302615245
 fileName: pda-api
 contents: |
@@ -265,30 +265,6 @@ contents: |
                   type: array
                   items:
                     $ref: '#/components/schemas/Role'
-      post:
-        tags:
-          - Role
-        summary: Store role
-        description: Use to create a role
-        operationId: StoreRole
-        security:
-          - bearerToken: [ ]
-        requestBody:
-          description: Role object that needs to be added to the store
-          required: true
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StoreRole'
-        responses:
-          '201':
-            description: Role created
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Role'
-          '400':
-            description: Invalid input
     /roles/{roleId}:
       get:
         tags:
@@ -312,59 +288,6 @@ contents: |
               application/json:
                 schema:
                   $ref: '#/components/schemas/Role'
-          '404':
-            description: Role not found
-      put:
-        tags:
-          - Role
-        summary: Edit role
-        description: Use to edit a role
-        operationId: EditRole
-        parameters:
-          - name: roleId
-            in: path
-            description: ID of role to update
-            required: true
-            schema:
-              type: string
-        security:
-          - bearerToken: [ ]
-        requestBody:
-          description: Role object that needs to be updated
-          required: true
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EditRole'
-        responses:
-          '200':
-            description: Role updated
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Role'
-          '400':
-            description: Invalid input
-          '404':
-            description: Role not found
-      delete:
-        tags:
-          - Role
-        summary: Delete role
-        description: Use to delete a role
-        operationId: DeleteRole
-        parameters:
-          - name: roleId
-            in: path
-            description: ID of role to delete
-            required: true
-            schema:
-              type: string
-        security:
-          - bearerToken: [ ]
-        responses:
-          '204':
-            description: Role deleted
           '404':
             description: Role not found
 
@@ -1066,60 +989,23 @@ contents: |
             example: 'Pda@551238'
           colaborator:
             $ref: '#/components/schemas/StoreCollaborator'
-          roles:
-            type: array
-            items:
-              format: uuid
-              example: 07360612-1006-43d8-b934-4c5722d84884
+          role:
+            type: string
+            example: 'admin'
         required:
           - first_name
           - last_name
           - email
           - user_name
           - password
-          - roles
+          - role
         example:
           first_name: John
           last_name: Doe
           email: john@pda.com
           user_name: john
           password: 'Pda@551238'
-          roles:
-            - c366318e-d205-41bb-8e7e-ad15827c61bb
-            - 634efc35-3060-4996-b309-571748e66a4f
-          collaborator:
-            code: '22108253'
-            cpf: '387.387.344-21'
-            rg: '58.912.123-1'
-            birth_date: '1998-01-01'
-            job: 'Developer'
-            sex: 'male'
-            work_type: 'clt'
-            status: 'active'
-            civil_status: 'single'
-            description: 'A good developer'
-            phones:
-              - phone: '(15) 99660-1742'
-                type: 'mobile'
-              - phone: '(15) 99660-1742'
-                type: 'work'
-            addresses:
-              - street: 'Rua 1'
-                number: '1'
-                complement: 'Casa 1'
-                neighborhood: 'Bairro 1'
-                city: 'São Paulo'
-                state: 'SP'
-                country: 'Brasil'
-                zip_code: '12345-678'
-              - street: 'Rua 2'
-                number: '2'
-                complement: 'Casa 2'
-                neighborhood: 'Bairro 2'
-                city: 'São Paulo'
-                state: 'SP'
-                country: 'Brasil'
-                zip_code: '12345-678'
+          role: 'user'
       EditUser:
         type: object
         properties:
@@ -1140,53 +1026,16 @@ contents: |
             example: 'Pda@551238'
           colaborator:
             $ref: '#/components/schemas/StoreCollaborator'
-          roles:
-            type: array
-            items:
-              format: uuid
-              example: 4b2b6ec4-6946-4b27-9dec-28b5b328f145
+          role:
+            type: string
+            example: 'admin'
         example:
           first_name: John
           last_name: Doe
           email: john@pda.com
           user_name: john
           password: 'Pda@551238'
-          roles:
-            - 73b01c16-e22e-43ca-857e-85fcac45c80c
-            - 5b1a65dc-f0d2-4e16-91cf-9a9c62d62d1d
-          collaborator:
-            code: '22108253'
-            cpf: '387.387.344-21'
-            rg: '58.912.123-1'
-            birth_date: '1998-01-01'
-            job: 'Developer'
-            sex: 'male'
-            work_type: 'clt'
-            status: 'active'
-            civil_status: 'single'
-            description: 'A good developer'
-            phones:
-              - phone: '(15) 99660-1742'
-                type: 'mobile'
-              - phone: '(15) 99660-1742'
-                type: 'work'
-            addresses:
-              - street: 'Rua 1'
-                number: '1'
-                complement: 'Casa 1'
-                neighborhood: 'Bairro 1'
-                city: 'São Paulo'
-                state: 'SP'
-                country: 'Brasil'
-                zip_code: '12345-678'
-              - street: 'Rua 2'
-                number: '2'
-                complement: 'Casa 2'
-                neighborhood: 'Bairro 2'
-                city: 'São Paulo'
-                state: 'SP'
-                country: 'Brasil'
-                zip_code: '12345-678'
+          role: 'user'
 
       # role schemas
       Role:
@@ -1206,33 +1055,6 @@ contents: |
           - description
         example:
           id: 948b0353-0bd4-4cfe-a443-f3204a91c86c
-          slug: USER
-          description: 'An common user'
-      StoreRole:
-        type: object
-        properties:
-          slug:
-            type: string
-            example: USER
-          description:
-            type: string
-            example: 'An common user'
-        required:
-          - slug
-          - description
-        example:
-          slug: USER
-          description: 'An common user'
-      EditRole:
-        type: object
-        properties:
-          slug:
-            type: string
-            example: USER
-          description:
-            type: string
-            example: 'An common user'
-        example:
           slug: USER
           description: 'An common user'
 
@@ -1573,6 +1395,9 @@ contents: |
         description: 'Client schema'
         type: object
         properties:
+          full_name:
+            type: string
+            example: 'John Doe'
           cpf:
             type: string
             example: '387.387.344-21'
@@ -1591,11 +1416,8 @@ contents: |
             type: array
             items:
               $ref: '#/components/schemas/Address'
-          user_id:
-            type: string
-            format: uuid
-            example: 6e7d8d28-ea9b-40ef-a1f6-f025a41d967a
         example:
+          full_name: 'John Doe'
           cpf: '387.387.344-21'
           rg: '58.912.123-1'
           birth_date: '1998-01-01'
@@ -1625,11 +1447,13 @@ contents: |
               state: 'SP'
               country: 'Brasil'
               zip_code: '12345-678'
-          user_id: f3b19247-a0e9-4fb9-a24a-8b16df9a6ac8
       StoreClient:
         description: 'Store client schema'
         type: object
         properties:
+          full_name:
+            type: string
+            example: 'John Doe'
           cpf:
             type: string
             example: '387.387.344-21'
@@ -1648,25 +1472,8 @@ contents: |
             type: array
             items:
               $ref: '#/components/schemas/StoreAddress'
-          user:
-            type: object
-            properties:
-              first_name:
-                type: string
-                example: John
-              last_name:
-                type: string
-                example: Doe
-              email:
-                type: string
-                example: john.client@pda.com
-              user_name:
-                type: string
-                example: john.client
-              password:
-                type: string
-                example: 'Pda@551238'
         example:
+          full_name: 'John Doe'
           cpf: '387.387.344-21'
           rg: '58.912.123-1'
           birth_date: '1998-01-01'
@@ -1692,10 +1499,4 @@ contents: |
               state: 'SP'
               country: 'Brasil'
               zip_code: '12345-678'
-          user:
-            first_name: John
-            last_name: Doe
-            email: john.client@pda.com
-            user_name: john.client
-            password: 'Pda@551238'
 contentType: yaml
