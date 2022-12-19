@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { forkJoin, from, map, of, switchMap } from 'rxjs';
+import { forkJoin, from, map, switchMap } from 'rxjs';
 import { I18nService } from 'nestjs-i18n';
 import { DateTime } from 'luxon';
 import * as crypto from 'crypto';
@@ -174,8 +174,13 @@ export class CollaboratorService {
           }),
         );
 
-        const bank$ = from(this.backService.create(bank)).pipe(
-          switchMap((bank) => {
+        const bank$ = from(
+          this.backService.create({
+            ...bank,
+            collaborator_id: collaborator.id,
+          }),
+        ).pipe(
+          map((bank) => {
             return this.syncBank(collaborator, bank.id);
           }),
         );
