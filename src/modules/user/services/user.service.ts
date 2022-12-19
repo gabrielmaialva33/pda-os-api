@@ -21,11 +21,12 @@ export class UserService {
     private readonly i18nService: I18nService<I18nTranslations>,
   ) {}
 
-  paginate({ page, per_page, sort, order }: ListOptions<User>) {
+  paginate({ page, per_page, search, sort, order }: ListOptions<User>) {
     return from(
       this.userRepository.paginate({
         page,
         per_page,
+        search,
         sort,
         order,
         context: { populate: ['roles'] },

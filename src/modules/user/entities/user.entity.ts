@@ -84,6 +84,10 @@ export class User extends BaseEntity {
     };
   }
 
+  static get jsonAttributes() {
+    return ['first_name', 'last_name', 'full_name', 'email', 'user_name'];
+  }
+
   /**
    * ------------------------------------------------------
    * Serializer
