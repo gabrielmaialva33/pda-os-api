@@ -1,10 +1,10 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1671466124733
+modified: 1671524074341
 created: 1668302615245
 fileName: pda-api
-contents: |
+contents: |+
   openapi: 3.0.3
   info:
     version: 1.0.0
@@ -19,8 +19,6 @@ contents: |
       description: Local server
     - url: http://127.0.0.1:3000
       description: Docker server
-    - url: https://pda.os.api.mrootx.xyz
-      description: Azure server
     - url: https://pda-os-api.azurewebsites.net
       description: Azure Web App
   tags:
@@ -38,6 +36,8 @@ contents: |
       description: Operations about phones
     - name: Address
       description: Operations about addresses
+    - name: Shop
+      description: Operations about shops
 
   paths:
     /sign_in:
@@ -560,7 +560,7 @@ contents: |
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StoreClient'
+                $ref: '#/components/schemas/EditClient'
         responses:
           '200':
             description: Client updated
@@ -711,7 +711,7 @@ contents: |
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StorePhone'
+                $ref: '#/components/schemas/EditPhone'
         responses:
           '200':
             description: Phone updated
@@ -862,7 +862,7 @@ contents: |
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StoreAddress'
+                $ref: '#/components/schemas/EditAddress'
         responses:
           '200':
             description: Address updated
@@ -894,6 +894,157 @@ contents: |
             description: Address deleted
           '404':
             description: Address not found
+
+    /shops:
+      get:
+        tags:
+          - Shop
+        summary: List shops
+        description: Use to request all shops
+        operationId: GetAllShops
+        parameters:
+          - in: query
+            name: page
+            schema:
+              type: integer
+              default: 1
+            description: Page number
+          - in: query
+            name: per_page
+            schema:
+              type: integer
+              default: 10
+            description: Number of shops per page
+          - in: query
+            name: search
+            schema:
+              type: string
+              example: 'John'
+            description: Search by public fields
+          - in: query
+            name: sort
+            schema:
+              type: string
+              default: id
+            description: Sort by field
+          - in: query
+            name: order
+            schema:
+              type: string
+              default: asc
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Shop'
+      post:
+        tags:
+          - Shop
+        summary: Store shop
+        description: Use to create a shop
+        operationId: StoreShop
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Shop object that needs to be added to the store
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreShop'
+        responses:
+          '201':
+            description: Shop created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Shop'
+          '400':
+            description: Invalid input
+    /shops/{shopId}:
+      get:
+        tags:
+          - Shop
+        summary: Get shop
+        description: Use to request a shop
+        operationId: GetShop
+        parameters:
+          - name: shopId
+            in: path
+            description: ID of shop to return
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Shop'
+          '404':
+            description: Shop not found
+      put:
+        tags:
+          - Shop
+        summary: Edit shop
+        description: Use to edit a shop
+        operationId: EditShop
+        parameters:
+          - name: shopId
+            in: path
+            description: ID of shop to update
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Shop object that needs to be updated
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditShop'
+        responses:
+          '200':
+            description: Shop updated
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Shop'
+          '400':
+            description: Invalid input
+          '404':
+            description: Shop not found
+      delete:
+        tags:
+          - Shop
+        summary: Delete shop
+        description: Use to delete a shop
+        operationId: DeleteShop
+        parameters:
+          - name: shopId
+            in: path
+            description: ID of shop to delete
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '204':
+            description: Shop deleted
+          '404':
+            description: Shop not found
   components:
     securitySchemes:
       bearerToken:
@@ -1315,9 +1466,29 @@ contents: |
           type:
             type: string
             example: 'home'
+        required:
+          - phone
+          - type
         example:
           phone: '(15) 99660-1742'
           type: 'home'
+      EditPhone:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
+          phone:
+            type: string
+            example: '(15) 99660-1742'
+          type:
+            type: string
+            example: 'mobile'
+        example:
+          id: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
+          phone: '(15) 99660-1742'
+          type: 'mobile'
 
       # address schemas
       Address:
@@ -1358,6 +1529,45 @@ contents: |
           state: 'SP'
           zip_code: '12345-678'
       StoreAddress:
+        type: object
+        properties:
+          street:
+            type: string
+            example: 'Rua 1'
+          number:
+            type: string
+            example: '1'
+          complement:
+            type: string
+            example: 'Casa 1'
+          neighborhood:
+            type: string
+            example: 'Bairro 1'
+          city:
+            type: string
+            example: 'São Paulo'
+          state:
+            type: string
+            example: 'SP'
+          zip_code:
+            type: string
+            example: '12345-678'
+        required:
+          - street
+          - number
+          - neighborhood
+          - city
+          - state
+          - zip_code
+        example:
+          street: 'Rua 1'
+          number: '1'
+          complement: 'Casa 1'
+          neighborhood: 'Bairro 1'
+          city: 'São Paulo'
+          state: 'SP'
+          zip_code: '12345-678'
+      EditAddress:
         type: object
         properties:
           street:
@@ -1499,4 +1709,253 @@ contents: |
               state: 'SP'
               country: 'Brasil'
               zip_code: '12345-678'
+      EditClient:
+        description: 'Edit client schema'
+        type: object
+        properties:
+          full_name:
+            type: string
+            example: 'John Doe'
+          cpf:
+            type: string
+            example: '387.387.344-21'
+          rg:
+            type: string
+            example: '58.912.123-1'
+          birth_date:
+            type: string
+            format: date
+            example: '1998-01-01'
+          phones:
+            type: array
+            items:
+              $ref: '#/components/schemas/Phone'
+          addresses:
+            type: array
+            items:
+              $ref: '#/components/schemas/Address'
+        example:
+          full_name: 'John Doe'
+          cpf: '387.387.344-21'
+          rg: '58.912.123-1'
+          birth_date: '1998-01-01'
+          phones:
+            - id: e051d2a5-3c22-481a-a175-8c59942c0c0e
+              phone: '(15) 99660-1742'
+              type: 'mobile'
+            - id: f2cad45f-b954-481f-98ca-fe76bec77ad5
+              phone: '(15) 99660-1742'
+              type: 'work'
+          addresses:
+            - id: 20d9704a-5f5c-4f72-bfc8-ac77727fd4f9
+              street: 'Rua 1'
+              number: '1'
+              complement: 'Casa 1'
+              neighborhood: 'Bairro 1'
+              city: 'São Paulo'
+              state: 'SP'
+              country: 'Brasil'
+              zip_code: '12345-678'
+            - id: 577a9251-a381-4216-b8cd-750d621f38d5
+              street: 'Rua 2'
+              number: '2'
+              complement: 'Casa 2'
+              neighborhood: 'Bairro 2'
+              city: 'São Paulo'
+              state: 'SP'
+              country: 'Brasil'
+              zip_code: '12345-678'
+
+      # shop schemas
+      Shop:
+        description: 'Shop schema'
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
+          code:
+            type: string
+            example: '12345678'
+          name:
+            type: string
+            example: 'Loja 1'
+          type:
+            type: string
+            example: 'fisica'
+          cost:
+            type: number
+            format: float
+            example: 100.00
+          profit:
+            type: number
+            format: float
+            example: 10.00
+          percentage_profit:
+            type: number
+            format: float
+            example: 10.00
+          net_profit:
+            type: number
+            format: float
+            example: 10.00
+          sale_price:
+            type: number
+            format: float
+            example: 110.00
+          commission:
+            type: number
+            format: float
+            example: 10.00
+          send_sms:
+            type: boolean
+            example: true
+          forecast_return:
+            type: number
+            format: float
+            example: 10.00
+          status:
+            type: string
+            example: 'active'
+        example:
+          id: 8965a147-cac2-472f-9ef3-9a1007a9d362
+          code: '12345678'
+          name: 'Loja 1'
+          type: 'fisica'
+          cost: 100.00
+          profit: 10.00
+          percentage_profit: 10.00
+          net_profit: 10.00
+          sale_price: 110.00
+          commission: 10.00
+          send_sms: true
+          forecast_return: 10.00
+          status: 'active'
+      StoreShop:
+        description: 'Store shop schema'
+        type: object
+        properties:
+          name:
+            type: string
+            example: 'Loja 1'
+          type:
+            type: string
+            example: 'fisica'
+          cost:
+            type: number
+            format: float
+            example: 100.00
+          profit:
+            type: number
+            format: float
+            example: 10.00
+          percentage_profit:
+            type: number
+            format: float
+            example: 10.00
+          net_profit:
+            type: number
+            format: float
+            example: 10.00
+          sale_price:
+            type: number
+            format: float
+            example: 110.00
+          commission:
+            type: number
+            format: float
+            example: 10.00
+          send_sms:
+            type: boolean
+            example: true
+          forecast_return:
+            type: number
+            format: float
+            example: 10.00
+          status:
+            type: string
+            example: 'active'
+        required:
+          - name
+          - type
+          - cost
+          - profit
+          - percentage_profit
+          - net_profit
+          - sale_price
+          - commission
+          - send_sms
+          - status
+        example:
+          code: '12345678'
+          name: 'Loja 1'
+          type: 'fisica'
+          cost: 100.00
+          profit: 10.00
+          percentage_profit: 10.00
+          net_profit: 10.00
+          sale_price: 110.00
+          commission: 10.00
+          send_sms: true
+          forecast_return: 10.00
+          status: 'active'
+      EditShop:
+        description: 'Edit shop schema'
+        type: object
+        properties:
+          name:
+            type: string
+            example: 'Loja 1'
+          type:
+            type: string
+            example: 'fisica'
+          cost:
+            type: number
+            format: float
+            example: 100.00
+          profit:
+            type: number
+            format: float
+            example: 10.00
+          percentage_profit:
+            type: number
+            format: float
+            example: 10.00
+          net_profit:
+            type: number
+            format: float
+            example: 10.00
+          sale_price:
+            type: number
+            format: float
+            example: 110.00
+          commission:
+            type: number
+            format: float
+            example: 10.00
+          send_sms:
+            type: boolean
+            example: true
+          forecast_return:
+            type: number
+            format: float
+            example: 10.00
+          status:
+            type: string
+            example: 'active'
+        example:
+          code: '12345678'
+          name: 'Loja 1'
+          type: 'fisica'
+          cost: 100.00
+          profit: 10.00
+          percentage_profit: 10.00
+          net_profit: 10.00
+          sale_price: 110.00
+          commission: 10.00
+          send_sms: true
+          forecast_return: 10.00
+          status: 'active'
+
 contentType: yaml
