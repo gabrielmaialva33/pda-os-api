@@ -1,7 +1,7 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1671524074341
+modified: 1671531889960
 created: 1668302615245
 fileName: pda-api
 contents: |+
@@ -38,6 +38,8 @@ contents: |+
       description: Operations about addresses
     - name: Shop
       description: Operations about shops
+    - name: Order
+      description: Operations about orders
 
   paths:
     /sign_in:
@@ -1045,6 +1047,159 @@ contents: |+
             description: Shop deleted
           '404':
             description: Shop not found
+
+    /orders:
+      get:
+        tags:
+          - Order
+        summary: List orders
+        description: Use to request all orders
+        operationId: GetAllOrders
+        parameters:
+          - in: query
+            name: page
+            schema:
+              type: integer
+              default: 1
+            description: Page number
+          - in: query
+            name: per_page
+            schema:
+              type: integer
+              default: 10
+            description: Number of orders per page
+          - in: query
+            name: search
+            schema:
+              type: string
+              example: 'John'
+            description: Search by public fields
+          - in: query
+            name: sort
+            schema:
+              type: string
+              default: id
+            description: Sort by field
+          - in: query
+            name: order
+            schema:
+              type: string
+              default: asc
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Order'
+      post:
+        tags:
+          - Order
+        summary: Store order
+        description: Use to create an order
+        operationId: StoreOrder
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Order object that needs to be added to the store
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreOrder'
+        responses:
+          '201':
+            description: Order created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Order'
+          '400':
+            description: Invalid input
+    /orders/{orderId}:
+      get:
+        tags:
+          - Order
+        summary: Get order
+        description: Use to request an order
+        operationId: GetOrder
+        parameters:
+          - name: orderId
+            in: path
+            description: ID of order to return
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Order'
+          '404':
+            description: Order not found
+      put:
+        tags:
+          - Order
+        summary: Edit order
+        description: Use to edit an order
+        operationId: EditOrder
+        parameters:
+          - name: orderId
+            in: path
+            description: ID of order to update
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Order object that needs to be updated
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditOrder'
+        responses:
+          '200':
+            description: Order updated
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Order'
+          '400':
+            description: Invalid input
+          '404':
+            description: Order not found
+      delete:
+        tags:
+          - Order
+        summary: Delete order
+        description: Use to delete an order
+        operationId: DeleteOrder
+        parameters:
+          - name: orderId
+            in: path
+            description: ID of order to delete
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '204':
+            description: Order deleted
+          '404':
+            description: Order not found
+
+
   components:
     securitySchemes:
       bearerToken:
@@ -1888,7 +2043,6 @@ contents: |+
           - send_sms
           - status
         example:
-          code: '12345678'
           name: 'Loja 1'
           type: 'fisica'
           cost: 100.00
@@ -1945,7 +2099,6 @@ contents: |+
             type: string
             example: 'active'
         example:
-          code: '12345678'
           name: 'Loja 1'
           type: 'fisica'
           cost: 100.00
@@ -1957,5 +2110,134 @@ contents: |+
           send_sms: true
           forecast_return: 10.00
           status: 'active'
+
+      # order schemas
+      Order:
+        description: 'Order schema'
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: d41d7132-3e51-4669-b77a-a1014794de98
+          client_id:
+            type: string
+            format: uuid
+            example: 50ff7b3b-a15c-40af-9221-db50619d4890
+          shop_id:
+            type: string
+            format: uuid
+            example: f4e9e8ae-2e23-445b-b741-73a350f6b8f5
+          report:
+            type: string
+            example: 'Relato de cliente 1'
+          accessories:
+            type: string
+            example: 'Acessórios 1, Acessórios 2, Acessórios 3'
+          note:
+            type: string
+            example: 'Nota 1'
+          status:
+            type: string
+            example: 'PENDING'
+          created_at:
+            type: string
+            format: date-time
+            example: '2020-01-01T00:00:00Z'
+          updated_at:
+            type: string
+            format: date-time
+            example: '2020-01-01T00:00:00Z'
+        required:
+          - client_id
+          - shop_id
+          - report
+          - accessories
+          - status
+        example:
+          id: dffcb5ac-8b30-4965-b972-74be3c23b4ee
+          client_id: 092468d9-869e-4a72-a4bc-c3092888c4ee
+          shop_id: 7202613d-6198-4806-b6db-fba7ad80b766
+          report: 'Relato de cliente 1'
+          accessories: 'Acessórios 1, Acessórios 2, Acessórios 3'
+          note: 'Nota 1'
+          status: 'PENDING'
+          created_at: '2020-01-01T00:00:00Z'
+          updated_at: '2020-01-01T00:00:00Z'
+      StoreOrder:
+        description: 'Store order schema'
+        type: object
+        properties:
+          client_id:
+            type: string
+            format: uuid
+            example: 6af80270-9cdc-417f-9b0a-7b130996594f
+          shop_id:
+            type: string
+            format: uuid
+            example: a451b551-6fe5-4cd2-839b-10e90f96a8df
+          report:
+            type: string
+            example: 'Relato de cliente 1'
+          accessories:
+            type: string
+            example: 'Acessórios 1, Acessórios 2, Acessórios 3'
+          note:
+            type: string
+            example: 'Nota 1'
+          status:
+            type: string
+            example: 'PENDING'
+        required:
+          - client_id
+          - shop_id
+          - report
+          - accessories
+          - status
+        example:
+          client_id: ead7c108-5d18-453f-b1b7-17efbc39b1fa
+          shop_id: 7205de9c-97fd-4b04-a246-004c4efb00fc
+          report: 'Relato de cliente 1'
+          accessories: 'Acessórios 1, Acessórios 2, Acessórios 3'
+          note: 'Nota 1'
+          status: 'PENDING'
+      EditOrder:
+        description: 'Edit order schema'
+        type: object
+        properties:
+          client_id:
+            type: string
+            format: uuid
+            example: 6af80270-9cdc-417f-9b0a-7b130996594f
+          shop_id:
+            type: string
+            format: uuid
+            example: a451b551-6fe5-4cd2-839b-10e90f96a8df
+          report:
+            type: string
+            example: 'Relato de cliente 1'
+          accessories:
+            type: string
+            example: 'Acessórios 1, Acessórios 2, Acessórios 3'
+          note:
+            type: string
+            example: 'Nota 1'
+          status:
+            type: string
+            example: 'PENDING'
+        example:
+          client_id: 0b435679-be7d-4fe0-aa72-e09720972e36
+          shop_id: a451b551-6fe5-4cd2-839b-10e90f96a8df
+          report: 'Relato de cliente 1'
+          accessories: 'Acessórios 1, Acessórios 2, Acessórios 3'
+          note: 'Nota 1'
+          status: 'PENDING'
+
+
+
+
+
+
+
 
 contentType: yaml
