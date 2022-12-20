@@ -14,6 +14,7 @@ import { AddressModule } from '@modules/address/address.module';
 import { CollaboratorModule } from '@modules/collaborator/collaborator.module';
 import { BankModule } from '@modules/bank/bank.module';
 import { ClientModule } from '@modules/client/client.module';
+import { ShopModule } from '@modules/shop/shop.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ClientModule } from '@modules/client/client.module';
     CollaboratorModule,
     BankModule,
     ClientModule,
+    ShopModule,
   ],
 })
 export class AppModule {}

@@ -67,5 +67,22 @@
       "rg": "RG",
       "birth_date": "Data de Nascimento"
     }
+  },
+  "shop": {
+    "entity": "Loja",
+    "field": {
+      "code": "Código",
+      "name": "Nome",
+      "type": "Tipo",
+      "cost": "Custo",
+      "profit": "Quero Lucrar",
+      "percentage_profit": "Perc. de Lucro (%)",
+      "net_profit": "Lucro Líquido",
+      "sale_price": "Preço de Venda",
+      "commission": "Comissão",
+      "send_sms": "Enviar SMS",
+      "forecast_return": "Previsão de Retorno",
+      "status": "Status"
+    }
   }
 }
