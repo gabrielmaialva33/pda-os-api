@@ -75,6 +75,35 @@ export type I18nTranslations = {
         birth_date: string;
       };
     };
+    shop: {
+      entity: string;
+      field: {
+        code: string;
+        name: string;
+        type: string;
+        cost: string;
+        profit: string;
+        percentage_profit: string;
+        net_profit: string;
+        sale_price: string;
+        commission: string;
+        send_sms: string;
+        forecast_return: string;
+        status: string;
+      };
+    };
+    order: {
+      entity: string;
+      field: {
+        client: string;
+        collaborator: string;
+        shop: string;
+        report: string;
+        accessories: string;
+        status: string;
+        note: string;
+      };
+    };
   };
   validation: {
     required: string;

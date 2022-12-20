@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 
 import { PaginationObject } from '@lib/pagination';
 import { ListOptions } from '@common/interfaces/base-repository.interface';
+import { I18nTranslations } from '@/resources/i18n/generated/i18n.generated';
 
 import { CreatePhoneDto, UpdatePhoneDto } from '@modules/phone/dto';
 import { Phone } from '@modules/phone/entities/phone.entity';
@@ -14,7 +15,7 @@ import { PhoneRepository } from '@modules/phone/repositories/phone.repository';
 export class PhoneService {
   constructor(
     private readonly phoneRepository: PhoneRepository,
-    private readonly i18nService: I18nService,
+    private readonly i18nService: I18nService<I18nTranslations>,
   ) {}
 
   paginate({ page, per_page, order, sort }: ListOptions<Phone>) {

@@ -10,6 +10,7 @@ import {
 } from '@modules/collaborator/dto';
 
 import { PaginationObject } from '@lib/pagination';
+import { I18nTranslations } from '@/resources/i18n/generated/i18n.generated';
 
 import { ListOptions } from '@common/interfaces/base-repository.interface';
 import { CollaboratorRepository } from '@modules/collaborator/repositories/collaborator.repository';
@@ -30,7 +31,7 @@ export class CollaboratorService {
     private readonly phoneService: PhoneService,
     private readonly addressService: AddressService,
     private readonly backService: BankService,
-    private readonly i18nService: I18nService,
+    private readonly i18nService: I18nService<I18nTranslations>,
   ) {}
 
   paginate({ page, per_page, sort, order }: ListOptions<Collaborator>) {

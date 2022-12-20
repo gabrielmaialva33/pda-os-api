@@ -1,9 +1,8 @@
 import { z } from '@lib/zod/z';
 import { CreateZodDto } from '@lib/zod';
-import { isExists, isUnique } from '@lib/zod/refine.zod';
+import { isUnique } from '@lib/zod/refine.zod';
 
 import { User } from '@modules/user/entities/user.entity';
-import { Role } from '@modules/role/entities/role.entity';
 import { RoleType } from '@modules/role/enum/role-type.enum';
 
 export const UpdateUserSchema = z.object({

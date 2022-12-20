@@ -84,5 +84,17 @@
       "forecast_return": "Previsão de Retorno",
       "status": "Status"
     }
+  },
+  "order": {
+    "entity": "Order de Serviço",
+    "field": {
+      "client": "Cliente",
+      "collaborator": "Colaborador",
+      "shop": "Loja",
+      "report": "Relato do Cliente",
+      "accessories": "Acessórios",
+      "status": "Status",
+      "note": "Observação"
+    }
   }
 }

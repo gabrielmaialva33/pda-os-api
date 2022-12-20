@@ -3,6 +3,7 @@ import { from, map, switchMap } from 'rxjs';
 import { I18nService } from 'nestjs-i18n';
 
 import { PaginationObject } from '@lib/pagination';
+import { I18nTranslations } from '@/resources/i18n/generated/i18n.generated';
 
 import { CreateBankDto, UpdateBankDto } from '@modules/bank/dto';
 import { BankRepository } from '@modules/bank/repositories/bank.repository';
@@ -14,7 +15,7 @@ import { DateTime } from 'luxon';
 export class BankService {
   constructor(
     private readonly bankRepository: BankRepository,
-    private readonly i18nService: I18nService,
+    private readonly i18nService: I18nService<I18nTranslations>,
   ) {}
 
   paginate({ page, per_page, sort, order }: ListOptions<Bank>) {

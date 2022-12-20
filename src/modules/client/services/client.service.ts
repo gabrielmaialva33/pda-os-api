@@ -5,6 +5,7 @@ import { I18nService } from 'nestjs-i18n';
 
 import { PaginationObject } from '@lib/pagination';
 import { ListOptions } from '@common/interfaces/base-repository.interface';
+import { I18nTranslations } from '@/resources/i18n/generated/i18n.generated';
 
 import { ClientRepository } from '@modules/client/repositories/client.repository';
 import { CreateClientDto, UpdateClientDto } from '@modules/client/dto';
@@ -22,7 +23,7 @@ export class ClientService {
     private readonly userService: UserService,
     private readonly phoneService: PhoneService,
     private readonly addressService: AddressService,
-    private readonly i18nService: I18nService,
+    private readonly i18nService: I18nService<I18nTranslations>,
   ) {}
 
   paginate({ page, per_page, sort, order }: ListOptions<Client>) {

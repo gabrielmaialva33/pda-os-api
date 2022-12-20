@@ -4,6 +4,8 @@ import { PaginationObject } from '@lib/pagination';
 import { I18nService } from 'nestjs-i18n';
 import { DateTime } from 'luxon';
 
+import { I18nTranslations } from '@/resources/i18n/generated/i18n.generated';
+
 import { ListOptions } from '@common/interfaces/base-repository.interface';
 import { CreateAddressDto, UpdateAddressDto } from '@modules/address/dto';
 import { AddressRepository } from '@modules/address/repositories/address.repository';
@@ -13,7 +15,7 @@ import { Address } from '@modules/address/entities/address.entity';
 export class AddressService {
   constructor(
     private readonly addressRepository: AddressRepository,
-    private readonly i18nService: I18nService,
+    private readonly i18nService: I18nService<I18nTranslations>,
   ) {}
 
   paginate({ page, per_page, sort, order }: ListOptions<Address>) {

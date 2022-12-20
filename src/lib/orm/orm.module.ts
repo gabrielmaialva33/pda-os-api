@@ -18,6 +18,8 @@ import { Bank } from '@modules/bank/entities/bank.entity';
 import { Client } from '@modules/client/entities/client.entity';
 import { PhoneClient } from '@modules/phone/entities/phone-client.entity';
 import { AddressClient } from '@modules/address/entities/address-client.entity';
+import { Shop } from '@modules/shop/entities/shop.entity';
+import { Order } from '@modules/order/entities/order.entity';
 
 @Module({
   imports: [
@@ -46,6 +48,8 @@ import { AddressClient } from '@modules/address/entities/address-client.entity';
       Client,
       PhoneClient,
       AddressClient,
+      Shop,
+      Order,
     ]),
   ],
   exports: [ObjectionModule],

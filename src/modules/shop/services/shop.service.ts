@@ -6,6 +6,7 @@ import * as crypto from 'crypto';
 
 import { ListOptions } from '@common/interfaces/base-repository.interface';
 import { PaginationObject } from '@lib/pagination';
+import { I18nTranslations } from '@/resources/i18n/generated/i18n.generated';
 
 import { CreateShopDto, UpdateShopDto } from '@modules/shop/dto';
 import { ShopRepository } from '@modules/shop/repositories/shop.repository';
@@ -15,7 +16,7 @@ import { Shop } from '@modules/shop/entities/shop.entity';
 export class ShopService {
   constructor(
     private readonly shopRepository: ShopRepository,
-    private readonly i18nService: I18nService,
+    private readonly i18nService: I18nService<I18nTranslations>,
   ) {}
 
   paginate({ page, per_page, search, sort, order }: ListOptions<Shop>) {
