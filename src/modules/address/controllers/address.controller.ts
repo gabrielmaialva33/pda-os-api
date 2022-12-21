@@ -7,13 +7,17 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ModelProps } from 'objection';
+
+import { JwtAuthGuard } from '@common/guards/jwt.auth.guard';
 
 import { AddressService } from '@modules/address/services/address.service';
 import { CreateAddressDto, UpdateAddressDto } from '@modules/address/dto';
 import { Address } from '@modules/address/entities/address.entity';
 
+@UseGuards(JwtAuthGuard)
 @Controller('addresses')
 export class AddressController {
   constructor(private readonly addressService: AddressService) {}

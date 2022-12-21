@@ -7,7 +7,10 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+
+import { JwtAuthGuard } from '@common/guards/jwt.auth.guard';
 
 import { CollaboratorService } from '@modules/collaborator/services/collaborator.service';
 import {
@@ -17,6 +20,7 @@ import {
 import { ModelProps } from 'objection';
 import { Collaborator } from '@modules/collaborator/entities/collaborator.entity';
 
+@UseGuards(JwtAuthGuard)
 @Controller('collaborators')
 export class CollaboratorController {
   constructor(private readonly collaboratorService: CollaboratorService) {}

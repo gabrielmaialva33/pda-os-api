@@ -7,12 +7,17 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+
+import { JwtAuthGuard } from '@common/guards/jwt.auth.guard';
+
 import { PhoneService } from '@modules/phone/services/phone.service';
 import { CreatePhoneDto, UpdatePhoneDto } from '@modules/phone/dto';
 import { ModelProps } from 'objection';
 import { Phone } from '@modules/phone/entities/phone.entity';
 
+@UseGuards(JwtAuthGuard)
 @Controller('phones')
 export class PhoneController {
   constructor(private readonly phoneService: PhoneService) {}

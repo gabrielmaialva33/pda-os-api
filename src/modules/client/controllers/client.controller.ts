@@ -7,13 +7,17 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ModelProps } from 'objection';
+
+import { JwtAuthGuard } from '@common/guards/jwt.auth.guard';
 
 import { ClientService } from '@modules/client/services/client.service';
 import { CreateClientDto, UpdateClientDto } from '@modules/client/dto';
 import { Client } from '@modules/client/entities/client.entity';
 
+@UseGuards(JwtAuthGuard)
 @Controller('clients')
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}

@@ -7,10 +7,12 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ModelProps } from 'objection';
 
 import { UseZodGuard } from '@lib/zod';
+import { JwtAuthGuard } from '@common/guards/jwt.auth.guard';
 
 import { UserService } from '@modules/user/services/user.service';
 import { User } from '@modules/user/entities/user.entity';
@@ -20,6 +22,7 @@ import {
   UpdateUserDto,
 } from '@modules/user/dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
