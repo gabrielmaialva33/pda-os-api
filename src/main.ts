@@ -47,15 +47,14 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ZodValidationPipe());
 
-  await app.listen(process.env.PORT || 3333, '0.0.0.0');
+  await app
+    .listen(process.env.PORT || 3333, '0.0.0.0')
+    .then(async () =>
+      Logger.log(
+        `Application is running on: ${await app.getUrl()}`,
+        'Bootstrap',
+      ),
+    );
 }
 
-(async () =>
-  await bootstrap().then(() =>
-    Logger.log(
-      `Application is listening on port ${
-        process.env.PORT || 3333
-      } in environment ${process.env.NODE_ENV}`,
-      'Bootstrap',
-    ),
-  ))();
+(async () => await bootstrap())();
