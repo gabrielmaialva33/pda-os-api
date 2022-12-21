@@ -1,75 +1,109 @@
+<h1 align="center">
+  <br>
+  <img src="https://telegra.ph/file/c32fcf49f08f62149f239.png" alt="TypeScript" width="400">
+  <br>
+  Agendamento e inventário - <a href=".azure/assets/images/logo.png">PDA Soluções</a>
+  <br>
+</h1>
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+ <strong>Soluções completas em inventário de estoque</strong>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+<br>
 
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+<p align="center">
+  <a href="#bookmark-about">Sobre</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#computer-technologies">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#wrench-tools">Ferramentas</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#package-installation">Instalação</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#memo-license">License</a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+<br>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## :bookmark: Sobre
 
-## Installation
+**Pda Agendamentos** é um projeto desenvolvido para a PDA Soluções, com o objetivo de agendar e gerenciar os inventários de estoque.
 
-```bash
-$ npm install
+<kbd>
+  <img src=".azure/assets/images/schema.svg" alt="schema">
+</kbd>
+
+<br>
+
+## :computer: Tecnologias
+
+- **[Typescript](https://www.typescriptlang.org/)**
+- **[Node.js](https://nodejs.org/)**
+- **[Eslint](https://eslint.org/)**
+- **[Prettier](https://prettier.io/)**
+- **[Next.js](https://nextjs.org/)**
+- **[PostgreSQL](https://www.postgresql.org/)**
+- **[Knex.js](http://knexjs.org/)**
+- **[Argon2](https://www.npmjs.com/package/argon2)**
+- **[RxJs](https://rxjs-dev.firebaseapp.com/)**
+- **[Objection.js](https://vincit.github.io/objection.js/)**
+- **[Fastify](https://www.fastify.io/)**
+
+<br>
+
+## :wrench: Ferramentas
+
+- **[WebStorm](https://www.jetbrains.com/webstorm/)**
+- **[Docker](https://www.docker.com/)**
+- **[Docker Compose](https://docs.docker.com/compose/)**
+- **[Insomnia](https://insomnia.rest/)**
+- **[DataGrip](https://www.jetbrains.com/datagrip/)**
+- **[OpenAPI](https://swagger.io/specification/)**
+- **[Azure DevOps](https://azure.microsoft.com/pt-br/services/devops/)**
+
+<br>
+
+## :package: Instalação
+
+### :heavy_check_mark: **Pré-requisitos**
+
+O seguinte software deve ser instalado:
+
+- **[Node.js](https://nodejs.org/en/)**
+- **[Git](https://git-scm.com/)**
+- **[NPM](https://www.npmjs.com/)** ou **[Yarn](https://yarnpkg.com/)**
+
+<br>
+
+### :arrow_down: **Clonando o repositório**
+
+```sh
+  $ git clone pdasolucoes@vs-ssh.visualstudio.com:v3/pdasolucoes/Projeto%20Saas%20Agendamento/pda.os.api
 ```
 
-## Running the app
+<br>
 
-```bash
-# development
-$ npm run start
+### :arrow_forward: **Executando o servidor**
 
-# watch mode
-$ npm run start:dev
+- :package: API
 
-# production mode
-$ npm run start:prod
+```sh
+  $ cd pda.os.api
+  # Instalando as dependências
+  $ yarn # or npm install
+  # Criando o arquivo .env
+  $ cp .env.example .env
+  # Executando as migrations
+  $ yarn db:reset # or npm run db:reset
+  # Executando o servidor
+  $ yarn start:dev
 ```
 
-## Test
+<br>
 
-```bash
-# unit tests
-$ npm run test
+### :writing_hand: **Autor**
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If
-you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+| [![Gabriel Maia](https://avatars.githubusercontent.com/u/26732067?size=100)](https://github.com/demartini) |
+| ---------------------------------------------------------------------------------------------------------- |
+| [Gabriel Maia](https://github.com/gabrielmaialva33)                                                        |
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+[MIT License](./LICENSE)
