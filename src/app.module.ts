@@ -16,6 +16,7 @@ import { BankModule } from '@modules/bank/bank.module';
 import { ClientModule } from '@modules/client/client.module';
 import { ShopModule } from '@modules/shop/shop.module';
 import { OrderModule } from '@modules/order/order.module';
+import { ScheduleModule } from './modules/schedule/schedule.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { OrderModule } from '@modules/order/order.module';
     ClientModule,
     ShopModule,
     OrderModule,
+    ScheduleModule,
   ],
 })
 export class AppModule {}
