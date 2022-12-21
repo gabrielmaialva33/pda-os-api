@@ -27,7 +27,7 @@
 **Pda Agendamentos** é um projeto desenvolvido para a PDA Soluções, com o objetivo de agendar e gerenciar os inventários de estoque.
 
 <kbd>
-  <img src=".azure/assets/images/schema.svg" alt="schema">
+  <img src=".azure/assets/images/schema.png" alt="schema">
 </kbd>
 
 <br>
