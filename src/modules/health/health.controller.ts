@@ -8,6 +8,8 @@ import {
   MemoryHealthIndicator,
 } from '@nestjs/terminus';
 
+import { DatabaseHealthIndicator } from '@modules/health/database.health';
+
 @Controller('/')
 export class HealthController {
   constructor(
@@ -15,6 +17,7 @@ export class HealthController {
     private http: HttpHealthIndicator,
     private disk: DiskHealthIndicator,
     private memory: MemoryHealthIndicator,
+    private databaseHealth: DatabaseHealthIndicator,
     private configService: ConfigService,
   ) {}
 
@@ -24,11 +27,7 @@ export class HealthController {
     return this.health.check([
       async () => this.memory.checkHeap('memory_heap', 200 * 1024 * 1024),
       async () => this.memory.checkRSS('memory_rss', 3000 * 1024 * 1024),
-      async () =>
-        this.disk.checkStorage('disk health', {
-          thresholdPercent: 0.5,
-          path: '/',
-        }),
+      async () => this.databaseHealth.isHealthy(),
     ]);
   }
 }
