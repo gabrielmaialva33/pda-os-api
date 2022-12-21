@@ -18,7 +18,6 @@ export class HealthController {
     private disk: DiskHealthIndicator,
     private memory: MemoryHealthIndicator,
     private databaseHealth: DatabaseHealthIndicator,
-    private configService: ConfigService,
   ) {}
 
   @Get('/')
