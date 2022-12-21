@@ -11,7 +11,7 @@ import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
         path: path.join(__dirname, '../../resources/i18n/'),
         watch: true,
       },
-      disableMiddleware: true,
+      disableMiddleware: false,
       resolvers: [
         AcceptLanguageResolver,
         { use: QueryResolver, options: ['lang'] },
