@@ -14,8 +14,6 @@ import { DatabaseHealthIndicator } from '@modules/health/database.health';
 export class HealthController {
   constructor(
     private health: HealthCheckService,
-    private http: HttpHealthIndicator,
-    private disk: DiskHealthIndicator,
     private memory: MemoryHealthIndicator,
     private databaseHealth: DatabaseHealthIndicator,
   ) {}
