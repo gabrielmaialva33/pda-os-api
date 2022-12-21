@@ -1,7 +1,7 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1671535897544
+modified: 1671644067794
 created: 1668302615245
 fileName: pda-os-api
 contents: |+
@@ -22,6 +22,8 @@ contents: |+
     - url: https://pda-os-api.azurewebsites.net
       description: Azure Web App
   tags:
+    - name: Api
+      description: API Status
     - name: Auth
       description: Operations about auth
     - name: User
@@ -42,6 +44,25 @@ contents: |+
       description: Operations about orders
 
   paths:
+    /:
+      get:
+        tags:
+          - Api
+        summary: Get the API status
+        description: Get the API status
+        operationId: getApiStatus
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: OK
+
     /sign_in:
       post:
         tags:
@@ -2232,12 +2253,6 @@ contents: |+
           accessories: 'Acessórios 1, Acessórios 2, Acessórios 3'
           note: 'Nota 1'
           status: 'PENDING'
-
-
-
-
-
-
 
 
 contentType: yaml
