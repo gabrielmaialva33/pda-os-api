@@ -17,7 +17,7 @@
   <a href="#computer-technologies">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#wrench-tools">Ferramentas</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#package-installation">Instalação</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#memo-license">License</a>
+  <a href="#memo-license">Licença</a>
 </p>
 
 <br>
@@ -104,6 +104,6 @@ O seguinte software deve ser instalado:
 | ---------------------------------------------------------------------------------------------------------- |
 | [Gabriel Maia](https://github.com/gabrielmaialva33)                                                        |
 
-## License
+## :memo: Licença
 
 [MIT License](./LICENSE)
