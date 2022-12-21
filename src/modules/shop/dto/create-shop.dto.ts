@@ -2,8 +2,8 @@ import { z } from '@lib/zod/z';
 import { CreateZodDto } from '@lib/zod';
 
 export const CreateShopSchema = z.object({
-  name: z.string(),
-  type: z.string(),
+  name: z.string().trim(),
+  type: z.string().trim(),
   cost: z.number(),
   profit: z.number(),
   percentage_profit: z.number(),
@@ -12,7 +12,7 @@ export const CreateShopSchema = z.object({
   commission: z.number(),
   send_sms: z.boolean(),
   forecast_return: z.number(),
-  status: z.string(),
+  status: z.string().trim(),
 });
 
 export class CreateShopDto extends CreateZodDto(CreateShopSchema) {}

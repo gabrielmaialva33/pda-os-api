@@ -1,5 +1,6 @@
 import { ModelProps, Pojo } from 'objection';
 import { DateTime } from 'luxon';
+import { omit } from 'helper-fns';
 
 import { Argon2Utils } from '@common/helpers';
 import { BaseEntity } from '@common/entities/base.entity';
@@ -99,11 +100,13 @@ export class User extends BaseEntity {
 
     if (json.roles) json.role = json.roles[0].slug.toLowerCase();
 
-    delete json.password;
-    delete json.is_deleted;
-    delete json.deleted_at;
-    delete json.roles;
-
-    return json;
+    return omit(json, [
+      'password',
+      'is_deleted',
+      'roles',
+      'deleted_at',
+      'created_at',
+      'updated_at',
+    ]);
   }
 }
