@@ -40,6 +40,7 @@ export class Order extends BaseEntity {
       },
     },
   };
+
   /**
    * ------------------------------------------------------
    * Hooks
