@@ -70,10 +70,19 @@ export class ScheduleService {
     );
   }
 
-  update(id: string, data: UpdateScheduleDto) {
-    return this.get(id).pipe(
-      map((schedule) => schedule.$query().patchAndFetch(data)),
-    );
+  update(id: string, { collaborators, ...data }: UpdateScheduleDto) {
+    return this.get(id)
+      .pipe(switchMap((schedule) => schedule.$query().patchAndFetch(data)))
+      .pipe(
+        switchMap((schedule) => {
+          if (collaborators)
+            return this.syncCollaborators(schedule, collaborators).pipe(
+              switchMap(() => this.get(schedule.id)),
+            );
+
+          return this.get(schedule.id);
+        }),
+      );
   }
 
   remove(id: string) {
@@ -83,6 +92,14 @@ export class ScheduleService {
           is_deleted: true,
           deleted_at: DateTime.local().toISO(),
         }),
+      ),
+    );
+  }
+
+  syncCollaborators(schedule: Schedule, collaborators: object[]) {
+    return from(schedule.$relatedQuery('collaborators').unrelate()).pipe(
+      switchMap(() =>
+        from(schedule.$relatedQuery('collaborators').relate(collaborators)),
       ),
     );
   }
