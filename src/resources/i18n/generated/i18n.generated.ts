@@ -104,6 +104,18 @@ export type I18nTranslations = {
         note: string;
       };
     };
+    schedule: {
+      entity: string;
+      field: {
+        client: string;
+        collaborator: string;
+        shop: string;
+        date: string;
+        time: string;
+        status: string;
+        note: string;
+      };
+    };
   };
   validation: {
     required: string;

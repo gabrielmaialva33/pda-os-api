@@ -49,7 +49,7 @@
     "helper-fns": "^2.5.17",
     "knex": "^2.3.0",
     "luxon": "^3.1.1",
-    "nestjs-i18n": "^10.1.0",
+    "nestjs-i18n": "^10.2.1",
     "nestjs-pino": "^3.1.1",
     "objection": "^3.0.1",
     "passport": "^0.6.0",

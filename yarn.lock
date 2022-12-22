@@ -4341,10 +4341,10 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-nestjs-i18n@^10.1.0:
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/nestjs-i18n/-/nestjs-i18n-10.1.0.tgz#54e46e5e87da7d217631db81d6287c9b50614466"
-  integrity sha512-a5L+uLyLblnvzwIVF0Kh+m2VYJcm3LkAJk/trUtvdz4tU7Nw8rhysrEB/fehkfovk+DUv5UtkWLJbopVa4JRRg==
+nestjs-i18n@^10.2.1:
+  version "10.2.1"
+  resolved "https://registry.yarnpkg.com/nestjs-i18n/-/nestjs-i18n-10.2.1.tgz#dc2aa66c94b347dd047695c3eaa3fae437733480"
+  integrity sha512-FIdA8jiR4ZO3kh7pKUsFzvkf3j6VAMRCk8BeS+rx7bYtI5WqOp/IXhyyarwp6gzz/kK4s5XWalkE9DutGuDdbA==
   dependencies:
     accept-language-parser "^1.5.0"
     chokidar "^3.5.3"
