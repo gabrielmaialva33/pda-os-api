@@ -96,5 +96,17 @@
       "status": "Status",
       "note": "Observação"
     }
+  },
+  "schedule": {
+    "entity": "Agendamento",
+    "field": {
+      "client": "Cliente",
+      "collaborator": "Colaborador",
+      "shop": "Loja",
+      "date": "Data",
+      "time": "Hora",
+      "status": "Status",
+      "note": "Observação"
+    }
   }
 }

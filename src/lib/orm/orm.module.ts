@@ -20,6 +20,7 @@ import { PhoneClient } from '@modules/phone/entities/phone-client.entity';
 import { AddressClient } from '@modules/address/entities/address-client.entity';
 import { Shop } from '@modules/shop/entities/shop.entity';
 import { Order } from '@modules/order/entities/order.entity';
+import { Schedule } from '@modules/schedule/entities/schedule.entity';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { Order } from '@modules/order/entities/order.entity';
       AddressClient,
       Shop,
       Order,
+      Schedule,
     ]),
   ],
   exports: [ObjectionModule],

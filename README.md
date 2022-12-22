@@ -24,7 +24,8 @@
 
 ## :bookmark: Sobre
 
-**Pda Agendamentos** é um projeto desenvolvido para a PDA Soluções, com o objetivo de agendar e gerenciar os inventários de estoque.
+**Pda Agendamentos** é um projeto desenvolvido para a PDA Soluções, com o objetivo de agendar e gerenciar os inventários
+de estoque.
 
 <kbd>
   <img src="https://telegra.ph/file/3d076bf985bd725f49c77.png" alt="schema">
@@ -101,7 +102,7 @@ O seguinte software deve ser instalado:
 ### :writing_hand: **Autor**
 
 | [![Gabriel Maia](https://avatars.githubusercontent.com/u/26732067?size=100)](https://github.com/demartini) |
-| ---------------------------------------------------------------------------------------------------------- |
+|------------------------------------------------------------------------------------------------------------|
 | [Gabriel Maia](https://github.com/gabrielmaialva33)                                                        |
 
 ## :memo: Licença
