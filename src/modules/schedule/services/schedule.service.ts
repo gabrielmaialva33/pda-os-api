@@ -2,8 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { from, map, switchMap } from 'rxjs';
 import { I18nService } from 'nestjs-i18n';
 import { DateTime } from 'luxon';
-
-import { I18nTranslations } from '@/resources/i18n/generated/i18n.generated';
 import { ListOptions } from '@common/interfaces/base-repository.interface';
 import { PaginationObject } from '@lib/pagination';
 
