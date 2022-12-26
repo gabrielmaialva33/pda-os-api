@@ -27,4 +27,9 @@ export const CreateUserSchema = z.object({
   role: z.nativeEnum(RoleType),
 });
 
-export class CreateUserDto extends CreateZodDto(CreateUserSchema) {}
+export class CreateUserDto extends CreateZodDto(CreateUserSchema) {
+  constructor(data: Partial<any>) {
+    super();
+    Object.assign(this, data);
+  }
+}

@@ -10,6 +10,6 @@ import { RoleModule } from '@modules/role/role.module';
   imports: [OrmModule, RoleModule],
   controllers: [UserController],
   providers: [UserService, UserRepository],
-  exports: [UserService],
+  exports: [UserService, UserRepository],
 })
 export class UserModule {}

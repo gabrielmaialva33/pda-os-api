@@ -1,27 +1,38 @@
 import { DateTime } from 'luxon';
 import { pick } from 'helper-fns';
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { from, map, of, switchMap } from 'rxjs';
 
 import { Argon2Utils } from '@common/helpers';
-import { UserService } from '@modules/user/services/user.service';
 import { User } from '@modules/user/entities/user.entity';
-import { from, map, switchMap } from 'rxjs';
+
 import { SignInUserDto } from '@modules/auth/dto';
+import { UserRepository } from '@modules/user/repositories/user.repository';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UserService,
+    private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
+    private readonly i18n: I18nService,
   ) {}
 
   validate(uid: string, password: string) {
-    return from(this.userService.getBy(User.uids, uid)).pipe(
+    return from(this.userRepository.getBy(User.uids, uid)).pipe(
       switchMap((user) => {
         if (!user) return null;
-        return Argon2Utils.verify(user.password, password).pipe(
-          map((isValid) => (isValid ? user : null)),
+
+        return of(Argon2Utils.verify(user.password, password)).pipe(
+          map((isValid) => {
+            if (!isValid)
+              throw new ForbiddenException(
+                this.i18n.t('exception.invalid_credentials'),
+              );
+
+            return user;
+          }),
         );
       }),
     );
@@ -32,25 +43,20 @@ export class AuthService {
       switchMap((user) => {
         if (!user) return null;
         const payload = { sub: user.id };
-        return from(this.jwtService.signAsync(payload)).pipe(
-          map((token) => {
-            const expiresAt = DateTime.local().plus({ hours: 1 });
-            return {
-              user: {
-                ...pick(user.$toJson(), [
-                  'id',
-                  'first_name',
-                  'last_name',
-                  'full_name',
-                  'email',
-                  'user_name',
-                  'avatar',
-                ]),
-              },
-              auth: { token, expires_at: expiresAt },
-            };
-          }),
-        );
+        const token = this.jwtService.sign(payload);
+
+        return of({
+          token,
+          user: pick(user, [
+            'id',
+            'first_name',
+            'last_name',
+            'full_name',
+            'email',
+            'user_name',
+            'avatar',
+          ]),
+        });
       }),
     );
   }
