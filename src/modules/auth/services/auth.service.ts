@@ -1,15 +1,15 @@
 import { DateTime } from 'luxon';
 import { pick } from 'helper-fns';
+import { from, map, of, switchMap } from 'rxjs';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { from, map, of, switchMap } from 'rxjs';
+import { I18nService } from 'nestjs-i18n';
 
 import { Argon2Utils } from '@common/helpers';
-import { User } from '@modules/user/entities/user.entity';
 
+import { User } from '@modules/user/entities/user.entity';
 import { SignInUserDto } from '@modules/auth/dto';
 import { UserRepository } from '@modules/user/repositories/user.repository';
-import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class AuthService {
@@ -46,7 +46,6 @@ export class AuthService {
         const token = this.jwtService.sign(payload);
 
         return of({
-          token,
           user: pick(user, [
             'id',
             'first_name',
@@ -56,6 +55,7 @@ export class AuthService {
             'user_name',
             'avatar',
           ]),
+          auth: { token },
         });
       }),
     );

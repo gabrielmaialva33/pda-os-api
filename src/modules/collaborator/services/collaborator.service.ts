@@ -94,23 +94,26 @@ export class CollaboratorService {
   }
 
   create({ phones, addresses, user, bank, ...data }: CreateCollaboratorDto) {
-    const collaborator$ = from(
+    const user$ = from(
       this.userService.create({
         ...user,
         role: RoleType.COLLABORATOR,
       }),
-    ).pipe(
+    );
+
+    const collaborator$ = user$.pipe(
       switchMap((user) => {
-        return this.collaboratorRepository.create({
-          ...data,
-          user_id: user.id,
-          code: crypto.randomBytes(4).toString('hex').toUpperCase(),
-        });
+        return from(
+          this.collaboratorRepository.create({
+            ...data,
+            user_id: user.id,
+          }),
+        );
       }),
     );
 
-    return from(collaborator$).pipe(
-      switchMap((collaborator) => {
+    return forkJoin([user$, collaborator$]).pipe(
+      switchMap(([user, collaborator]) => {
         const phones$ = from(this.phoneService.createMany(phones)).pipe(
           switchMap((phones) =>
             this.syncPhones(

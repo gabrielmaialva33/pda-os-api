@@ -47,7 +47,7 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
   });
 
-  it('should be validate', async () => {
+  it('should be validate username', async () => {
     const userMock = await lastValueFrom(mockUser);
 
     service.validate(userMock.user_name, '123456').subscribe((user) => {
@@ -61,13 +61,27 @@ describe('AuthService', () => {
     });
   });
 
-  it('should be login', async () => {
+  it('should be validate email', async () => {
+    const userMock = await lastValueFrom(mockUser);
+
+    service.validate(userMock.email, '123456').subscribe((user) => {
+      expect(user).toStrictEqual(mockUser);
+      expect(mockUserRepository.getBy).toBeCalledTimes(1);
+    });
+
+    service.validate(userMock.email, '1234567').subscribe((user) => {
+      expect(user).toBeNull();
+      expect(mockUserRepository.getBy).toBeCalledTimes(2);
+    });
+  });
+
+  it('should be login username', async () => {
     const userMock = await lastValueFrom(mockUser);
 
     service
       .login({ uid: userMock.user_name, password: '123456' })
-      .subscribe((auth) => {
-        expect(auth.user).toStrictEqual({
+      .subscribe((data) => {
+        expect(data.user).toStrictEqual({
           id: userMock.id,
           first_name: userMock.first_name,
           last_name: userMock.last_name,
@@ -77,7 +91,27 @@ describe('AuthService', () => {
           avatar: userMock.avatar,
         });
 
-        expect(auth.token).toBe('token');
+        expect(data.auth.token).toBe('token');
+      });
+  });
+
+  it('should be login with email', async () => {
+    const userMock = await lastValueFrom(mockUser);
+
+    service
+      .login({ uid: userMock.email, password: '123456' })
+      .subscribe((data) => {
+        expect(data.user).toStrictEqual({
+          id: userMock.id,
+          first_name: userMock.first_name,
+          last_name: userMock.last_name,
+          full_name: userMock.full_name,
+          email: userMock.email,
+          user_name: userMock.user_name,
+          avatar: userMock.avatar,
+        });
+
+        expect(data.auth.token).toBe('token');
       });
   });
 });

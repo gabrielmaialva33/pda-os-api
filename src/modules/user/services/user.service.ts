@@ -89,12 +89,19 @@ export class UserService {
   }
 
   create({ role, ...data }: CreateUserDto) {
+    console.log({ role, ...data });
     return from(this.roleService.getBy(['name'], role)).pipe(
       switchMap((role) => {
-        return this.userRepository.create(data).pipe(
-          switchMap(async (user) => {
-            await user.$relatedQuery('roles').relate([role.id]);
-            return user.$query().withGraphFetched('roles');
+        console.log('role', role);
+        return from(this.userRepository.create(data)).pipe(
+          switchMap((user) => {
+            console.log('user', user);
+            return this.syncRoles(user, [role.id]).pipe(
+              switchMap(() => {
+                console.log('syncRoles');
+                return this.get(user.id);
+              }),
+            );
           }),
         );
       }),
@@ -121,11 +128,10 @@ export class UserService {
   }
 
   syncRoles(user: User, roleIds: string[]) {
-    return from(
-      user
-        .$relatedQuery('roles')
-        .unrelate()
-        .then(() => user.$relatedQuery('roles').relate(roleIds)),
-    ).pipe(switchMap(() => this.get(user.id)));
+    return from(user.$relatedQuery('roles').unrelate()).pipe(
+      switchMap(() => {
+        return from(user.$relatedQuery('roles').relate(roleIds));
+      }),
+    );
   }
 }

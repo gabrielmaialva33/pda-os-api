@@ -48,7 +48,7 @@ describe('AuthController', () => {
     controller = module.get<AuthController>(AuthController);
   });
 
-  it('should be sing in', async () => {
+  it('should be sing in with username', async () => {
     const userMock = await lastValueFrom(mockUser);
 
     const signIn = await controller.signIn({
@@ -60,7 +60,24 @@ describe('AuthController', () => {
       expect(mockUserRepository.getBy).toBeCalledTimes(1);
       expect(mockJwtService.sign).toBeCalledTimes(1);
 
-      expect(data.token).toBe('token');
+      expect(data.auth.token).toBe('token');
+      expect(data.user).toStrictEqual(userMock);
+    });
+  });
+
+  it('should be sing in with email', async () => {
+    const userMock = await lastValueFrom(mockUser);
+
+    const signIn = await controller.signIn({
+      uid: userMock.email,
+      password: '123456',
+    });
+
+    signIn.subscribe((data) => {
+      expect(mockUserRepository.getBy).toBeCalledTimes(1);
+      expect(mockJwtService.sign).toBeCalledTimes(1);
+
+      expect(data.auth.token).toBe('token');
       expect(data.user).toStrictEqual(userMock);
     });
   });
