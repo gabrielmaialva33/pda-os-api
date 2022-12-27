@@ -26,7 +26,7 @@ export const UpdateUserSchema = z.object({
     .optional(),
   password: z.string().min(1).max(118).optional(),
   avatar: z.string().min(1).max(255).optional(),
-  role: z.nativeEnum(RoleType),
+  role: z.nativeEnum(RoleType).optional(),
 });
 
 export class UpdateUserDto extends CreateZodDto(UpdateUserSchema) {}

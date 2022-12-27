@@ -115,7 +115,7 @@ export class ClientService {
           switchMap(([phones, addresses]) => {
             return forkJoin([
               from(
-                this.clientRepository.update(client.id, {
+                this.clientRepository.update(client, {
                   ...data,
                 }),
               ),
@@ -138,7 +138,7 @@ export class ClientService {
     return this.get(id).pipe(
       switchMap((client) => {
         return from(
-          this.clientRepository.update(client.id, {
+          this.clientRepository.update(client, {
             is_deleted: true,
             deleted_at: DateTime.local().toISO(),
           }),

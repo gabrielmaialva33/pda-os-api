@@ -75,7 +75,7 @@ export class AddressService {
   update(id: string, data: UpdateAddressDto) {
     return this.get(id).pipe(
       switchMap((address) =>
-        from(this.addressRepository.update(address.id, data)).pipe(
+        from(this.addressRepository.update(address, data)).pipe(
           switchMap(() => this.get(id)),
         ),
       ),
@@ -86,7 +86,7 @@ export class AddressService {
     return this.get(id).pipe(
       switchMap((address) =>
         from(
-          this.addressRepository.update(address.id, {
+          this.addressRepository.update(address, {
             is_deleted: true,
             deleted_at: DateTime.local().toISO(),
           }),

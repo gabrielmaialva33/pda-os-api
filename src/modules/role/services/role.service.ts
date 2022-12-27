@@ -76,7 +76,7 @@ export class RoleService {
 
   update(id: string, data: UpdateRoleDto) {
     return this.get(id).pipe(
-      switchMap((role) => this.roleRepository.update(role.id, data)),
+      switchMap((role) => this.roleRepository.update(role, data)),
     );
   }
 }

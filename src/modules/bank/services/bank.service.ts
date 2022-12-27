@@ -61,7 +61,7 @@ export class BankService {
 
   update(id: string, data: UpdateBankDto) {
     return this.get(id).pipe(
-      switchMap((bank) => from(this.bankRepository.update(bank.id, data))),
+      switchMap((bank) => from(this.bankRepository.update(bank, data))),
     );
   }
 
@@ -69,7 +69,7 @@ export class BankService {
     return this.get(id).pipe(
       switchMap((bank) =>
         from(
-          this.bankRepository.update(bank.id, {
+          this.bankRepository.update(bank, {
             is_deleted: true,
             deleted_at: DateTime.local().toISO(),
           }),

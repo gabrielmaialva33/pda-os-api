@@ -60,7 +60,7 @@ export interface IBaseRepository<Entity extends BaseEntity> {
 
   /**
    * @description Update an entity in the database
-   * @param {string} id
+   * @param {Entity} model
    * @param {ModelAttributes<Entity>} data
    * @returns {Observable<Entity>}
    * @memberof IBaseRepository
@@ -68,7 +68,7 @@ export interface IBaseRepository<Entity extends BaseEntity> {
    * // returns { id: 1, name: 'John Doe' }
    * const user = await this.userRepository.update(1, { name: 'John Doe' });
    */
-  update(id: string, data: ModelAttributes<Entity>): Observable<Entity>;
+  update(model: Entity, data: ModelAttributes<Entity>): Observable<Entity>;
 }
 
 export type ModelAttributes<T extends BaseEntity> = { [k in keyof T]?: T[k] };

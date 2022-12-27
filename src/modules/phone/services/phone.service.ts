@@ -72,9 +72,7 @@ export class PhoneService {
   update(id: string, data: UpdatePhoneDto) {
     return this.get(id).pipe(
       switchMap((phone) =>
-        from(this.phoneRepository.update(phone.id, data)).pipe(
-          map(() => phone),
-        ),
+        from(this.phoneRepository.update(phone, data)).pipe(map(() => phone)),
       ),
     );
   }
@@ -83,7 +81,7 @@ export class PhoneService {
     return this.get(id).pipe(
       switchMap((phone) =>
         from(
-          this.phoneRepository.update(phone.id, {
+          this.phoneRepository.update(phone, {
             is_deleted: true,
             deleted_at: DateTime.local().toISO(),
           }),

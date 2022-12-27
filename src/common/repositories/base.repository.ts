@@ -123,11 +123,12 @@ export class BaseRepository<Entity extends BaseEntity>
     ).pipe(map((result) => result as Entity));
   }
 
-  update(id: string, data: ModelAttributes<Entity>): Observable<Entity> {
+  update(model: Entity, data: ModelAttributes<Entity>): Observable<Entity> {
     return from(
-      this.orm.transaction(async (trx) =>
-        this.orm.query(trx).patchAndFetchById(id, data).returning('*'),
-      ),
+      this.orm.transaction(async (trx) => {
+        await model.$query(trx).patchAndFetch(data);
+        return model;
+      }),
     ).pipe(map((result) => result as Entity));
   }
 }
