@@ -4,10 +4,9 @@ import { DateTime } from 'luxon';
 import { createMock } from '@golevelup/ts-jest';
 import { lastValueFrom, of } from 'rxjs';
 
-import { UserMock } from '@/_mocks_';
+import { UserMock, UserMocks } from '@/_mocks_';
 
 import { UserService } from '@modules/user/services/user.service';
-import { RoleService } from '@modules/role/services/role.service';
 import { UserRepository } from '@modules/user/repositories/user.repository';
 import { RoleRepository } from '@modules/role/repositories/role.repository';
 import { RoleType } from '@modules/role/enum/role-type.enum';
@@ -28,7 +27,6 @@ describe('UserService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
-        RoleService,
         { provide: UserRepository, useValue: mockUserRepository },
         { provide: RoleRepository, useValue: mockRoleRepository },
         { provide: I18nService, useValue: mockI18nService },
@@ -40,6 +38,62 @@ describe('UserService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('should be able to paginate users', async () => {
+    const mockedUsers = await UserMocks(20);
+
+    mockUserRepository.paginate = jest.fn().mockReturnValue(
+      of({
+        results: mockedUsers,
+        total: mockedUsers.length,
+      }),
+    );
+    const result = await lastValueFrom(
+      service.paginate({
+        page: 1,
+        per_page: 10,
+      }),
+    );
+
+    expect(result).toEqual({
+      meta: {
+        total: mockedUsers.length,
+        current_page: 1,
+        per_page: 10,
+        total_pages: 2,
+        first: '/users?per_page=10',
+        previous: '',
+        next: '/users?page=2&per_page=10',
+        last: '/users?page=2&per_page=10',
+      },
+      data: mockedUsers,
+    });
+    expect(mockUserRepository.paginate).toBeCalledTimes(1);
+
+    jest.clearAllMocks();
+  });
+
+  it('should be able to list users', async () => {
+    const mockedUsers = await UserMocks(20);
+
+    mockUserRepository.list = jest.fn().mockReturnValue(of(mockedUsers));
+    const result = await lastValueFrom(
+      service.list({
+        sort: 'first_name',
+        order: 'asc',
+      }),
+    );
+
+    expect(result).toEqual(mockedUsers);
+    expect(mockUserRepository.list).toBeCalledTimes(1);
+    expect(mockUserRepository.list).toBeCalledWith({
+      sort: 'first_name',
+      order: 'asc',
+    });
+    expect(result.length).toBe(20);
+
+    jest.clearAllMocks();
   });
 
   it('should be get user', async () => {

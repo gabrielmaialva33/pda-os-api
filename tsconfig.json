@@ -19,21 +19,11 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@common/*": [
-        "./common/*"
-      ],
-      "@lib/*": [
-        "./lib/*"
-      ],
-      "@modules/*": [
-        "./modules/*"
-      ]
+      "@/*": ["./*"],
+      "@common/*": ["./common/*"],
+      "@lib/*": ["./lib/*"],
+      "@modules/*": ["./modules/*"]
     }
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }

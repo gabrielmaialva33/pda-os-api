@@ -32,8 +32,11 @@ export const UserMock = async (role?: RoleType) => {
   return user;
 };
 
-export const UserMocks = async (roles?: RoleType[]) => {
+export const UserMocks = async (mocks: number) => {
   const users = [];
-  for (const role of roles) users.push(await UserMock(role));
+  for (let i = 0; i < mocks; i++)
+    users.push(
+      await UserMock(faker.helpers.arrayElement([...Object.values(RoleType)])),
+    );
   return users;
 };

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { forkJoin, from, map, switchMap } from 'rxjs';
 import { I18nService } from 'nestjs-i18n';
 import { DateTime } from 'luxon';
+import * as crypto from 'crypto';
 
 import {
   CreateCollaboratorDto,
@@ -106,13 +107,14 @@ export class CollaboratorService {
           this.collaboratorRepository.create({
             ...data,
             user_id: user.id,
+            code: crypto.randomBytes(4).toString('hex').toUpperCase(),
           }),
         );
       }),
     );
 
     return forkJoin([user$, collaborator$]).pipe(
-      switchMap(([user, collaborator]) => {
+      switchMap(([_, collaborator]) => {
         const phones$ = from(this.phoneService.createMany(phones)).pipe(
           switchMap((phones) =>
             this.syncPhones(

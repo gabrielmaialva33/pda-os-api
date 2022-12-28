@@ -17,7 +17,7 @@ export class BaseRepository<Entity extends BaseEntity>
   paginate(options?: ListOptions<Entity>) {
     return from(
       this.orm.transaction(async (trx) => {
-        const query = this.orm.query(trx);
+        const query = this.orm.query(trx).notDeleted();
 
         if (options) {
           /**
@@ -55,7 +55,7 @@ export class BaseRepository<Entity extends BaseEntity>
           else query.orderBy('created_at', options.order || 'desc');
         }
 
-        return query.whereNot('is_deleted', true);
+        return query;
       }),
     ).pipe(
       map(
@@ -76,9 +76,7 @@ export class BaseRepository<Entity extends BaseEntity>
         if (options?.sort)
           query.orderBy(options.sort as string, options.order || 'desc');
 
-        return query
-          .whereNot('is_deleted', true)
-          .orderBy('created_at', options.order || 'desc');
+        return query.orderBy('created_at', options.order || 'desc');
       }),
     ).pipe(map((result) => result as Entity[]));
   }
@@ -107,7 +105,10 @@ export class BaseRepository<Entity extends BaseEntity>
     return from(
       this.orm.transaction(async (trx) => {
         for (let i = 0; i < keys.length; i++) {
-          const query = this.orm.query(trx).where(keys[i] as string, value);
+          const query = this.orm
+            .query(trx)
+            .where(keys[i] as string, value)
+            .notDeleted();
 
           if (context) {
             if (context.populate && context.populate.length > 0)
@@ -117,7 +118,7 @@ export class BaseRepository<Entity extends BaseEntity>
             if (context.where) query.where(context.where);
           }
 
-          const result = await query.whereNot('is_deleted', true).first();
+          const result = await query.first();
 
           if (result) return result;
         }

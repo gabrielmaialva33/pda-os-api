@@ -5,7 +5,7 @@ services:
     container_name: database
     restart: always
     healthcheck:
-      test: [ 'CMD', 'pg_isready', '-q', '-d', 'postgres', '-U', 'postgres' ]
+      test: ['CMD', 'pg_isready', '-q', '-d', 'postgres', '-U', 'postgres']
       interval: 10s
       timeout: 5s
       retries: 5

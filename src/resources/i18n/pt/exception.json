@@ -1,4 +1,5 @@
 {
   "not_found": "{entity} não encontrado(a)",
-  "invalid_credentials": "Credenciais inválidas"
+  "invalid_credentials": "Credenciais inválidas",
+  "account_not_found": "Conta não encontrada"
 }

@@ -21,7 +21,10 @@ export class AuthService {
   validate(uid: string, password: string) {
     return from(this.userRepository.getBy(User.uids, uid)).pipe(
       switchMap((user) => {
-        if (!user) return null;
+        if (!user)
+          throw new ForbiddenException(
+            this.i18n.translate('exception.account_not_found'),
+          );
 
         return of(Argon2Utils.verify(user.password, password)).pipe(
           map((isValid) => {

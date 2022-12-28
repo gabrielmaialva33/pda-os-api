@@ -25,6 +25,7 @@ export class User extends BaseEntity {
   password: string;
   avatar: string;
   is_online: boolean;
+  is_deleted: boolean;
 
   /**
    * ------------------------------------------------------
@@ -84,6 +85,7 @@ export class User extends BaseEntity {
         password: { type: 'string', minLength: 1, maxLength: 118 },
         avatar: { type: 'string', minLength: 1, maxLength: 255 },
         is_online: { type: 'boolean' },
+        is_deleted: { type: 'boolean' },
         created_at: { type: 'string' },
         updated_at: { type: 'string' },
       },
