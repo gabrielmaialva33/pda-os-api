@@ -51,9 +51,9 @@ export class UserService {
     const user$ = this.userRepository.create(data);
 
     return forkJoin([role$, user$]).pipe(
-      switchMap(([role, user]) => {
-        return this.userRepository.syncRoles(user, [role.id]);
-      }),
+      switchMap(([role, user]) =>
+        this.userRepository.syncRoles(user, [role.id]),
+      ),
     );
   }
 
@@ -77,18 +77,7 @@ export class UserService {
   }
 
   remove(id: string) {
-    return this.get(id).pipe(
-      switchMap((user) => {
-        return from(
-          user.$query().patchAndFetchById(user.id, {
-            email: `${user.email}-${user.id.slice(0, 8)}`,
-            user_name: `${user.user_name}-${user.id.slice(0, 8)}`,
-            is_deleted: true,
-            deleted_at: DateTime.local().toISO(),
-          }),
-        );
-      }),
-    );
+    return from(this.userRepository.softDelete(id)).pipe(map((user) => user));
   }
 
   paginate({ page, per_page, search, sort, order }: ListOptions<User>) {

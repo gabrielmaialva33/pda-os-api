@@ -1,18 +1,29 @@
 import { faker } from '@faker-js/faker';
+
 import { Role } from '@modules/role/entities/role.entity';
 import { RoleType } from '@modules/role/enum/role-type.enum';
 
-export const RoleMock = () => {
-  const role = new Role();
+export const RoleMock = (role?: RoleType) => {
+  const role$ = new Role();
 
-  Object.assign(role, {
+  const name = role
+    ? role
+    : faker.helpers.arrayElement(Object.values(RoleType));
+
+  Object.assign(role$, {
     id: faker.datatype.uuid(),
-    name: faker.helpers.arrayElement(Object.values(RoleType)).toLowerCase(),
-    slug: faker.helpers.arrayElement(Object.values(RoleType)),
+    name,
+    slug: name.toUpperCase(),
     description: faker.lorem.paragraph(),
     created_at: faker.date.past().toISOString(),
     updated_at: faker.date.recent().toISOString(),
   });
 
-  return role;
+  return role$;
+};
+
+export const RoleMocks = (roles?: RoleType[]) => {
+  const roles$ = [];
+  for (const role of roles) roles$.push(RoleMock(role));
+  return roles$;
 };

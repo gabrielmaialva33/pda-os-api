@@ -1,7 +1,9 @@
+import { forkJoin, from, map, Observable, switchMap } from 'rxjs';
+import { DateTime } from 'luxon';
+
 import { BaseRepository } from '@common/repositories/base.repository';
 import { User } from '@modules/user/entities/user.entity';
 import { IUserRepository } from '@modules/user/interfaces';
-import { forkJoin, from, map, Observable, switchMap } from 'rxjs';
 
 export class UserRepository
   extends BaseRepository<User>
@@ -9,6 +11,21 @@ export class UserRepository
 {
   constructor() {
     super(User);
+  }
+
+  softDelete(id: string): Observable<User> {
+    return this.getBy(['id'], id).pipe(
+      switchMap((user) =>
+        from(
+          user.$query().patchAndFetch({
+            email: `${user.email}-${user.id.slice(0, 8)}`,
+            user_name: `${user.user_name}-${user.id.slice(0, 8)}`,
+            is_deleted: true,
+            deleted_at: DateTime.local().toISO(),
+          }),
+        ).pipe(map((user) => user)),
+      ),
+    );
   }
 
   syncRoles(user: User, roleIds: string[]): Observable<User> {

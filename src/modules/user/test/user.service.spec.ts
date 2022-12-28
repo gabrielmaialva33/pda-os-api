@@ -1,21 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { I18nService } from 'nestjs-i18n';
+import { DateTime } from 'luxon';
 import { createMock } from '@golevelup/ts-jest';
-import { from, lastValueFrom, map, of } from 'rxjs';
+import { lastValueFrom, of } from 'rxjs';
 
-import { RoleMock, UserMock } from '@/_mocks_';
+import { UserMock } from '@/_mocks_';
 
 import { UserService } from '@modules/user/services/user.service';
 import { RoleService } from '@modules/role/services/role.service';
 import { UserRepository } from '@modules/user/repositories/user.repository';
 import { RoleRepository } from '@modules/role/repositories/role.repository';
+import { RoleType } from '@modules/role/enum/role-type.enum';
 
 describe('UserService', () => {
   let service: UserService;
-  // mock entities
-  const mockUser = from(UserMock()).pipe(map((user) => user));
-  const userMockUpdated = from(UserMock()).pipe(map((user) => user));
-  const mockRole = of(RoleMock());
 
   // service dependencies mocks
   const mockI18nService = createMock<I18nService>();
@@ -23,13 +21,6 @@ describe('UserService', () => {
   // repository dependencies mocks
   const mockUserRepository = createMock<UserRepository>();
   const mockRoleRepository = createMock<RoleRepository>();
-
-  // mock`s methods
-  mockRoleRepository.getBy = jest.fn().mockReturnValue(mockRole);
-  mockUserRepository.getBy = jest.fn().mockReturnValue(mockUser);
-  mockUserRepository.create = jest.fn().mockReturnValue(mockUser);
-  mockUserRepository.update = jest.fn().mockReturnValue(userMockUpdated);
-  mockUserRepository.syncRoles = jest.fn().mockReturnValue(mockUser);
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -47,133 +38,188 @@ describe('UserService', () => {
     service = module.get<UserService>(UserService);
   });
 
-  it('should be able to get a user', async () => {
-    const userMock = await lastValueFrom(mockUser);
-
-    const user = await lastValueFrom(service.get(userMock.id));
-
-    expect(user).toEqual(userMock);
-    expect(mockUserRepository.getBy).toBeCalledTimes(1);
-
-    expect(user.id).toEqual(userMock.id);
-    expect(user.email).toEqual(userMock.email);
-    expect(user.first_name).toEqual(userMock.first_name);
-    expect(user.last_name).toEqual(userMock.last_name);
-    expect(user.user_name).toEqual(userMock.user_name);
-    expect(user.avatar).toEqual(userMock.avatar);
-
-    expect(user['roles']).toEqual(userMock['roles']);
+  it('should be defined', () => {
+    expect(service).toBeDefined();
   });
 
-  it('should be able to get a user by email', async () => {
-    const userMock = await lastValueFrom(mockUser);
-    const user = await lastValueFrom(service.getBy(['email'], userMock.email));
+  it('should be get user', async () => {
+    const user = await UserMock(RoleType.ADMIN);
 
-    expect(user).toEqual(userMock);
+    mockUserRepository.getBy = jest.fn().mockReturnValue(of(user));
+
+    const get$ = service.get(user.id);
+    const result = await lastValueFrom(get$);
+
+    expect(result).toEqual(user);
     expect(mockUserRepository.getBy).toBeCalledTimes(1);
+    expect(mockUserRepository.getBy).toBeCalledWith(['id'], user.id, {
+      populate: ['roles'],
+    });
 
-    expect(user.id).toEqual(userMock.id);
-    expect(user.email).toEqual(userMock.email);
-    expect(user.first_name).toEqual(userMock.first_name);
-    expect(user.last_name).toEqual(userMock.last_name);
-    expect(user.user_name).toEqual(userMock.user_name);
-    expect(user.avatar).toEqual(userMock.avatar);
+    expect(mockI18nService.t).toBeCalledTimes(0);
+
+    expect(result.id).toEqual(user.id);
+    expect(result.first_name).toEqual(user.first_name);
+    expect(result.last_name).toEqual(user.last_name);
+    expect(result.full_name).toEqual(user.full_name);
+    expect(result.email).toEqual(user.email);
+    expect(result.user_name).toEqual(user.user_name);
+    expect(result.avatar).toEqual(user.avatar);
+    expect(result.is_online).toEqual(user.is_online);
   });
 
-  it('should be able to get a user by user_name', async () => {
-    const userMock = await lastValueFrom(mockUser);
+  it('should be get by user name', async () => {
+    const user = await UserMock(RoleType.ADMIN);
 
-    const user = await lastValueFrom(
-      service.getBy(['user_name'], userMock.user_name),
+    mockUserRepository.getBy.mockClear();
+    mockUserRepository.getBy.mockReturnValue(of(user));
+
+    const get$ = service.getBy(['user_name'], user.user_name);
+    const result = await lastValueFrom(get$);
+
+    expect(result).toEqual(user);
+    expect(mockUserRepository.getBy).toBeCalledTimes(1);
+    expect(mockUserRepository.getBy).toBeCalledWith(
+      ['user_name'],
+      user.user_name,
+      { populate: ['roles'] },
     );
 
-    expect(user).toEqual(userMock);
+    expect(mockI18nService.t).toBeCalledTimes(0);
+
+    expect(result.id).toEqual(user.id);
+    expect(result.first_name).toEqual(user.first_name);
+    expect(result.last_name).toEqual(user.last_name);
+    expect(result.full_name).toEqual(user.full_name);
+    expect(result.email).toEqual(user.email);
+    expect(result.user_name).toEqual(user.user_name);
+    expect(result.avatar).toEqual(user.avatar);
+    expect(result.is_online).toEqual(user.is_online);
+  });
+
+  it('should be get by email', async () => {
+    const user = await UserMock(RoleType.ADMIN);
+
+    mockUserRepository.getBy.mockClear();
+    mockUserRepository.getBy.mockReturnValue(of(user));
+
+    const get$ = service.getBy(['email'], user.email);
+    const result = await lastValueFrom(get$);
+
+    expect(result).toEqual(user);
     expect(mockUserRepository.getBy).toBeCalledTimes(1);
+    expect(mockUserRepository.getBy).toBeCalledWith(['email'], user.email, {
+      populate: ['roles'],
+    });
 
-    expect(user.id).toEqual(userMock.id);
-    expect(user.email).toEqual(userMock.email);
-    expect(user.first_name).toEqual(userMock.first_name);
-    expect(user.last_name).toEqual(userMock.last_name);
-    expect(user.user_name).toEqual(userMock.user_name);
-    expect(user.avatar).toEqual(userMock.avatar);
+    expect(mockI18nService.t).toBeCalledTimes(0);
+
+    expect(result.id).toEqual(user.id);
+    expect(result.first_name).toEqual(user.first_name);
+    expect(result.last_name).toEqual(user.last_name);
+    expect(result.full_name).toEqual(user.full_name);
+    expect(result.email).toEqual(user.email);
+    expect(result.user_name).toEqual(user.user_name);
+    expect(result.avatar).toEqual(user.avatar);
+    expect(result.is_online).toEqual(user.is_online);
   });
 
-  it('should be able to get a user by email or user_name', async () => {
-    const userMock = await lastValueFrom(mockUser);
+  it('should be create user', async () => {
+    const data = await UserMock(RoleType.ADMIN);
 
-    const user = await lastValueFrom(
-      service.getBy(['email', 'user_name'], userMock.email),
+    mockUserRepository.create = jest.fn().mockReturnValue(of(data));
+    mockUserRepository.getBy = jest.fn().mockReturnValue(of(data));
+    mockUserRepository.syncRoles = jest.fn().mockReturnValue(of(data));
+    mockRoleRepository.getBy = jest.fn().mockReturnValue(of(data['roles'][0]));
+
+    const create$ = service.create({
+      first_name: data.first_name,
+      last_name: data.last_name,
+      email: data.email,
+      user_name: data.user_name,
+      password: data.password,
+      role: data['roles'][0].name,
+    });
+    const result = await lastValueFrom(create$);
+
+    expect(result).toEqual(data);
+    expect(mockRoleRepository.getBy).toBeCalledTimes(1);
+    expect(mockRoleRepository.getBy).toBeCalledWith(
+      ['name'],
+      data['roles'][0].name,
     );
-
-    expect(user).toEqual(userMock);
-    expect(mockUserRepository.getBy).toBeCalledTimes(1);
-
-    expect(user.id).toEqual(userMock.id);
-    expect(user.email).toEqual(userMock.email);
-    expect(user.first_name).toEqual(userMock.first_name);
-    expect(user.last_name).toEqual(userMock.last_name);
-    expect(user.user_name).toEqual(userMock.user_name);
-    expect(user.avatar).toEqual(userMock.avatar);
+    expect(mockUserRepository.create).toBeCalledTimes(1);
+    expect(mockUserRepository.syncRoles).toBeCalledTimes(1);
+    expect(mockI18nService.t).toBeCalledTimes(0);
   });
 
-  it('should be able to create a user', async () => {
-    const userMock = await lastValueFrom(mockUser);
+  it('should be update user', async () => {
+    const user = await UserMock(RoleType.ADMIN);
+    const data = await UserMock(RoleType.USER);
 
-    const result = await lastValueFrom(
-      service.create({
-        first_name: userMock.first_name,
-        last_name: userMock.last_name,
-        email: userMock.email,
-        user_name: userMock.user_name,
-        password: userMock.password,
-        avatar: userMock.avatar,
-        role: userMock['roles'][0].name,
-      }),
+    mockUserRepository.update = jest
+      .fn()
+      .mockImplementation((id: string, data: any) => {
+        Object.assign(user, data);
+        return of(user);
+      });
+    mockUserRepository.getBy.mockReturnValue(of(data));
+    mockUserRepository.syncRoles.mockReturnValue(of(data));
+    mockRoleRepository.getBy.mockReturnValue(of(data['roles'][0]));
+
+    const update$ = service.update(user.id, {
+      first_name: data.first_name,
+      last_name: data.last_name,
+      email: data.email,
+      user_name: data.user_name,
+      password: data.password,
+      role: RoleType.USER,
+    });
+    const result = await lastValueFrom(update$);
+
+    expect(result).toEqual(data);
+    expect(mockRoleRepository.getBy).toBeCalledTimes(1);
+    expect(mockRoleRepository.getBy).toBeCalledWith(
+      ['name'],
+      data['roles'][0].name,
     );
-
-    expect(result).toEqual(userMock);
-    expect(mockUserRepository.create).toHaveBeenCalledTimes(1);
-    expect(mockRoleRepository.getBy).toHaveBeenCalledTimes(1);
-    expect(mockUserRepository.syncRoles).toHaveBeenCalledTimes(1);
-
-    expect(result.first_name).toEqual(userMock.first_name);
-    expect(result.last_name).toEqual(userMock.last_name);
-    expect(result.email).toEqual(userMock.email);
-    expect(result.user_name).toEqual(userMock.user_name);
-    expect(result.avatar).toEqual(userMock.avatar);
-
-    expect(result['roles']).toEqual(userMock['roles']);
+    expect(mockUserRepository.update).toBeCalledTimes(1);
+    expect(mockUserRepository.syncRoles).toBeCalledTimes(1);
+    expect(mockI18nService.t).toBeCalledTimes(0);
   });
 
-  it('should be able to update a user', async () => {
-    const userMock = await lastValueFrom(userMockUpdated);
+  it('should be delete user', async () => {
+    const user = await UserMock(RoleType.ADMIN);
 
-    const user = await lastValueFrom(
-      service.update(userMock.id, {
-        first_name: userMock.first_name,
-        last_name: userMock.last_name,
-        email: userMock.email,
-        user_name: userMock.user_name,
-        avatar: userMock.avatar,
-      }),
+    mockUserRepository.getBy = jest.fn().mockReturnValue(of(user));
+    mockUserRepository.softDelete = jest.fn().mockReturnValue(
+      of(
+        Object.assign(user, {
+          email: `${user.email}-${user.id.slice(0, 8)}`,
+          user_name: `${user.user_name}-${user.id.slice(0, 8)}`,
+          is_deleted: true,
+          deleted_at: DateTime.now(),
+        }),
+      ),
     );
 
-    expect(user).toEqual(userMock);
-    expect(mockUserRepository.getBy).toHaveBeenCalledTimes(1);
-    expect(mockUserRepository.syncRoles).toHaveBeenCalledTimes(0);
-    expect(mockRoleRepository.getBy).toHaveBeenCalledTimes(0);
+    const delete$ = service.remove(user.id);
+    const result = await lastValueFrom(delete$);
 
-    expect(user).toHaveProperty('id');
-    expect(user).toHaveProperty('first_name');
-    expect(user).toHaveProperty('last_name');
-    expect(user).toHaveProperty('email');
-    expect(user).toHaveProperty('user_name');
-    expect(user).toHaveProperty('avatar');
+    expect(result).toEqual(user);
+    expect(mockUserRepository.getBy).toBeCalledTimes(0);
 
-    expect(user.first_name).toEqual(userMock.first_name);
-    expect(user.last_name).toEqual(userMock.last_name);
-    expect(user.email).toEqual(userMock.email);
-    expect(user.user_name).toEqual(userMock.user_name);
-    expect(user.avatar).toEqual(userMock.avatar);
+    expect(mockUserRepository.softDelete).toBeCalledTimes(1);
+    expect(mockUserRepository.softDelete).toBeCalledWith(user.id);
+    expect(mockI18nService.t).toBeCalledTimes(0);
+
+    expect(result.id).toEqual(user.id);
+    expect(result.first_name).toEqual(user.first_name);
+    expect(result.last_name).toEqual(user.last_name);
+    expect(result.full_name).toEqual(user.full_name);
+    expect(result.avatar).toEqual(user.avatar);
+    expect(result.is_online).toEqual(user.is_online);
+    expect(result.is_deleted).toEqual(true);
+    expect(result.deleted_at).toBeDefined();
   });
 });

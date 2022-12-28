@@ -55,7 +55,7 @@ export class BaseRepository<Entity extends BaseEntity>
           else query.orderBy('created_at', options.order || 'desc');
         }
 
-        return query;
+        return query.whereNot('is_deleted', true);
       }),
     ).pipe(
       map(
@@ -76,7 +76,9 @@ export class BaseRepository<Entity extends BaseEntity>
         if (options?.sort)
           query.orderBy(options.sort as string, options.order || 'desc');
 
-        return query.orderBy('created_at', options.order || 'desc');
+        return query
+          .whereNot('is_deleted', true)
+          .orderBy('created_at', options.order || 'desc');
       }),
     ).pipe(map((result) => result as Entity[]));
   }
@@ -115,7 +117,7 @@ export class BaseRepository<Entity extends BaseEntity>
             if (context.where) query.where(context.where);
           }
 
-          const result = await query.first();
+          const result = await query.whereNot('is_deleted', true).first();
 
           if (result) return result;
         }
