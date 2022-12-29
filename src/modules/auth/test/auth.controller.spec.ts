@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { I18nService } from 'nestjs-i18n';
-import { from, lastValueFrom, map } from 'rxjs';
+import { lastValueFrom, of } from 'rxjs';
 import { createMock } from '@golevelup/ts-jest';
 
 import { AuthService } from '@modules/auth/services/auth.service';
@@ -12,8 +12,6 @@ import { UserMock } from '@/_mocks_';
 
 describe('AuthController', () => {
   let controller: AuthController;
-  // user mock
-  const mockUser = from(UserMock()).pipe(map((user) => user));
 
   // service dependencies
   const mockI18nService = createMock<I18nService>();
@@ -23,7 +21,6 @@ describe('AuthController', () => {
   const mockUserRepository = createMock<UserRepository>();
 
   // mock`s
-  mockUserRepository.getBy.mockReturnValue(mockUser);
   mockJwtService.sign.mockReturnValue('token');
 
   beforeEach(async () => {
@@ -52,36 +49,40 @@ describe('AuthController', () => {
   });
 
   it('should be sing in with username', async () => {
-    const userMock = await lastValueFrom(mockUser);
+    const userMock = await UserMock();
 
-    const signIn = await controller.signIn({
+    mockUserRepository.getBy.mockClear();
+    mockUserRepository.getBy.mockReturnValue(of(userMock));
+
+    const signIn$ = controller.signIn({
       uid: userMock.user_name,
       password: '123456',
     });
 
-    signIn.subscribe((data) => {
-      expect(mockUserRepository.getBy).toBeCalledTimes(1);
-      expect(mockJwtService.sign).toBeCalledTimes(1);
+    const result = await lastValueFrom(signIn$);
 
-      expect(data.auth.token).toBe('token');
-      expect(data.user).toStrictEqual(userMock);
-    });
+    expect(mockUserRepository.getBy).toBeCalledTimes(1);
+    expect(mockJwtService.sign).toBeCalledTimes(1);
+
+    expect(result.auth.token).toBe('token');
   });
 
   it('should be sing in with email', async () => {
-    const userMock = await lastValueFrom(mockUser);
+    const userMock = await UserMock();
 
-    const signIn = await controller.signIn({
+    mockUserRepository.getBy.mockClear();
+    mockUserRepository.getBy.mockReturnValue(of(userMock));
+
+    const signIn$ = await controller.signIn({
       uid: userMock.email,
       password: '123456',
     });
 
-    signIn.subscribe((data) => {
-      expect(mockUserRepository.getBy).toBeCalledTimes(1);
-      expect(mockJwtService.sign).toBeCalledTimes(1);
+    const result = await lastValueFrom(signIn$);
 
-      expect(data.auth.token).toBe('token');
-      expect(data.user).toStrictEqual(userMock);
-    });
+    expect(mockUserRepository.getBy).toBeCalledTimes(1);
+    expect(mockJwtService.sign).toBeCalledTimes(1);
+
+    expect(result.auth.token).toBe('token');
   });
 });

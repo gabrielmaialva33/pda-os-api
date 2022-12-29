@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { createMock } from '@golevelup/ts-jest';
 import { I18nService } from 'nestjs-i18n';
-import { from, lastValueFrom, map } from 'rxjs';
+import { lastValueFrom, of } from 'rxjs';
 
 import { UserRepository } from '@modules/user/repositories/user.repository';
 import { UserService } from '@modules/user/services/user.service';
@@ -14,20 +14,15 @@ import { UserMock } from '@/_mocks_';
 
 describe('AuthService', () => {
   let service: AuthService;
-  // user mock
-  const mockUser = from(UserMock()).pipe(map((user) => user));
 
   // service dependencies
   const mockI18nService = createMock<I18nService>();
   const mockJwtService = createMock<JwtService>();
-  const mockRoleService = createMock<RoleService>();
-  const mockUserService = createMock<UserService>();
 
   // repository dependencies
   const mockUserRepository = createMock<UserRepository>();
-  const roleRepository = createMock<RoleRepository>();
+  const mockRoleRepository = createMock<RoleRepository>();
 
-  mockUserRepository.getBy.mockReturnValue(mockUser);
   mockJwtService.sign.mockReturnValue('token');
 
   beforeEach(async () => {
@@ -36,12 +31,12 @@ describe('AuthService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        { provide: UserService, useValue: mockUserService },
+        UserService,
+        RoleService,
         { provide: I18nService, useValue: mockI18nService },
         { provide: JwtService, useValue: mockJwtService },
-        { provide: RoleService, useValue: mockRoleService },
         { provide: UserRepository, useValue: mockUserRepository },
-        { provide: RoleRepository, useValue: roleRepository },
+        { provide: RoleRepository, useValue: mockRoleRepository },
       ],
     }).compile();
 
@@ -49,70 +44,70 @@ describe('AuthService', () => {
   });
 
   it('should be validate username', async () => {
-    const userMock = await lastValueFrom(mockUser);
+    const mockUser = await UserMock();
 
-    service.validate(userMock.user_name, '123456').subscribe((user) => {
-      expect(user).toStrictEqual(mockUser);
-      expect(mockUserRepository.getBy).toBeCalledTimes(1);
-    });
+    mockUserRepository.getBy.mockClear();
+    mockUserRepository.getBy.mockReturnValue(of(mockUser));
 
-    service.validate(userMock.email, '1234567').subscribe((user) => {
-      expect(user).toBeNull();
-      expect(mockUserRepository.getBy).toBeCalledTimes(2);
-    });
+    const validate$ = service.validate(mockUser.user_name, '123456');
+
+    const result = await lastValueFrom(validate$);
+
+    expect(result).toStrictEqual(mockUser);
+    expect(mockUserRepository.getBy).toBeCalledTimes(1);
   });
 
   it('should be validate email', async () => {
-    const userMock = await lastValueFrom(mockUser);
+    const mockUser = await UserMock();
 
-    service.validate(userMock.email, '123456').subscribe((user) => {
-      expect(user).toStrictEqual(mockUser);
-      expect(mockUserRepository.getBy).toBeCalledTimes(1);
-    });
+    mockUserRepository.getBy.mockClear();
+    mockUserRepository.getBy.mockReturnValue(of(mockUser));
 
-    service.validate(userMock.email, '1234567').subscribe((user) => {
-      expect(user).toBeNull();
-      expect(mockUserRepository.getBy).toBeCalledTimes(2);
-    });
+    const validate$ = service.validate(mockUser.email, '123456');
+    const result = await lastValueFrom(validate$);
+
+    expect(result).toStrictEqual(mockUser);
+    expect(mockUserRepository.getBy).toBeCalledTimes(1);
   });
 
   it('should be login username', async () => {
-    const userMock = await lastValueFrom(mockUser);
+    const mockUser = await UserMock();
 
-    service
-      .login({ uid: userMock.user_name, password: '123456' })
-      .subscribe((data) => {
-        expect(data.user).toStrictEqual({
-          id: userMock.id,
-          first_name: userMock.first_name,
-          last_name: userMock.last_name,
-          full_name: userMock.full_name,
-          email: userMock.email,
-          user_name: userMock.user_name,
-          avatar: userMock.avatar,
-        });
+    const login$ = service.login({
+      uid: mockUser.user_name,
+      password: '123456',
+    });
 
-        expect(data.auth.token).toBe('token');
-      });
+    const result = await lastValueFrom(login$);
+
+    expect(result.user).toStrictEqual({
+      id: result.user.id,
+      first_name: result.user.first_name,
+      last_name: result.user.last_name,
+      full_name: result.user.full_name,
+      email: result.user.email,
+      user_name: result.user.user_name,
+      avatar: result.user.avatar,
+    });
+    expect(result.auth.token).toBe('token');
   });
 
   it('should be login with email', async () => {
-    const userMock = await lastValueFrom(mockUser);
+    const mockUser = await UserMock();
 
-    service
-      .login({ uid: userMock.email, password: '123456' })
-      .subscribe((data) => {
-        expect(data.user).toStrictEqual({
-          id: userMock.id,
-          first_name: userMock.first_name,
-          last_name: userMock.last_name,
-          full_name: userMock.full_name,
-          email: userMock.email,
-          user_name: userMock.user_name,
-          avatar: userMock.avatar,
-        });
+    const login$ = service.login({ uid: mockUser.email, password: '123456' });
+    const result = await lastValueFrom(login$);
 
-        expect(data.auth.token).toBe('token');
-      });
+    expect(result.user).toStrictEqual({
+      id: result.user.id,
+      first_name: result.user.first_name,
+      last_name: result.user.last_name,
+      full_name: result.user.full_name,
+      email: result.user.email,
+      user_name: result.user.user_name,
+      avatar: result.user.avatar,
+    });
+
+    expect(result.auth.token).toBe('token');
   });
 });
