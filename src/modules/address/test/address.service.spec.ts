@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { I18nService } from 'nestjs-i18n';
 import { createMock } from '@golevelup/ts-jest';
+import { lastValueFrom, of } from 'rxjs';
 
 import { AddressService } from '@modules/address/services/address.service';
 import { AddressRepository } from '@modules/address/repositories/address.repository';
+
 import { AddressMock, AddressMocks } from '@/_mocks_';
-import { lastValueFrom, of } from 'rxjs';
 
 describe('AddressService', () => {
   let service: AddressService;
