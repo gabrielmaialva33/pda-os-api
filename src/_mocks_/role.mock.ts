@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 
 import { Role } from '@modules/role/entities/role.entity';
 import { RoleType } from '@modules/role/enum/role-type.enum';
+import { UserMock } from '@/_mocks_/user.mock';
 
 export const RoleMock = (role?: RoleType) => {
   const role$ = new Role();
@@ -22,8 +23,11 @@ export const RoleMock = (role?: RoleType) => {
   return role$;
 };
 
-export const RoleMocks = (roles?: RoleType[]) => {
-  const roles$ = [];
-  for (const role of roles) roles$.push(RoleMock(role));
-  return roles$;
+export const RoleMocks = (mocks: number) => {
+  const roles: Role[] = [];
+  for (let i = 0; i < mocks; i++)
+    roles.push(
+      RoleMock(faker.helpers.arrayElement([...Object.values(RoleType)])),
+    );
+  return roles;
 };

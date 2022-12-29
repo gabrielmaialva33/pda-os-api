@@ -9,6 +9,7 @@ import { UserService } from '@modules/user/services/user.service';
 import { RoleService } from '@modules/role/services/role.service';
 import { AuthService } from '@modules/auth/services/auth.service';
 import { RoleRepository } from '@modules/role/repositories/role.repository';
+
 import { UserMock } from '@/_mocks_';
 
 describe('AuthService', () => {

@@ -1,13 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { JwtService } from '@nestjs/jwt';
+import { I18nService } from 'nestjs-i18n';
 import { from, lastValueFrom, map } from 'rxjs';
+import { createMock } from '@golevelup/ts-jest';
 
 import { AuthService } from '@modules/auth/services/auth.service';
 import { AuthController } from '@modules/auth/controllers/auth.controller';
-import { UserMock } from '@/_mocks_';
-import { createMock } from '@golevelup/ts-jest';
 import { UserRepository } from '@modules/user/repositories/user.repository';
-import { JwtService } from '@nestjs/jwt';
-import { I18nService } from 'nestjs-i18n';
+
+import { UserMock } from '@/_mocks_';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -26,6 +27,8 @@ describe('AuthController', () => {
   mockJwtService.sign.mockReturnValue('token');
 
   beforeEach(async () => {
+    jest.clearAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
