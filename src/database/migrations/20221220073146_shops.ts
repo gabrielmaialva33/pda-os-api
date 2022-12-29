@@ -18,6 +18,15 @@ export async function up(knex: Knex): Promise<void> {
     table.float('forecast_return').notNullable();
     table.string('status').notNullable();
 
+    table.uuid('client_id').notNullable();
+
+    table
+      .foreign('client_id')
+      .references('id')
+      .inTable('clients')
+      .onDelete('CASCADE')
+      .onUpdate('CASCADE');
+
     table.boolean('is_deleted').notNullable().defaultTo(false);
     table.timestamps(true, true);
     table.timestamp('deleted_at').nullable();

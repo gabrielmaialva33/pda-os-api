@@ -76,7 +76,7 @@ export class AddressService {
     return this.get(id).pipe(
       switchMap((address) =>
         from(this.addressRepository.update(address, data)).pipe(
-          switchMap(() => this.get(id)),
+          map((updatedAddress) => updatedAddress),
         ),
       ),
     );

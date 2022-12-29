@@ -46,6 +46,14 @@ export class Client extends BaseEntity {
         to: 'addresses.id',
       },
     },
+    shop: {
+      relation: BaseEntity.HasOneRelation,
+      modelClass: `${__dirname}/../../shop/entities/shop.entity`,
+      join: {
+        from: 'clients.id',
+        to: 'shops.client_id',
+      },
+    },
   };
 
   /**

@@ -13,6 +13,7 @@ export const CreateShopSchema = z.object({
   send_sms: z.boolean(),
   forecast_return: z.number(),
   status: z.string().trim(),
+  client_id: z.string().uuid(),
 });
 
 export class CreateShopDto extends CreateZodDto(CreateShopSchema) {}

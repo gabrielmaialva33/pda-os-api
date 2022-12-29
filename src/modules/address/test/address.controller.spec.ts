@@ -62,6 +62,19 @@ describe('AddressController', () => {
     expect(result.meta.per_page).toEqual(10);
   });
 
+  it('should be able to list addresses', async () => {
+    const mockAddresses = AddressMocks(20);
+
+    mockAddressRepository.list.mockReturnValueOnce(of(mockAddresses));
+
+    const list$ = controller.list('id', 'asc');
+    const result = await lastValueFrom(list$);
+
+    expect(result).toBeDefined();
+
+    expect(result.length).toEqual(20);
+  });
+
   it('should be able to get address', async () => {
     const mockAddress = AddressMock();
 

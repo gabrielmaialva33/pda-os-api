@@ -27,6 +27,9 @@ export class ShopService {
         search,
         sort,
         order,
+        context: {
+          populate: ['client'],
+        },
       }),
     ).pipe(
       map(({ total, results: data }) =>
@@ -42,13 +45,23 @@ export class ShopService {
   }
 
   list({ sort, order }: ListOptions<Shop>) {
-    return from(this.shopRepository.list({ sort, order })).pipe(
-      map((shops) => shops),
-    );
+    return from(
+      this.shopRepository.list({
+        sort,
+        order,
+        context: {
+          populate: ['client'],
+        },
+      }),
+    ).pipe(map((shops) => shops));
   }
 
   get(id: string) {
-    return from(this.shopRepository.getBy(['id'], id)).pipe(
+    return from(
+      this.shopRepository.getBy(['id'], id, {
+        populate: ['client'],
+      }),
+    ).pipe(
       map((shop) => {
         if (!shop)
           throw new NotFoundException(

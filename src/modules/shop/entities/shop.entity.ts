@@ -1,6 +1,8 @@
 import { BaseEntity } from '@common/entities/base.entity';
 import { DateTime } from 'luxon';
 import { Pojo } from 'objection';
+import { z } from '@lib/zod/z';
+import { Client } from '@modules/client/entities/client.entity';
 
 export class Shop extends BaseEntity {
   static tableName = 'shops';
@@ -22,12 +24,23 @@ export class Shop extends BaseEntity {
   send_sms: boolean;
   forecast_return: number;
   status: string;
+  client_id: string;
 
   /**
    * ------------------------------------------------------
    * Relationships
    * ------------------------------------------------------
    */
+  static relationMappings = {
+    client: {
+      relation: BaseEntity.BelongsToOneRelation,
+      modelClass: Client,
+      join: {
+        from: 'shops.client_id',
+        to: 'clients.id',
+      },
+    },
+  };
 
   /**
    * ------------------------------------------------------
@@ -65,6 +78,7 @@ export class Shop extends BaseEntity {
         'send_sms',
         'forecast_return',
         'status',
+        'client_id',
       ],
 
       properties: {
@@ -81,6 +95,7 @@ export class Shop extends BaseEntity {
         send_sms: { type: 'boolean' },
         forecast_return: { type: 'number' },
         status: { type: 'string' },
+        client_id: { type: 'string' },
       },
     };
   }

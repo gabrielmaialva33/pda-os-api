@@ -2139,8 +2139,10 @@ components:
         status:
           type: string
           example: 'active'
+        client:
+          $ref: '#/components/schemas/Client'
       example:
-        id: 8965a147-cac2-472f-9ef3-9a1007a9d362
+        id: 5c37250b-c712-436b-92c9-8ca6c8a054a8
         code: '12345678'
         name: 'Loja 1'
         type: 'fisica'
@@ -2153,6 +2155,38 @@ components:
         send_sms: true
         forecast_return: 10.00
         status: 'active'
+        client:
+          id: 8965a147-cac2-472f-9ef3-9a1007a9d362
+          full_name: 'John Doe'
+          cpf: '387.387.344-21'
+          rg: '58.912.123-1'
+          birth_date: '1998-01-01'
+          phones:
+            - id: e051d2a5-3c22-481a-a175-8c59942c0c0e
+              phone: '(15) 99660-1742'
+              type: 'mobile'
+            - id: f2cad45f-b954-481f-98ca-fe76bec77ad5
+              phone: '(15) 99660-1742'
+              type: 'work'
+          addresses:
+            - id: 20d9704a-5f5c-4f72-bfc8-ac77727fd4f9
+              street: 'Rua 1'
+              number: '1'
+              complement: 'Casa 1'
+              neighborhood: 'Bairro 1'
+              city: 'São Paulo'
+              state: 'SP'
+              country: 'Brasil'
+              zip_code: '12345-678'
+            - id: 577a9251-a381-4216-b8cd-750d621f38d5
+              street: 'Rua 2'
+              number: '2'
+              complement: 'Casa 2'
+              neighborhood: 'Bairro 2'
+              city: 'São Paulo'
+              state: 'SP'
+              country: 'Brasil'
+              zip_code: '12345-678'
     StoreShop:
       description: 'Store shop schema'
       type: object
@@ -2197,6 +2231,10 @@ components:
         status:
           type: string
           example: 'active'
+        client_id:
+          type: string
+          format: uuid
+          example: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
       required:
         - name
         - type
@@ -2208,6 +2246,7 @@ components:
         - commission
         - send_sms
         - status
+        - client_id
       example:
         name: 'Loja 1'
         type: 'fisica'
@@ -2220,6 +2259,7 @@ components:
         send_sms: true
         forecast_return: 10.00
         status: 'active'
+        client_id: 8965a147-cac2-472f-9ef3-9a1007a9d362
     EditShop:
       description: 'Edit shop schema'
       type: object
@@ -2264,6 +2304,10 @@ components:
         status:
           type: string
           example: 'active'
+        client_id:
+          type: string
+          format: uuid
+          example: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
       example:
         name: 'Loja 1'
         type: 'fisica'
@@ -2276,6 +2320,7 @@ components:
         send_sms: true
         forecast_return: 10.00
         status: 'active'
+        client_id: 8965a147-cac2-472f-9ef3-9a1007a9d362
 
     # order schemas
     Order:
