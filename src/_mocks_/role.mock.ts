@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker';
 
 import { Role } from '@modules/role/entities/role.entity';
 import { RoleType } from '@modules/role/enum/role-type.enum';
-import { UserMock } from '@/_mocks_/user.mock';
 
 export const RoleMock = (role?: RoleType) => {
   const role$ = new Role();
