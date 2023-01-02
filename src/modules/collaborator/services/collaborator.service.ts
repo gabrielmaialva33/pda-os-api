@@ -182,9 +182,21 @@ export class CollaboratorService {
           }),
         ).pipe(map((bank) => this.syncBank(collaborator, bank.id)));
 
-        return forkJoin([collaborator$, phones$, addresses$, bank$]).pipe(
-          switchMap(() => this.get(id)),
+        const user$ = collaborator$.pipe(
+          switchMap((collaborator) => {
+            return from(
+              this.userService.update(collaborator.user_id, data.user),
+            ).pipe(map(() => collaborator));
+          }),
         );
+
+        return forkJoin([
+          collaborator$,
+          phones$,
+          addresses$,
+          bank$,
+          user$,
+        ]).pipe(switchMap(() => this.get(id)));
       }),
     );
   }
