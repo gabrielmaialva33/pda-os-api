@@ -1,10 +1,10 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1671644067794
+modified: 1672672116963
 created: 1668302615245
 fileName: pda-os-api
-contents: |+
+contents: |
   openapi: 3.0.3
   info:
     version: 1.0.0
@@ -42,6 +42,8 @@ contents: |+
       description: Operations about shops
     - name: Order
       description: Operations about orders
+    - name: Schedule
+      description: Operations about schedules
 
   paths:
     /:
@@ -1220,6 +1222,156 @@ contents: |+
           '404':
             description: Order not found
 
+    /schedules:
+      get:
+        tags:
+          - Schedule
+        summary: List schedules
+        description: Use to request all schedules
+        operationId: GetAllSchedules
+        parameters:
+          - in: query
+            name: page
+            schema:
+              type: integer
+              default: 1
+            description: Page number
+          - in: query
+            name: per_page
+            schema:
+              type: integer
+              default: 10
+            description: Number of schedules per page
+          - in: query
+            name: search
+            schema:
+              type: string
+              example: 'John'
+            description: Search by public fields
+          - in: query
+            name: sort
+            schema:
+              type: string
+              default: id
+            description: Sort by field
+          - in: query
+            name: order
+            schema:
+              type: string
+              default: asc
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Schedule'
+      post:
+        tags:
+          - Schedule
+        summary: Store schedule
+        description: Use to create a schedule
+        operationId: StoreSchedule
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Schedule object that needs to be added to the store
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreSchedule'
+        responses:
+          '201':
+            description: Schedule created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Schedule'
+          '400':
+            description: Invalid input
+    /schedules/{scheduleId}:
+      get:
+        tags:
+          - Schedule
+        summary: Get schedule
+        description: Use to request a schedule
+        operationId: GetSchedule
+        parameters:
+          - name: scheduleId
+            in: path
+            description: ID of schedule to return
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Schedule'
+          '404':
+            description: Schedule not found
+      put:
+        tags:
+          - Schedule
+        summary: Edit schedule
+        description: Use to edit a schedule
+        operationId: EditSchedule
+        parameters:
+          - name: scheduleId
+            in: path
+            description: ID of schedule to update
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Schedule object that needs to be updated
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditSchedule'
+        responses:
+          '200':
+            description: Schedule updated
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Schedule'
+          '400':
+            description: Invalid input
+          '404':
+            description: Schedule not found
+      delete:
+        tags:
+          - Schedule
+        summary: Delete schedule
+        description: Use to delete a schedule
+        operationId: DeleteSchedule
+        parameters:
+          - name: scheduleId
+            in: path
+            description: ID of schedule to delete
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '204':
+            description: Schedule deleted
+          '404':
+            description: Schedule not found
 
   components:
     securitySchemes:
@@ -1994,8 +2146,10 @@ contents: |+
           status:
             type: string
             example: 'active'
+          client:
+            $ref: '#/components/schemas/Client'
         example:
-          id: 8965a147-cac2-472f-9ef3-9a1007a9d362
+          id: 5c37250b-c712-436b-92c9-8ca6c8a054a8
           code: '12345678'
           name: 'Loja 1'
           type: 'fisica'
@@ -2008,6 +2162,38 @@ contents: |+
           send_sms: true
           forecast_return: 10.00
           status: 'active'
+          client:
+            id: 8965a147-cac2-472f-9ef3-9a1007a9d362
+            full_name: 'John Doe'
+            cpf: '387.387.344-21'
+            rg: '58.912.123-1'
+            birth_date: '1998-01-01'
+            phones:
+              - id: e051d2a5-3c22-481a-a175-8c59942c0c0e
+                phone: '(15) 99660-1742'
+                type: 'mobile'
+              - id: f2cad45f-b954-481f-98ca-fe76bec77ad5
+                phone: '(15) 99660-1742'
+                type: 'work'
+            addresses:
+              - id: 20d9704a-5f5c-4f72-bfc8-ac77727fd4f9
+                street: 'Rua 1'
+                number: '1'
+                complement: 'Casa 1'
+                neighborhood: 'Bairro 1'
+                city: 'São Paulo'
+                state: 'SP'
+                country: 'Brasil'
+                zip_code: '12345-678'
+              - id: 577a9251-a381-4216-b8cd-750d621f38d5
+                street: 'Rua 2'
+                number: '2'
+                complement: 'Casa 2'
+                neighborhood: 'Bairro 2'
+                city: 'São Paulo'
+                state: 'SP'
+                country: 'Brasil'
+                zip_code: '12345-678'
       StoreShop:
         description: 'Store shop schema'
         type: object
@@ -2052,6 +2238,10 @@ contents: |+
           status:
             type: string
             example: 'active'
+          client_id:
+            type: string
+            format: uuid
+            example: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
         required:
           - name
           - type
@@ -2063,6 +2253,7 @@ contents: |+
           - commission
           - send_sms
           - status
+          - client_id
         example:
           name: 'Loja 1'
           type: 'fisica'
@@ -2075,6 +2266,7 @@ contents: |+
           send_sms: true
           forecast_return: 10.00
           status: 'active'
+          client_id: 8965a147-cac2-472f-9ef3-9a1007a9d362
       EditShop:
         description: 'Edit shop schema'
         type: object
@@ -2119,6 +2311,10 @@ contents: |+
           status:
             type: string
             example: 'active'
+          client_id:
+            type: string
+            format: uuid
+            example: 0bc30ff1-f7d7-4202-bce5-8a1c648fcb86
         example:
           name: 'Loja 1'
           type: 'fisica'
@@ -2131,6 +2327,7 @@ contents: |+
           send_sms: true
           forecast_return: 10.00
           status: 'active'
+          client_id: 8965a147-cac2-472f-9ef3-9a1007a9d362
 
       # order schemas
       Order:
@@ -2254,5 +2451,149 @@ contents: |+
           note: 'Nota 1'
           status: 'PENDING'
 
-
+      # schedule schemas
+      Schedule:
+        description: 'Schedule schema'
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: 54fa20cb-02f3-49ac-a821-8e933316d1f2
+          shop_id:
+            type: string
+            format: uuid
+            example: e03d836d-fe7e-45a0-b6b5-0287b166a162
+          date:
+            type: string
+            format: date
+            example: '2022-01-01'
+          start_time:
+            type: string
+            format: time
+            example: '08:00:00'
+          end_time:
+            type: string
+            format: time
+            example: '18:00:00'
+          status:
+            type: string
+            example: 'pending'
+          created_at:
+            type: string
+            format: date-time
+            example: '2020-01-01T00:00:00Z'
+          updated_at:
+            type: string
+            format: date-time
+            example: '2020-01-01T00:00:00Z'
+        example:
+          id: 4c8a57d0-c48c-42c7-ac19-c841d7162181
+          client_id: 74accb9f-f64a-4963-99b6-391c46b8a163
+          shop_id: 0001cf53-8571-4887-8e18-991cf2f08adf
+          date: '2022-01-01'
+          start_time: '08:00:00'
+          end_time: '18:00:00'
+          status: 'pending'
+          created_at: '2022-12-22T00:00:00Z'
+          updated_at: '2023-01-01T00:00:00Z'
+      StoreSchedule:
+        description: 'Store schedule schema'
+        type: object
+        properties:
+          shop_id:
+            type: string
+            format: uuid
+            example: 502d0a3e-b367-42b2-99e7-0e79e155c004
+          date:
+            type: string
+            format: date
+            example: '2022-01-01'
+          start_time:
+            type: string
+            format: time
+            example: '08:00:00'
+          end_time:
+            type: string
+            format: time
+            example: '18:00:00'
+          status:
+            type: string
+            example: 'pending'
+          collaborators:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: 45915664-54c5-4056-adf1-b2729ede4c5f
+                role:
+                  type: string
+                  example: 'member'
+        required:
+          - shop_id
+          - date
+          - start_time
+          - end_time
+          - status
+          - collaborators
+        example:
+          shop_id: 0001cf53-8571-4887-8e18-991cf2f08adf
+          date: '2022-01-01'
+          start_time: '08:00:00'
+          end_time: '18:00:00'
+          status: 'pending'
+          collaborators:
+            - id: 45915664-54c5-4056-adf1-b2729ede4c5f
+              role: 'member'
+            - id: 45915664-54c5-4056-adf1-b2729ede4c5f
+              role: 'leader'
+      EditSchedule:
+        description: 'Edit schedule schema'
+        type: object
+        properties:
+          shop_id:
+            type: string
+            format: uuid
+            example: a990511c-056e-4692-a1bb-cc2597bfffb6
+          date:
+            type: string
+            format: date
+            example: '2022-01-01'
+          start_time:
+            type: string
+            format: time
+            example: '08:00:00'
+          end_time:
+            type: string
+            format: time
+            example: '18:00:00'
+          status:
+            type: string
+            example: 'pending'
+          collaborators:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: 45915664-54c5-4056-adf1-b2729ede4c5f
+                role:
+                  type: string
+                  example: 'member'
+        example:
+          shop_id: 956994d0-6086-4cc6-9687-da41ca8dcb7b
+          date: '2022-01-01'
+          start_time: '08:00:00'
+          end_time: '18:00:00'
+          status: 'pending'
+          collaborators:
+            - id: 7485f5d2-6beb-4b1c-aa8b-8faef97b6276
+              role: 'member'
+            - id: 791fe20f-5548-4454-9a92-b7ab954e726e
+              role: 'member'
 contentType: yaml

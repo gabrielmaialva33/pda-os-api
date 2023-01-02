@@ -6,13 +6,13 @@ created: 1671141329932
 name: OpenAPI env 127.0.0.1:3000
 data:
   scheme: http
-  base_path: ''
+  base_path: ""
   host: 127.0.0.1:3000
   bearerToken: "{% response 'body',
     'req_wrk_b084de0cdb4b4710bd5022395701401379e18923',
     'b64::JC5hdXRoLnRva2Vu::46b', 'never', 60 %}"
 dataPropertyOrder:
-  '&':
+  "&":
     - scheme
     - base_path
     - host

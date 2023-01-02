@@ -6,13 +6,13 @@ created: 1671141329930
 name: OpenAPI env pda-os-api.azurewebsites.net
 data:
   scheme: https
-  base_path: ''
+  base_path: ""
   host: pda-os-api.azurewebsites.net
   bearerToken: "{% response 'body',
     'req_wrk_b084de0cdb4b4710bd5022395701401379e18923',
     'b64::JC5hdXRoLnRva2Vu::46b', 'never', 60 %}"
 dataPropertyOrder:
-  '&':
+  "&":
     - scheme
     - base_path
     - host
