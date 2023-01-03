@@ -21,6 +21,7 @@ import { AddressClient } from '@modules/address/entities/address-client.entity';
 import { Shop } from '@modules/shop/entities/shop.entity';
 import { Order } from '@modules/order/entities/order.entity';
 import { Schedule } from '@modules/schedule/entities/schedule.entity';
+import { Token } from '@modules/token/entities/token.entity';
 
 @Module({
   imports: [
@@ -37,21 +38,22 @@ import { Schedule } from '@modules/schedule/entities/schedule.entity';
       },
     }),
     ObjectionModule.forFeature([
-      User,
-      Role,
-      UserRole,
-      Phone,
       Address,
-      Collaborator,
-      PhoneCollaborator,
+      AddressClient,
       AddressCollaborator,
       Bank,
       Client,
-      PhoneClient,
-      AddressClient,
-      Shop,
+      Collaborator,
       Order,
+      Phone,
+      PhoneClient,
+      PhoneCollaborator,
+      Role,
       Schedule,
+      Shop,
+      Token,
+      User,
+      UserRole,
     ]),
   ],
   exports: [ObjectionModule],

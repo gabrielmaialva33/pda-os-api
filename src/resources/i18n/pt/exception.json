@@ -1,5 +1,7 @@
 {
   "not_found": "{entity} não encontrado(a)",
   "invalid_credentials": "Credenciais inválidas",
-  "account_not_found": "Conta não encontrada"
+  "account_not_found": "Conta não encontrada",
+  "account_deleted": "Conta deletada",
+  "access_token": "Token de acesso inválido: {error}!"
 }

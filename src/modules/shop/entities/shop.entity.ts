@@ -1,7 +1,6 @@
 import { BaseEntity } from '@common/entities/base.entity';
 import { DateTime } from 'luxon';
 import { Pojo } from 'objection';
-import { z } from '@lib/zod/z';
 import { Client } from '@modules/client/entities/client.entity';
 
 export class Shop extends BaseEntity {

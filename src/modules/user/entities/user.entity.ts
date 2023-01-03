@@ -7,6 +7,7 @@ import { BaseEntity } from '@common/entities/base.entity';
 
 import { Role } from '@modules/role/entities/role.entity';
 import { ModelAttributes } from '@common/interfaces/base-repository.interface';
+import { Token } from '@modules/token/entities/token.entity';
 
 export class User extends BaseEntity {
   static tableName = 'users';
@@ -43,6 +44,14 @@ export class User extends BaseEntity {
           to: 'user_roles.role_id',
         },
         to: 'roles.id',
+      },
+    },
+    tokens: {
+      relation: BaseEntity.HasManyRelation,
+      modelClass: Token,
+      join: {
+        from: 'users.id',
+        to: 'tokens.user_id',
       },
     },
   };
