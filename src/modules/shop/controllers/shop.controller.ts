@@ -26,10 +26,11 @@ export class ShopController {
   paginate(
     @Query('page') page: number,
     @Query('per_page') per_page: number,
+    @Query('search') search: string,
     @Query('sort') sort: ModelProps<Shop>,
     @Query('order') order: 'asc' | 'desc',
   ) {
-    return this.shopService.paginate({ page, per_page, sort, order });
+    return this.shopService.paginate({ page, per_page, search, sort, order });
   }
 
   @Get(':id')

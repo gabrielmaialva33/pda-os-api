@@ -87,6 +87,10 @@ export class Client extends BaseEntity {
     };
   }
 
+  static get jsonAttributes() {
+    return ['full_name', 'cpf', 'rg'];
+  }
+
   /**
    * ------------------------------------------------------
    * Serializer

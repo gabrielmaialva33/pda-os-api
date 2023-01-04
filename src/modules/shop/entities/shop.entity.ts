@@ -99,6 +99,10 @@ export class Shop extends BaseEntity {
     };
   }
 
+  static get jsonAttributes() {
+    return ['code', 'name'];
+  }
+
   /**
    * ------------------------------------------------------
    * Serializer
