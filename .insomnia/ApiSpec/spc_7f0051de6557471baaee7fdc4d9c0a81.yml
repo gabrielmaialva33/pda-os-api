@@ -1,11 +1,12 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1672672116963
+modified: 1672935184877
 created: 1668302615245
 fileName: pda-os-api
-contents: |
+contents: >+
   openapi: 3.0.3
+
   info:
     version: 1.0.0
     title: PDA API
@@ -44,6 +45,8 @@ contents: |
       description: Operations about orders
     - name: Schedule
       description: Operations about schedules
+    - name: File
+      description: Operations about files
 
   paths:
     /:
@@ -1373,6 +1376,73 @@ contents: |
           '404':
             description: Schedule not found
 
+    /file/single-file:
+      post:
+        tags:
+          - File
+        summary: Store single file
+        description: Use to create a single file
+        operationId: StoreSingleFile
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: File object that needs to be added to the store
+          required: true
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  file:
+                    type: string
+                    format: binary
+                    example: 'file.png'
+              example: { file: 'file.png' }
+        responses:
+          '201':
+            description: File created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/File'
+          '400':
+            description: Invalid input
+    /file/multiple-file:
+      post:
+        tags:
+          - File
+        summary: Store multiple files
+        description: Use to create multiple files
+        operationId: StoreMultipleFiles
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: File object that needs to be added to the store
+          required: true
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      type: string
+                      format: binary
+                      example: 'file1.png'
+              example: { file: [ 'file1.png', 'file2.png' ] }
+        responses:
+          '201':
+            description: File created
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/File'
+          '400':
+            description: Invalid input
+
   components:
     securitySchemes:
       bearerToken:
@@ -2596,4 +2666,20 @@ contents: |
               role: 'member'
             - id: 791fe20f-5548-4454-9a92-b7ab954e726e
               role: 'member'
+
+      # files
+      File:
+        description: 'File schema'
+        type: object
+        properties:
+          originalname:
+            type: string
+            example: 'file.png'
+          filename:
+            type: string
+            example: 'file-7995.png'
+          image_url:
+            type: string
+            example: 'https://pda-os-api.azurewebsites.net/public/WallpaperDog-10845580-1099b.jpg'
+
 contentType: yaml
