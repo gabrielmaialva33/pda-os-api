@@ -1,9 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { catchError, forkJoin, from, map, Observable, switchMap } from 'rxjs';
+import { forkJoin, from, map, Observable, switchMap } from 'rxjs';
 import { pick } from 'helper-fns';
 import { DateTime } from 'luxon';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
-import { TokenExpiredError } from 'jsonwebtoken';
 
 import { TokenRepository } from '@modules/token/repositories/token.repository';
 
@@ -62,24 +61,31 @@ export class TokenService {
   validateAccessToken(token: string): Observable<User> {
     return this.tokenRepository.validate(token, TokenType.ACCESS).pipe(
       switchMap((token) => {
+        if (!token)
+          throw new UnauthorizedException(
+            this.i18nService.t('exception.access_token', {
+              args: { error: 'invalid' },
+            }),
+          );
+
         return this.jwtService.verifyAsync(token.token, {
           issuer: this.BASE_OPTIONS.issuer,
           audience: this.BASE_OPTIONS.audience,
         });
       }),
-      catchError((error_) => {
-        throw error_ instanceof TokenExpiredError
-          ? new UnauthorizedException(
-              this.i18nService.t('exception.access_token', {
-                args: { error: 'expired' },
-              }),
-            )
-          : new UnauthorizedException(
-              this.i18nService.t('exception.refreshToken', {
-                args: { error: 'malformed' },
-              }),
-            );
-      }),
+      // catchError((error_) => {
+      //   throw error_ instanceof TokenExpiredError
+      //     ? new UnauthorizedException(
+      //         this.i18nService.t('exception.access_token', {
+      //           args: { error: 'expired' },
+      //         }),
+      //       )
+      //     : new UnauthorizedException(
+      //         this.i18nService.t('exception.access_token', {
+      //           args: { error: 'revoked' },
+      //         }),
+      //       );
+      // }),
     );
   }
 }

@@ -6,12 +6,14 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { TokenService } from '@modules/token/token.service';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   constructor(
     private readonly jwt: JwtService,
     private readonly reflector: Reflector,
+    private readonly tokenService: TokenService,
   ) {
     super();
   }

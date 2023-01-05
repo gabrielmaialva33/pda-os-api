@@ -10,16 +10,19 @@ import {
 } from '@nestjs/platform-fastify';
 import helmet from '@fastify/helmet';
 import compression from '@fastify/compress';
+import fastifyStatic from '@fastify/static';
+import { contentParser } from 'fastify-multer';
 import { I18nValidationExceptionFilter } from 'nestjs-i18n';
 
 import { AppModule } from '@/app.module';
 import { AppUtils } from '@common/helpers';
 import { ZodValidationPipe } from '@lib/zod/pipe.zod';
+import * as path from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    new FastifyAdapter({ ignoreTrailingSlash: true }),
     { bufferLogs: true },
   );
 
@@ -31,8 +34,18 @@ async function bootstrap() {
    * ------------------------------------------------------
    */
   await app.register(helmet);
-  await app.register(compression);
+  await app.register(compression, {
+    global: true,
+    threshold: 1,
+    encodings: ['gzip', 'deflate'],
+  });
+  await app.register(contentParser);
   app.enableCors();
+
+  await app.register(fastifyStatic, {
+    root: path.join(__dirname, '..', 'public'),
+    prefix: '/public/',
+  });
 
   /**
    * ------------------------------------------------------

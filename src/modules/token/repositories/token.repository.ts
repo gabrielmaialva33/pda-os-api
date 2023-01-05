@@ -32,8 +32,8 @@ export class TokenRepository
       this.orm
         .query()
         .where({ token, type })
-        .andWhere('expires_at > ?', DateTime.local().toISO())
-        .andWhere('is_revoked = ?', false)
+        .andWhere('expires_at', '>', DateTime.local().toISO())
+        .andWhere('is_revoked', false)
         .first(),
     ).pipe(map((result) => result as Token));
   }

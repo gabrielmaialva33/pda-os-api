@@ -21,6 +21,7 @@ import { OrderModule } from '@modules/order/order.module';
 import { ScheduleModule } from '@modules/schedule/schedule.module';
 import { HealthModule } from '@modules/health/health.module';
 import { TokenModule } from '@modules/token/token.module';
+import { FileModule } from '@modules/file/file.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { TokenModule } from '@modules/token/token.module';
     BankModule,
     ClientModule,
     CollaboratorModule,
+    FileModule,
     HealthModule,
     NestConfigModule,
     NestI18nModule,

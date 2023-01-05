@@ -13,6 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
         secret: config.get('jwt.secret'),
         signOptions: {
           expiresIn: config.get('jwt.access_expiry'),
+          algorithm: 'HS256',
         },
       }),
       inject: [ConfigService],

@@ -60,20 +60,18 @@ export class AuthService {
           );
 
         return zip(this.tokenService.generateAccessToken(user), of(user)).pipe(
-          map(([accessToken, user]) => {
-            return {
-              user: pick(user, [
-                'id',
-                'first_name',
-                'last_name',
-                'full_name',
-                'email',
-                'user_name',
-                'avatar',
-              ]),
-              auth: { token: accessToken },
-            };
-          }),
+          map(([accessToken, user]) => ({
+            user: pick(user, [
+              'id',
+              'first_name',
+              'last_name',
+              'full_name',
+              'email',
+              'user_name',
+              'avatar',
+            ]),
+            auth: { token: accessToken },
+          })),
         );
       }),
     );
