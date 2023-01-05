@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FileController } from '../file.controller';
+import { FileController } from '../controllers/file.controller';
 import { FileService } from '../file.service';
 
 describe('FileController', () => {

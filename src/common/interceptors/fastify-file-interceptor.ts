@@ -9,9 +9,10 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import FastifyMulter from 'fastify-multer';
-import { Options, Multer } from 'multer';
+import { Multer, Options } from 'multer';
 
 type MulterInstance = any;
+
 export function FastifyFileInterceptor(
   fieldName: string,
   localOptions: Options,
@@ -47,6 +48,7 @@ export function FastifyFileInterceptor(
       return next.handle();
     }
   }
+
   const Interceptor = mixin(MixinInterceptor);
   return Interceptor as Type<NestInterceptor>;
 }

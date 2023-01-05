@@ -6,7 +6,7 @@ interface FileMapper {
 }
 
 interface FilesMapper {
-  files: Express.Multer.File[];
+  file: Express.Multer.File[];
   req: Request;
 }
 
@@ -19,8 +19,8 @@ export const fileMapper = ({ file, req }: FileMapper) => {
   };
 };
 
-export const filesMapper = ({ files, req }: FilesMapper) => {
-  return files.map((file) => {
+export const filesMapper = ({ file, req }: FilesMapper) => {
+  return file.map((file) => {
     const image_url = `${req.protocol}://${req.headers.host}/${file.path}`;
     return {
       originalname: file.originalname,

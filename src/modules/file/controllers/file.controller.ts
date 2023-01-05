@@ -1,11 +1,12 @@
 import {
+  Body,
   Controller,
   Post,
-  Body,
-  UploadedFiles,
-  UploadedFile,
-  UseInterceptors,
   Req,
+  UploadedFile,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 
 import {
@@ -20,7 +21,9 @@ import { diskStorage } from 'multer';
 import { fileMapper, filesMapper } from '@common/helpers';
 import { MultipleFilesDto } from '@modules/file/dto/multiple-files-dto';
 import { Request } from 'express';
+import { JwtAuthGuard } from '@common/guards/jwt.auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('file')
 export class FileController {
   @Post('single-file')
@@ -43,7 +46,7 @@ export class FileController {
 
   @Post('multiple-file')
   @UseInterceptors(
-    FastifyFilesInterceptor('files', 10, {
+    FastifyFilesInterceptor('file', 10, {
       storage: diskStorage({
         destination: './public',
         filename: editFileName,
@@ -53,9 +56,9 @@ export class FileController {
   )
   multiple(
     @Req() req: Request,
-    @UploadedFiles() files: Express.Multer.File[],
+    @UploadedFiles() file: Express.Multer.File[],
     @Body() body: MultipleFilesDto,
   ) {
-    return { ...body, photo_url: filesMapper({ files, req }) };
+    return { ...body, file: filesMapper({ file, req }) };
   }
 }
