@@ -13,7 +13,7 @@ export class SignatureService {
   }
 
   create(data: CreateSignatureDto) {
-    return 'This action adds a new signature';
+    return `This action adds a new signature`;
   }
 
   update(id: string, data: UpdateSignatureDto) {

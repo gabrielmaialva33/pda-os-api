@@ -22,6 +22,7 @@ import { ScheduleModule } from '@modules/schedule/schedule.module';
 import { HealthModule } from '@modules/health/health.module';
 import { TokenModule } from '@modules/token/token.module';
 import { FileModule } from '@modules/file/file.module';
+import { SignatureModule } from '@modules/signature/signature.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { FileModule } from '@modules/file/file.module';
     PhoneModule,
     RoleModule,
     ScheduleModule,
+    SignatureModule,
     ShopModule,
     TokenModule,
     UserModule,
