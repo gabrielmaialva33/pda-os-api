@@ -108,5 +108,13 @@
       "status": "Status",
       "note": "Observação"
     }
+  },
+  "signature": {
+    "entity": "Assinatura",
+    "field": {
+      "full_name": "Nome Completo",
+      "rubric": "Rubrica",
+      "image_url": "Imagem"
+    }
   }
 }

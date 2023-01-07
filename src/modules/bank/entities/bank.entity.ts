@@ -65,6 +65,7 @@ export class Bank extends BaseEntity {
         account: { type: 'string' },
         pix: { type: 'string' },
         collaborator_id: { type: 'string' },
+        is_deleted: { type: 'boolean' },
         created_at: { type: 'string' },
         updated_at: { type: 'string' },
       },

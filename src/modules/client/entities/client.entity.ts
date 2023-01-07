@@ -86,6 +86,7 @@ export class Client extends BaseEntity {
         cpf: { type: 'string' },
         rg: { type: 'string' },
         birth_date: { type: 'string' },
+        is_deleted: { type: 'boolean' },
         created_at: { type: 'string' },
         updated_at: { type: 'string' },
       },

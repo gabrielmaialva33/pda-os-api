@@ -123,6 +123,7 @@ export class Collaborator extends BaseEntity {
         civil_status: { type: 'string' },
         note: { type: 'string' },
         user_id: { type: 'string' },
+        is_deleted: { type: 'boolean' },
       },
     };
   }

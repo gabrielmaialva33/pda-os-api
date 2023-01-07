@@ -76,6 +76,7 @@ export class Schedule extends BaseEntity {
         end_time: { type: 'string' },
         note: { type: 'string' },
         shop_id: { type: 'string' },
+        is_deleted: { type: 'boolean' },
       },
     };
   }

@@ -58,6 +58,7 @@ export class Phone extends BaseEntity {
       properties: {
         phone: { type: 'string' },
         type: { type: 'string' },
+        is_deleted: { type: 'boolean' },
       },
     };
   }

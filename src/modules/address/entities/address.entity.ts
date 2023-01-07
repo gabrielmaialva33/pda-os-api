@@ -71,6 +71,7 @@ export class Address extends BaseEntity {
         city: { type: 'string', minLength: 1, maxLength: 100 },
         state: { type: 'string', minLength: 2, maxLength: 2 },
         zip_code: { type: 'string', minLength: 1, maxLength: 10 },
+        is_deleted: { type: 'boolean' },
       },
     };
   }

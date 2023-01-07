@@ -37,6 +37,8 @@ tags:
     description: Operations about orders
   - name: Schedule
     description: Operations about schedules
+  - name: Signature
+    description: Operations about signatures
   - name: File
     description: Operations about files
 
@@ -1368,6 +1370,157 @@ paths:
         '404':
           description: Schedule not found
 
+  /signatures:
+    get:
+      tags:
+        - Signature
+      summary: List signatures
+      description: Use to request all signatures
+      operationId: GetAllSignatures
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 10
+          description: Number of signatures per page
+        - in: query
+          name: search
+          schema:
+            type: string
+            example: 'John'
+          description: Search by public fields
+        - in: query
+          name: sort
+          schema:
+            type: string
+            default: id
+          description: Sort by field
+        - in: query
+          name: order
+          schema:
+            type: string
+            default: asc
+      security:
+        - bearerToken: [ ]
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Signature'
+    post:
+      tags:
+        - Signature
+      summary: Store signature
+      description: Use to create a signature
+      operationId: StoreSignature
+      security:
+        - bearerToken: [ ]
+      requestBody:
+        description: Signature object that needs to be added to the store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreSignature'
+      responses:
+        '201':
+          description: Signature created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Signature'
+        '400':
+          description: Invalid input
+  /signatures/{signatureId}:
+    get:
+      tags:
+        - Signature
+      summary: Get signature
+      description: Use to request a signature
+      operationId: GetSignature
+      parameters:
+        - name: signatureId
+          in: path
+          description: ID of signature to return
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerToken: [ ]
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Signature'
+        '404':
+          description: Signature not found
+    put:
+      tags:
+        - Signature
+      summary: Edit signature
+      description: Use to edit a signature
+      operationId: EditSignature
+      parameters:
+        - name: signatureId
+          in: path
+          description: ID of signature to update
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerToken: [ ]
+      requestBody:
+        description: Signature object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditSignature'
+      responses:
+        '200':
+          description: Signature updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Signature'
+        '400':
+          description: Invalid input
+        '404':
+          description: Signature not found
+    delete:
+      tags:
+        - Signature
+      summary: Delete signature
+      description: Use to delete a signature
+      operationId: DeleteSignature
+      parameters:
+        - name: signatureId
+          in: path
+          description: ID of signature to delete
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerToken: [ ]
+      responses:
+        '204':
+          description: Signature deleted
+        '404':
+          description: Signature not found
+
   /file/single-file:
     post:
       tags:
@@ -2659,6 +2812,65 @@ components:
           - id: 791fe20f-5548-4454-9a92-b7ab954e726e
             role: 'member'
 
+    # signature
+    Signature:
+      type: object
+      properties:
+        id:
+            type: string
+            format: uuid
+            example: e51051b0-62ad-41e8-9777-f0dad51bcc2e
+        full_name:
+          type: string
+          example: 'Gabriel Maia'
+        rubric:
+          type: string
+          example: 'Maia'
+        image_url:
+          type: string
+          example: 'https://telegra.ph/file/11275b9f795738ba882d6.png'
+      example:
+        full_name: 'Gabriel Maia'
+        rubric: 'Maia'
+        image_url: 'https://telegra.ph/file/11275b9f795738ba882d6.png'
+    StoreSignature:
+      type: object
+      properties:
+        full_name:
+          type: string
+          example: 'Gabriel Maia'
+        rubric:
+          type: string
+          example: 'Maia'
+        image_url:
+          type: string
+          example: 'https://telegra.ph/file/11275b9f795738ba882d6.png'
+      required:
+        - full_name
+        - rubric
+        - image_url
+      example:
+        full_name: 'Gabriel Maia'
+        rubric: 'Maia'
+        image_url: 'https://telegra.ph/file/11275b9f795738ba882d6.png'
+    EditSignature:
+      type: object
+      properties:
+        full_name:
+          type: string
+          example: 'Gabriel Maia'
+        rubric:
+          type: string
+          example: 'Maia'
+        image_url:
+          type: string
+          example: 'https://telegra.ph/file/11275b9f795738ba882d6.png'
+      example:
+        full_name: 'Gabriel Maia'
+        rubric: 'Maia'
+        image_url: 'https://telegra.ph/file/11275b9f795738ba882d6.png'
+
+
     # files
     File:
       description: 'File schema'
@@ -2673,4 +2885,7 @@ components:
         image_url:
           type: string
           example: 'https://pda-os-api.azurewebsites.net/public/WallpaperDog-10845580-1099b.jpg'
-
+      example:
+        originalname: 'file.png'
+        filename: 'file-7995.png'
+        image_url: 'https://pda-os-api.azurewebsites.net/public/WallpaperDog-10845580-1099b.jpg'

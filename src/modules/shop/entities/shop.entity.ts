@@ -1,7 +1,8 @@
-import { BaseEntity } from '@common/entities/base.entity';
 import { DateTime } from 'luxon';
 import { Pojo } from 'objection';
 import { omit } from 'helper-fns';
+
+import { BaseEntity } from '@common/entities/base.entity';
 
 export class Shop extends BaseEntity {
   static tableName = 'shops';
@@ -95,6 +96,7 @@ export class Shop extends BaseEntity {
         forecast_return: { type: 'number' },
         status: { type: 'string' },
         client_id: { type: 'string' },
+        is_deleted: { type: 'boolean' },
       },
     };
   }
