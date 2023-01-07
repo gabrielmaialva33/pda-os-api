@@ -24,6 +24,7 @@ export const DatabaseConfig = {
   seeds: {
     directory: `${process.cwd()}/src/database/seeds`,
   },
+  debug: environment.PG_DEBUG,
 } as Knex.Config;
 
 export const database = registerAs('database', () => DatabaseConfig);

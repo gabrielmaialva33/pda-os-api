@@ -1,6 +1,11 @@
 import { BaseEntity } from '@common/entities/base.entity';
 import { Pojo } from 'objection';
 import { DateTime } from 'luxon';
+import { omit } from 'helper-fns';
+
+import { Phone } from '@modules/phone/entities/phone.entity';
+import { Address } from '@modules/address/entities/address.entity';
+import { Shop } from '@modules/shop/entities/shop.entity';
 
 export class Client extends BaseEntity {
   static tableName = 'clients';
@@ -24,7 +29,7 @@ export class Client extends BaseEntity {
   static relationMappings = {
     phones: {
       relation: BaseEntity.ManyToManyRelation,
-      modelClass: `${__dirname}/../../phone/entities/phone.entity`,
+      modelClass: Phone,
       join: {
         from: 'clients.id',
         through: {
@@ -36,7 +41,7 @@ export class Client extends BaseEntity {
     },
     addresses: {
       relation: BaseEntity.ManyToManyRelation,
-      modelClass: `${__dirname}/../../address/entities/address.entity`,
+      modelClass: Address,
       join: {
         from: 'clients.id',
         through: {
@@ -48,7 +53,7 @@ export class Client extends BaseEntity {
     },
     shop: {
       relation: BaseEntity.HasOneRelation,
-      modelClass: `${__dirname}/../../shop/entities/shop.entity`,
+      modelClass: Shop,
       join: {
         from: 'clients.id',
         to: 'shops.client_id',
@@ -98,6 +103,6 @@ export class Client extends BaseEntity {
    */
   $formatJson(json: Pojo) {
     json = super.$formatJson(json);
-    return json;
+    return omit(json, ['is_deleted', 'created_at', 'updated_at', 'deleted_at']);
   }
 }

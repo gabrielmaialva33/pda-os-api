@@ -1,6 +1,10 @@
-import { BaseEntity } from '@common/entities/base.entity';
 import { DateTime } from 'luxon';
 import { Pojo } from 'objection';
+import { omit } from 'helper-fns';
+
+import { BaseEntity } from '@common/entities/base.entity';
+import { Client } from '@modules/client/entities/client.entity';
+import { Shop } from '@modules/shop/entities/shop.entity';
 
 export class Order extends BaseEntity {
   static tableName = 'orders';
@@ -25,7 +29,7 @@ export class Order extends BaseEntity {
   static relationMappings = {
     client: {
       relation: BaseEntity.BelongsToOneRelation,
-      modelClass: `${__dirname}/../../client/entities/client.entity`,
+      modelClass: Client,
       join: {
         from: 'orders.client_id',
         to: 'clients.id',
@@ -33,7 +37,7 @@ export class Order extends BaseEntity {
     },
     shop: {
       relation: BaseEntity.BelongsToOneRelation,
-      modelClass: `${__dirname}/../../shop/entities/shop.entity`,
+      modelClass: Shop,
       join: {
         from: 'orders.shop_id',
         to: 'shops.id',
@@ -89,6 +93,6 @@ export class Order extends BaseEntity {
    */
   $formatJson(json: Pojo) {
     json = super.$formatJson(json);
-    return json;
+    return omit(json, ['is_deleted', 'deleted_at']);
   }
 }

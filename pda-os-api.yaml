@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
   version: 1.0.0
-  title: PDA API
-  description: 'This is a simple ACL API built with NestJS'
+  title: PDA OS API
+  description: 'This is documentation for PDA OS API'
   contact:
-    name: Maia
+    name: Gabriel Maia
     email: gabrielmaialva33@gmail.com
     url: github.com/gabrielmaialva33
 servers:

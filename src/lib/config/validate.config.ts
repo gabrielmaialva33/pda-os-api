@@ -29,7 +29,7 @@ export const ValidateSchema = z.object({
     .min(1)
     .optional()
     .default('false')
-    .transform((value) => Boolean(value)),
+    .transform((value) => value === 'true'),
   PG_SSL: z
     .string()
     .trim()

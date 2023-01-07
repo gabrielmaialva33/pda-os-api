@@ -1,6 +1,11 @@
-import { BaseEntity } from '@common/entities/base.entity';
 import { DateTime } from 'luxon';
 import { Pojo } from 'objection';
+import { omit } from 'helper-fns';
+
+import { BaseEntity } from '@common/entities/base.entity';
+import { Address } from '@modules/address/entities/address.entity';
+import { Bank } from '@modules/bank/entities/bank.entity';
+import { User } from '@modules/user/entities/user.entity';
 
 export class Collaborator extends BaseEntity {
   static tableName = 'collaborators';
@@ -42,7 +47,7 @@ export class Collaborator extends BaseEntity {
     },
     addresses: {
       relation: BaseEntity.ManyToManyRelation,
-      modelClass: `${__dirname}/../../address/entities/address.entity`,
+      modelClass: Address,
       join: {
         from: 'collaborators.id',
         through: {
@@ -54,7 +59,7 @@ export class Collaborator extends BaseEntity {
     },
     bank: {
       relation: BaseEntity.HasOneRelation,
-      modelClass: `${__dirname}/../../bank/entities/bank.entity`,
+      modelClass: Bank,
       join: {
         from: 'collaborators.id',
         to: 'banks.collaborator_id',
@@ -62,7 +67,7 @@ export class Collaborator extends BaseEntity {
     },
     user: {
       relation: BaseEntity.BelongsToOneRelation,
-      modelClass: `${__dirname}/../../user/entities/user.entity`,
+      modelClass: User,
       join: {
         from: 'collaborators.user_id',
         to: 'users.id',
@@ -129,6 +134,12 @@ export class Collaborator extends BaseEntity {
    */
   $formatJson(json: Pojo) {
     json = super.$formatJson(json);
-    return json;
+    return omit(json, [
+      'user_id',
+      'is_deleted',
+      'created_at',
+      'updated_at',
+      'deleted_at',
+    ]);
   }
 }

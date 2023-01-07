@@ -1,7 +1,9 @@
 import { DateTime } from 'luxon';
 import { Pojo } from 'objection';
+import { omit } from 'helper-fns';
 
 import { BaseEntity } from '@common/entities/base.entity';
+import { Collaborator } from '@modules/collaborator/entities/collaborator.entity';
 
 export class Bank extends BaseEntity {
   static tableName = 'banks';
@@ -24,7 +26,7 @@ export class Bank extends BaseEntity {
   static relationMappings = {
     collaborator: {
       relation: BaseEntity.BelongsToOneRelation,
-      modelClass: `${__dirname}/../../collaborator/entities/collaborator.entity`,
+      modelClass: Collaborator,
       join: {
         from: 'banks.collaborator_id',
         to: 'collaborators.id',
@@ -76,6 +78,12 @@ export class Bank extends BaseEntity {
    */
   $formatJson(json: Pojo) {
     json = super.$formatJson(json);
-    return json;
+    return omit(json, [
+      'collaborator_id',
+      'is_deleted',
+      'created_at',
+      'updated_at',
+      'deleted_at',
+    ]);
   }
 }

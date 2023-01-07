@@ -1,23 +1,23 @@
 import 'dotenv/config';
 import * as process from 'process';
+import * as path from 'path';
+import { contentParser } from 'fastify-multer';
 
 import { NestFactory } from '@nestjs/core';
-
 import { Logger } from '@nestjs/common';
+import { I18nValidationExceptionFilter } from 'nestjs-i18n';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+
 import helmet from '@fastify/helmet';
 import compression from '@fastify/compress';
 import fastifyStatic from '@fastify/static';
-import { contentParser } from 'fastify-multer';
-import { I18nValidationExceptionFilter } from 'nestjs-i18n';
 
 import { AppModule } from '@/app.module';
 import { AppUtils } from '@common/helpers';
 import { ZodValidationPipe } from '@lib/zod/pipe.zod';
-import * as path from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -40,8 +40,6 @@ async function bootstrap() {
     encodings: ['gzip', 'deflate'],
   });
   await app.register(contentParser);
-  app.enableCors();
-
   await app.register(fastifyStatic, {
     root: path.join(__dirname, '..', 'public'),
     prefix: '/public/',
@@ -52,6 +50,7 @@ async function bootstrap() {
    * Global Config
    * ------------------------------------------------------
    */
+  app.enableCors();
   app.enableShutdownHooks();
 
   app.useGlobalFilters(

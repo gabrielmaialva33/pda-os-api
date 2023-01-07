@@ -6,7 +6,6 @@ import { Argon2Utils } from '@common/helpers';
 import { BaseEntity } from '@common/entities/base.entity';
 
 import { Role } from '@modules/role/entities/role.entity';
-import { ModelAttributes } from '@common/interfaces/base-repository.interface';
 import { Token } from '@modules/token/entities/token.entity';
 
 export class User extends BaseEntity {
@@ -68,10 +67,6 @@ export class User extends BaseEntity {
   async $beforeUpdate() {
     if (this.password) this.password = await Argon2Utils.hash(this.password);
     this.updated_at = DateTime.local().toISO();
-  }
-
-  static build(data: ModelAttributes<User>) {
-    return Object.assign(this, data);
   }
 
   /**

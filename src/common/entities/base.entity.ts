@@ -73,13 +73,11 @@ export class BaseEntity extends Model {
       const p = [];
       for (const key in obj) {
         const o = { parent: key, children: [] as Record<string, any>[] };
-        if (key === '$recursive' || key === '$relation' || key === '$modify') {
+        if (key === '$recursive' || key === '$relation' || key === '$modify')
           continue;
-        }
+
         const exp = obj[key];
-        if (typeof exp === 'object') {
-          o.children = getKeys(exp);
-        }
+        if (typeof exp === 'object') o.children = getKeys(exp);
         p.push(o);
       }
 
@@ -95,19 +93,17 @@ export class BaseEntity extends Model {
       parent: string,
     ) => {
       for (const o of rel) {
-        if (!model || !model[o.parent as unknown as ObjectKey]) {
+        if (!model || !model[o.parent as unknown as ObjectKey])
           toBeLoadedRelations[
             parent !== '' ? `${parent}.${o.parent}` : o.parent
           ] = true;
-        }
 
-        if (o.children.length > 0) {
+        if (o.children.length > 0)
           await getUnloadedRelationsList(
             model[o.parent as ObjectKey] as unknown as this,
             o.children,
             o.parent,
           );
-        }
       }
     };
 
