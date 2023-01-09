@@ -26,7 +26,7 @@ export const dateStringCustom = createCustomMapper<ZodAnyDateStringIssue>(
     }
 
     if (params.code === 'invalid_date_string_day') {
-      const mapper: Record<typeof params['expected'], string> = {
+      const mapper: Record<(typeof params)['expected'], string> = {
         weekDay: 'week day',
         weekend: 'weekend',
       };
