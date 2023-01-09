@@ -1,18 +1,18 @@
 _id: spc_7f0051de6557471baaee7fdc4d9c0a81
 type: ApiSpec
 parentId: wrk_b084de0cdb4b4710bd50223957014013
-modified: 1672935184877
+modified: 1673298387816
 created: 1668302615245
 fileName: pda-os-api
-contents: >+
+contents: >
   openapi: 3.0.3
 
   info:
     version: 1.0.0
-    title: PDA API
-    description: 'This is a simple ACL API built with NestJS'
+    title: PDA OS API
+    description: 'This is documentation for PDA OS API'
     contact:
-      name: Maia
+      name: Gabriel Maia
       email: gabrielmaialva33@gmail.com
       url: github.com/gabrielmaialva33
   servers:
@@ -45,6 +45,8 @@ contents: >+
       description: Operations about orders
     - name: Schedule
       description: Operations about schedules
+    - name: Signature
+      description: Operations about signatures
     - name: File
       description: Operations about files
 
@@ -1376,6 +1378,157 @@ contents: >+
           '404':
             description: Schedule not found
 
+    /signatures:
+      get:
+        tags:
+          - Signature
+        summary: List signatures
+        description: Use to request all signatures
+        operationId: GetAllSignatures
+        parameters:
+          - in: query
+            name: page
+            schema:
+              type: integer
+              default: 1
+            description: Page number
+          - in: query
+            name: per_page
+            schema:
+              type: integer
+              default: 10
+            description: Number of signatures per page
+          - in: query
+            name: search
+            schema:
+              type: string
+              example: 'John'
+            description: Search by public fields
+          - in: query
+            name: sort
+            schema:
+              type: string
+              default: id
+            description: Sort by field
+          - in: query
+            name: order
+            schema:
+              type: string
+              default: asc
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Signature'
+      post:
+        tags:
+          - Signature
+        summary: Store signature
+        description: Use to create a signature
+        operationId: StoreSignature
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Signature object that needs to be added to the store
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreSignature'
+        responses:
+          '201':
+            description: Signature created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Signature'
+          '400':
+            description: Invalid input
+    /signatures/{signatureId}:
+      get:
+        tags:
+          - Signature
+        summary: Get signature
+        description: Use to request a signature
+        operationId: GetSignature
+        parameters:
+          - name: signatureId
+            in: path
+            description: ID of signature to return
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '200':
+            description: A successful response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Signature'
+          '404':
+            description: Signature not found
+      put:
+        tags:
+          - Signature
+        summary: Edit signature
+        description: Use to edit a signature
+        operationId: EditSignature
+        parameters:
+          - name: signatureId
+            in: path
+            description: ID of signature to update
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        requestBody:
+          description: Signature object that needs to be updated
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditSignature'
+        responses:
+          '200':
+            description: Signature updated
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Signature'
+          '400':
+            description: Invalid input
+          '404':
+            description: Signature not found
+      delete:
+        tags:
+          - Signature
+        summary: Delete signature
+        description: Use to delete a signature
+        operationId: DeleteSignature
+        parameters:
+          - name: signatureId
+            in: path
+            description: ID of signature to delete
+            required: true
+            schema:
+              type: string
+        security:
+          - bearerToken: [ ]
+        responses:
+          '204':
+            description: Signature deleted
+          '404':
+            description: Signature not found
+
     /file/single-file:
       post:
         tags:
@@ -2408,10 +2561,6 @@ contents: >+
             type: string
             format: uuid
             example: d41d7132-3e51-4669-b77a-a1014794de98
-          client_id:
-            type: string
-            format: uuid
-            example: 50ff7b3b-a15c-40af-9221-db50619d4890
           shop_id:
             type: string
             format: uuid
@@ -2437,14 +2586,12 @@ contents: >+
             format: date-time
             example: '2020-01-01T00:00:00Z'
         required:
-          - client_id
           - shop_id
           - report
           - accessories
           - status
         example:
           id: dffcb5ac-8b30-4965-b972-74be3c23b4ee
-          client_id: 092468d9-869e-4a72-a4bc-c3092888c4ee
           shop_id: 7202613d-6198-4806-b6db-fba7ad80b766
           report: 'Relato de cliente 1'
           accessories: 'Acessórios 1, Acessórios 2, Acessórios 3'
@@ -2456,10 +2603,6 @@ contents: >+
         description: 'Store order schema'
         type: object
         properties:
-          client_id:
-            type: string
-            format: uuid
-            example: 6af80270-9cdc-417f-9b0a-7b130996594f
           shop_id:
             type: string
             format: uuid
@@ -2476,27 +2619,30 @@ contents: >+
           status:
             type: string
             example: 'PENDING'
+          schedule_ids:
+            type: array
+            items:
+              type: string
+              format: uuid
+              example: 80686103-4a03-4fb6-b894-d7cdc2c940c4
         required:
-          - client_id
           - shop_id
           - report
           - accessories
           - status
         example:
-          client_id: ead7c108-5d18-453f-b1b7-17efbc39b1fa
           shop_id: 7205de9c-97fd-4b04-a246-004c4efb00fc
           report: 'Relato de cliente 1'
           accessories: 'Acessórios 1, Acessórios 2, Acessórios 3'
           note: 'Nota 1'
           status: 'PENDING'
+          schedule_ids:
+              - f4023ba2-c822-48da-bf87-6c024a28c1fd
+              - f11c9461-6d98-48e0-8e15-31ee4f051215
       EditOrder:
         description: 'Edit order schema'
         type: object
         properties:
-          client_id:
-            type: string
-            format: uuid
-            example: 6af80270-9cdc-417f-9b0a-7b130996594f
           shop_id:
             type: string
             format: uuid
@@ -2513,13 +2659,21 @@ contents: >+
           status:
             type: string
             example: 'PENDING'
+          schedule_ids:
+            type: array
+            items:
+              type: string
+              format: uuid
+              example: cc342556-f65e-4721-b360-9ef328b30e6d
         example:
-          client_id: 0b435679-be7d-4fe0-aa72-e09720972e36
           shop_id: a451b551-6fe5-4cd2-839b-10e90f96a8df
           report: 'Relato de cliente 1'
           accessories: 'Acessórios 1, Acessórios 2, Acessórios 3'
           note: 'Nota 1'
           status: 'PENDING'
+          schedule_ids:
+              - c1ee7958-6919-4b82-b762-d5dc17ec3494
+              - f1d45fb1-5192-46d2-86ba-3ebf9c3c2674
 
       # schedule schemas
       Schedule:
@@ -2530,10 +2684,6 @@ contents: >+
             type: string
             format: uuid
             example: 54fa20cb-02f3-49ac-a821-8e933316d1f2
-          shop_id:
-            type: string
-            format: uuid
-            example: e03d836d-fe7e-45a0-b6b5-0287b166a162
           date:
             type: string
             format: date
@@ -2559,8 +2709,6 @@ contents: >+
             example: '2020-01-01T00:00:00Z'
         example:
           id: 4c8a57d0-c48c-42c7-ac19-c841d7162181
-          client_id: 74accb9f-f64a-4963-99b6-391c46b8a163
-          shop_id: 0001cf53-8571-4887-8e18-991cf2f08adf
           date: '2022-01-01'
           start_time: '08:00:00'
           end_time: '18:00:00'
@@ -2571,10 +2719,6 @@ contents: >+
         description: 'Store schedule schema'
         type: object
         properties:
-          shop_id:
-            type: string
-            format: uuid
-            example: 502d0a3e-b367-42b2-99e7-0e79e155c004
           date:
             type: string
             format: date
@@ -2603,14 +2747,12 @@ contents: >+
                   type: string
                   example: 'member'
         required:
-          - shop_id
           - date
           - start_time
           - end_time
           - status
           - collaborators
         example:
-          shop_id: 0001cf53-8571-4887-8e18-991cf2f08adf
           date: '2022-01-01'
           start_time: '08:00:00'
           end_time: '18:00:00'
@@ -2624,10 +2766,6 @@ contents: >+
         description: 'Edit schedule schema'
         type: object
         properties:
-          shop_id:
-            type: string
-            format: uuid
-            example: a990511c-056e-4692-a1bb-cc2597bfffb6
           date:
             type: string
             format: date
@@ -2656,7 +2794,6 @@ contents: >+
                   type: string
                   example: 'member'
         example:
-          shop_id: 956994d0-6086-4cc6-9687-da41ca8dcb7b
           date: '2022-01-01'
           start_time: '08:00:00'
           end_time: '18:00:00'
@@ -2666,6 +2803,64 @@ contents: >+
               role: 'member'
             - id: 791fe20f-5548-4454-9a92-b7ab954e726e
               role: 'member'
+
+      # signature
+      Signature:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+            example: e51051b0-62ad-41e8-9777-f0dad51bcc2e
+          full_name:
+            type: string
+            example: 'Gabriel Maia'
+          rubric:
+            type: string
+            example: 'Maia'
+          image_url:
+            type: string
+            example: 'https://telegra.ph/file/11275b9f795738ba882d6.png'
+        example:
+          full_name: 'Gabriel Maia'
+          rubric: 'Maia'
+          image_url: 'https://telegra.ph/file/11275b9f795738ba882d6.png'
+      StoreSignature:
+        type: object
+        properties:
+          full_name:
+            type: string
+            example: 'Gabriel Maia'
+          rubric:
+            type: string
+            example: 'Maia'
+          image_url:
+            type: string
+            example: 'https://telegra.ph/file/11275b9f795738ba882d6.png'
+        required:
+          - full_name
+          - rubric
+          - image_url
+        example:
+          full_name: 'Gabriel Maia'
+          rubric: 'Maia'
+          image_url: 'https://telegra.ph/file/11275b9f795738ba882d6.png'
+      EditSignature:
+        type: object
+        properties:
+          full_name:
+            type: string
+            example: 'Gabriel Maia'
+          rubric:
+            type: string
+            example: 'Maia'
+          image_url:
+            type: string
+            example: 'https://telegra.ph/file/11275b9f795738ba882d6.png'
+        example:
+          full_name: 'Gabriel Maia'
+          rubric: 'Maia'
+          image_url: 'https://telegra.ph/file/11275b9f795738ba882d6.png'
 
       # files
       File:
@@ -2681,5 +2876,8 @@ contents: >+
           image_url:
             type: string
             example: 'https://pda-os-api.azurewebsites.net/public/WallpaperDog-10845580-1099b.jpg'
-
+        example:
+          originalname: 'file.png'
+          filename: 'file-7995.png'
+          image_url: 'https://pda-os-api.azurewebsites.net/public/WallpaperDog-10845580-1099b.jpg'
 contentType: yaml
