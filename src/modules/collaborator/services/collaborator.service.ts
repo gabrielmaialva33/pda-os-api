@@ -11,8 +11,8 @@ import {
 
 import { PaginationObject } from '@lib/pagination';
 import { I18nTranslations } from '@/resources/i18n/generated/i18n.generated';
-
 import { ListOptions } from '@common/interfaces/base-repository.interface';
+
 import { CollaboratorRepository } from '@modules/collaborator/repositories/collaborator.repository';
 import { Collaborator } from '@modules/collaborator/entities/collaborator.entity';
 import { UserService } from '@modules/user/services/user.service';
@@ -41,9 +41,7 @@ export class CollaboratorService {
         per_page,
         sort,
         order,
-        context: {
-          populate: ['phones', 'addresses', 'user', 'bank'],
-        },
+        context: { populate: '[phones, addresses, user, bank]' },
       }),
     ).pipe(
       map(({ total, results: data }) =>
@@ -63,9 +61,7 @@ export class CollaboratorService {
       this.collaboratorRepository.list({
         sort,
         order,
-        context: {
-          populate: ['phones', 'addresses', 'user', 'bank'],
-        },
+        context: { populate: '[phones, addresses, user, bank]' },
       }),
     ).pipe(map((collaborators) => collaborators));
   }
@@ -73,9 +69,7 @@ export class CollaboratorService {
   get(id: string) {
     return from(
       this.collaboratorRepository
-        .getBy(['id'], id, {
-          populate: ['phones', 'addresses', 'user', 'bank'],
-        })
+        .getBy(['id'], id, { populate: '[phones, addresses, user, bank]' })
         .pipe(
           map((collaborator) => {
             if (!collaborator)

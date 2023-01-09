@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { from, map, switchMap } from 'rxjs';
+import { forkJoin, from, map, switchMap } from 'rxjs';
 import { I18nService } from 'nestjs-i18n';
 import { DateTime } from 'luxon';
 
@@ -26,7 +26,6 @@ export class OrderService {
         search,
         order,
         sort,
-        context: { populate: ['client', 'shop'] },
       }),
     ).pipe(
       map(({ total, results: data }) =>
@@ -44,7 +43,7 @@ export class OrderService {
   get(id: string) {
     return from(
       this.orderRepository.getBy(['id'], id, {
-        populate: ['client', 'shop'],
+        populate: '[shop, shop.client, schedules]',
       }),
     ).pipe(
       map((order) => {
@@ -62,9 +61,18 @@ export class OrderService {
     );
   }
 
-  create(data: CreateOrderDto) {
+  create({ schedule_ids, ...data }: CreateOrderDto) {
     return from(this.orderRepository.create(data)).pipe(
-      switchMap((order) => this.get(order.id)),
+      switchMap((order) => {
+        if (schedule_ids && schedule_ids.length)
+          return this.syncSchedules(order, schedule_ids).pipe(
+            switchMap(() =>
+              order.$fetchGraph('[shop, shop.client, schedules]'),
+            ),
+          );
+
+        return this.get(order.id);
+      }),
     );
   }
 
@@ -81,6 +89,16 @@ export class OrderService {
           is_deleted: true,
           deleted_at: DateTime.local().toISO(),
         }),
+      ),
+    );
+  }
+
+  syncSchedules(order: Order, scheduleIds: string[]) {
+    return from(order.$relatedQuery('schedules').unrelate()).pipe(
+      switchMap(() =>
+        from(order.$relatedQuery('schedules').relate(scheduleIds)).pipe(
+          map(() => order),
+        ),
       ),
     );
   }

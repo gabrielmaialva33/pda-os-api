@@ -34,9 +34,7 @@ export class ClientService {
           per_page,
           sort,
           order,
-          context: {
-            populate: ['phones', 'addresses'],
-          },
+          context: { populate: '[phones, addresses]' },
         })
         .pipe(
           map(({ total, results: data }) =>
@@ -57,7 +55,7 @@ export class ClientService {
       this.clientRepository.list({
         sort,
         order,
-        context: { populate: ['phones', 'addresses'] },
+        context: { populate: '[phones, addresses]' },
       }),
     ).pipe(map((clients) => clients));
   }
@@ -65,7 +63,7 @@ export class ClientService {
   get(id: string) {
     return from(
       this.clientRepository.getBy(['id'], id, {
-        populate: ['phones', 'addresses'],
+        populate: '[phones, addresses]',
       }),
     ).pipe(
       map((client) => {

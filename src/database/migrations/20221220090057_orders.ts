@@ -6,8 +6,6 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable(Order.tableName, (table) => {
     table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));
 
-    table.uuid('client_id').notNullable();
-    table.uuid('shop_id').notNullable();
     table.string('report').notNullable();
     table.string('accessories').notNullable();
     table.string('note').notNullable();
@@ -16,13 +14,7 @@ export async function up(knex: Knex): Promise<void> {
       .notNullable()
       .defaultTo(OrderStatus.PENDING);
 
-    table
-      .foreign('client_id')
-      .references('id')
-      .inTable('clients')
-      .onDelete('CASCADE')
-      .onUpdate('CASCADE');
-
+    table.uuid('shop_id').notNullable();
     table
       .foreign('shop_id')
       .references('id')

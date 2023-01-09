@@ -28,14 +28,6 @@ export const UpdateScheduleSchema = z.object({
     .optional(),
   note: z.string().trim().optional(),
   status: z.nativeEnum(ScheduleStatus).optional(),
-  shop_id: z
-    .string()
-    .trim()
-    .uuid()
-    .superRefine(async (value, ctx) =>
-      isExists<Shop>({ model: Shop, field: 'id', value, ctx }),
-    )
-    .optional(),
   collaborators: z.array(
     z
       .object({

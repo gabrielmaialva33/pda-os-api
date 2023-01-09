@@ -11,27 +11,20 @@ export const CreateScheduleSchema = z.object({
   date: z
     .string()
     .trim()
-    .datetime()
+    .datetime({ offset: true })
     .transform((value) => DateTime.fromISO(value).toISODate()),
   start_time: z
     .string()
     .trim()
-    .datetime()
+    .datetime({ offset: true })
     .transform((value) => DateTime.fromISO(value).toFormat('HH:mm:ss')),
   end_time: z
     .string()
     .trim()
-    .datetime()
+    .datetime({ offset: true })
     .transform((value) => DateTime.fromISO(value).toFormat('HH:mm:ss')),
   note: z.string().trim().optional(),
   status: z.nativeEnum(ScheduleStatus).optional(),
-  shop_id: z
-    .string()
-    .trim()
-    .uuid()
-    .superRefine(async (value, ctx) =>
-      isExists<Shop>({ model: Shop, field: 'id', value, ctx }),
-    ),
   collaborators: z.array(
     z.object({
       id: z.string().trim().uuid(),

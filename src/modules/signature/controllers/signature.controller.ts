@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Put,
   Post,
+  Put,
 } from '@nestjs/common';
 import { ModelProps } from 'objection';
 

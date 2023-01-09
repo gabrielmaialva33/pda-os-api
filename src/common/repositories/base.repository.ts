@@ -23,10 +23,13 @@ export class BaseRepository<Entity extends BaseEntity>
           /**
            * if exists cotext is for the case when we want to paginate
            */
-          if (options.context)
-            if (options.context.populate && options.context.populate.length > 0)
-              for (const relation of options.context.populate)
-                query.withGraphFetched(relation);
+          if (options.context) {
+            if (options.context.populate)
+              query.withGraphFetched(options.context.populate);
+
+            if (options.context.where) query.where(options.context.where);
+            if (options.context.select) query.select(options.context.select);
+          }
 
           if (options.search) {
             const fields = this.orm.jsonAttributes;
@@ -111,10 +114,7 @@ export class BaseRepository<Entity extends BaseEntity>
             .notDeleted();
 
           if (context) {
-            if (context.populate && context.populate.length > 0)
-              for (const relation of context.populate)
-                query.withGraphFetched(relation);
-
+            if (context.populate) query.withGraphFetched(context.populate);
             if (context.where) query.where(context.where);
           }
 

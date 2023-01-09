@@ -1,5 +1,6 @@
 import { Pojo } from 'objection';
 import { DateTime } from 'luxon';
+import { omit } from 'helper-fns';
 
 import { BaseEntity } from '@common/entities/base.entity';
 
@@ -16,7 +17,6 @@ export class Schedule extends BaseEntity {
   end_time: string;
   note: string;
   status: string;
-  shop_id: string;
 
   /**
    * ------------------------------------------------------
@@ -34,14 +34,6 @@ export class Schedule extends BaseEntity {
           to: 'schedule_collaborators.collaborator_id',
         },
         to: 'collaborators.id',
-      },
-    },
-    shop: {
-      relation: BaseEntity.BelongsToOneRelation,
-      modelClass: `${__dirname}/../../shop/entities/shop.entity`,
-      join: {
-        from: 'schedules.shop_id',
-        to: 'shops.id',
       },
     },
   };
@@ -69,13 +61,12 @@ export class Schedule extends BaseEntity {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['date', 'start_time', 'end_time', 'status', 'shop_id'],
+      required: ['date', 'start_time', 'end_time', 'status'],
       properties: {
         date: { type: 'string' },
         start_time: { type: 'string' },
         end_time: { type: 'string' },
         note: { type: 'string' },
-        shop_id: { type: 'string' },
         is_deleted: { type: 'boolean' },
       },
     };

@@ -1,4 +1,5 @@
-import { Model, ModelOptions, QueryContext } from 'objection';
+import { Model, ModelOptions, Pojo, QueryContext } from 'objection';
+import { omit } from 'helper-fns';
 
 import { CustomQueryBuilder } from '@common/entities/custom-query-builder';
 import {
@@ -124,5 +125,15 @@ export class BaseEntity extends Model {
     await Promise.all(promises);
 
     return;
+  }
+
+  /**
+   * ------------------------------------------------------
+   * Serializer
+   * ------------------------------------------------------
+   */
+  $formatJson(json: Pojo) {
+    json = super.$formatJson(json);
+    return omit(json, ['is_deleted', 'created_at', 'updated_at', 'deleted_at']);
   }
 }

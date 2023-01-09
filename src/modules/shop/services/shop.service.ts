@@ -28,7 +28,7 @@ export class ShopService {
         sort,
         order,
         context: {
-          populate: ['client'],
+          populate: '[client]',
         },
       }),
     ).pipe(
@@ -50,7 +50,7 @@ export class ShopService {
         sort,
         order,
         context: {
-          populate: ['client'],
+          populate: '[client]',
         },
       }),
     ).pipe(map((shops) => shops));
@@ -59,7 +59,7 @@ export class ShopService {
   get(id: string) {
     return from(
       this.shopRepository.getBy(['id'], id, {
-        populate: ['client'],
+        populate: '[client]',
       }),
     ).pipe(
       map((shop) => {

@@ -3,8 +3,8 @@ import { Pojo } from 'objection';
 import { omit } from 'helper-fns';
 
 import { BaseEntity } from '@common/entities/base.entity';
-import { Client } from '@modules/client/entities/client.entity';
 import { Shop } from '@modules/shop/entities/shop.entity';
+import { Schedule } from '@modules/schedule/entities/schedule.entity';
 
 export class Order extends BaseEntity {
   static tableName = 'orders';
@@ -14,7 +14,6 @@ export class Order extends BaseEntity {
    * Columns
    * ------------------------------------------------------
    */
-  client_id: string;
   shop_id: string;
   report: string;
   accessories: string;
@@ -27,20 +26,24 @@ export class Order extends BaseEntity {
    * ------------------------------------------------------
    */
   static relationMappings = {
-    client: {
-      relation: BaseEntity.BelongsToOneRelation,
-      modelClass: Client,
-      join: {
-        from: 'orders.client_id',
-        to: 'clients.id',
-      },
-    },
     shop: {
       relation: BaseEntity.BelongsToOneRelation,
       modelClass: Shop,
       join: {
         from: 'orders.shop_id',
         to: 'shops.id',
+      },
+    },
+    schedules: {
+      relation: BaseEntity.ManyToManyRelation,
+      modelClass: Schedule,
+      join: {
+        from: 'orders.id',
+        through: {
+          from: 'order_schedules.order_id',
+          to: 'order_schedules.schedule_id',
+        },
+        to: 'schedules.id',
       },
     },
   };
@@ -62,17 +65,9 @@ export class Order extends BaseEntity {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: [
-        'client_id',
-        'shop_id',
-        'report',
-        'accessories',
-        'note',
-        'status',
-      ],
+      required: ['shop_id', 'report', 'accessories', 'note', 'status'],
       properties: {
         id: { type: 'string' },
-        client_id: { type: 'string' },
         shop_id: { type: 'string' },
         report: { type: 'string' },
         accessories: { type: 'string' },
@@ -93,6 +88,6 @@ export class Order extends BaseEntity {
    */
   $formatJson(json: Pojo) {
     json = super.$formatJson(json);
-    return omit(json, ['is_deleted', 'deleted_at']);
+    return omit(json, ['shop_id', 'is_deleted', 'deleted_at']);
   }
 }

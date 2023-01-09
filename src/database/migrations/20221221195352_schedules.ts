@@ -15,14 +15,6 @@ export async function up(knex: Knex): Promise<void> {
       .enum('status', Object.values(ScheduleStatus))
       .notNullable()
       .defaultTo(ScheduleStatus.PENDING);
-    table.uuid('shop_id').notNullable();
-
-    table
-      .foreign('shop_id')
-      .references('id')
-      .inTable('shops')
-      .onDelete('CASCADE')
-      .onUpdate('CASCADE');
 
     table.boolean('is_deleted').notNullable().defaultTo(false);
     table.timestamps(true, true);

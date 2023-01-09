@@ -24,7 +24,7 @@ export class ScheduleService {
         search,
         sort,
         order,
-        context: { populate: ['collaborators', 'shop'] },
+        context: { populate: '[collaborators]' },
       }),
     ).pipe(
       map(({ total, results: data }) =>
@@ -42,7 +42,7 @@ export class ScheduleService {
   get(id: string) {
     return from(
       this.scheduleRepository.getBy(['id'], id, {
-        populate: ['collaborators', 'shop'],
+        populate: '[collaborators]',
       }),
     ).pipe(
       map((schedule) => {

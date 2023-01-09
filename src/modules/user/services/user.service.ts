@@ -29,7 +29,7 @@ export class UserService {
   get(id: string) {
     return from(
       this.userRepository.getBy(['id'], id, {
-        populate: ['roles'],
+        populate: '[roles]',
       }),
     ).pipe(
       map((user) => {
@@ -87,7 +87,7 @@ export class UserService {
         search,
         sort,
         order,
-        context: { populate: ['roles'] },
+        context: { populate: '[roles]' },
       }),
     ).pipe(
       map(({ total, results: data }) =>
@@ -105,7 +105,7 @@ export class UserService {
   getBy(keys: ModelProps<User>[], value: any) {
     return from(
       this.userRepository.getBy(keys, value, {
-        populate: ['roles'],
+        populate: '[roles]',
       }),
     ).pipe(
       map((user) => {

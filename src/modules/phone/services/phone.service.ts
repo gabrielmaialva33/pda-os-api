@@ -43,7 +43,7 @@ export class PhoneService {
   get(id: string) {
     return from(
       this.phoneRepository.getBy(['id'], id, {
-        populate: ['collaborators'],
+        populate: '[collaborators]',
       }),
     ).pipe(
       map((phone) => {

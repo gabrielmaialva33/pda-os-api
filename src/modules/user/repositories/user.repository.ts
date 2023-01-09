@@ -33,7 +33,7 @@ export class UserRepository
     const relateRoles$ = from(user.$relatedQuery('roles').relate(roleIds));
 
     return forkJoin([unrelatedRoles$, relateRoles$]).pipe(
-      switchMap(() => this.getBy(['id'], user.id, { populate: ['roles'] })),
+      switchMap(() => this.getBy(['id'], user.id, { populate: '[roles]' })),
     );
   }
 }

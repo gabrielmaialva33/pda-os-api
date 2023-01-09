@@ -83,6 +83,7 @@ export interface ListOptions<T extends BaseEntity> {
 }
 
 export interface QueryContext<T extends BaseEntity> {
+  select?: ModelProps<T>[];
   where?: { [k in keyof T]?: T[k] };
-  populate?: RelationExpression<T>[];
+  populate?: RelationExpression<T>;
 }

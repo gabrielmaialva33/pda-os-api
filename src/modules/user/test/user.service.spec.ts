@@ -107,7 +107,7 @@ describe('UserService', () => {
     expect(result).toEqual(user);
     expect(mockUserRepository.getBy).toBeCalledTimes(1);
     expect(mockUserRepository.getBy).toBeCalledWith(['id'], user.id, {
-      populate: ['roles'],
+      populate: '[roles]',
     });
 
     expect(mockI18nService.t).toBeCalledTimes(0);
@@ -136,7 +136,7 @@ describe('UserService', () => {
     expect(mockUserRepository.getBy).toBeCalledWith(
       ['user_name'],
       user.user_name,
-      { populate: ['roles'] },
+      { populate: '[roles]' },
     );
 
     expect(mockI18nService.t).toBeCalledTimes(0);
@@ -163,7 +163,7 @@ describe('UserService', () => {
     expect(result).toEqual(user);
     expect(mockUserRepository.getBy).toBeCalledTimes(1);
     expect(mockUserRepository.getBy).toBeCalledWith(['email'], user.email, {
-      populate: ['roles'],
+      populate: '[roles]',
     });
 
     expect(mockI18nService.t).toBeCalledTimes(0);
