@@ -7,6 +7,7 @@ export type I18nTranslations = {
     not_found: string;
     invalid_credentials: string;
     account_not_found: string;
+    internal_server_error: string;
   };
   model: {
     user: {

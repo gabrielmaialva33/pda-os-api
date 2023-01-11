@@ -134,4 +134,12 @@ export class BaseRepository<Entity extends BaseEntity>
       }),
     ).pipe(map((result) => result as Entity));
   }
+
+  destroy(model: Entity): Observable<void> {
+    return from(
+      this.orm.transaction(async (trx) => {
+        await model.$query(trx).delete();
+      }),
+    );
+  }
 }

@@ -6,6 +6,7 @@ import { BaseEntity } from '@common/entities/base.entity';
 import { Address } from '@modules/address/entities/address.entity';
 import { Bank } from '@modules/bank/entities/bank.entity';
 import { User } from '@modules/user/entities/user.entity';
+import crypto from 'crypto';
 
 export class Collaborator extends BaseEntity {
   static tableName = 'collaborators';
@@ -80,7 +81,14 @@ export class Collaborator extends BaseEntity {
    * Hooks
    * ------------------------------------------------------
    */
+  async $beforeInsert() {
+    this.code = this.code
+      ? this.code.toUpperCase()
+      : crypto.randomBytes(4).toString('hex').toUpperCase();
+  }
+
   async $beforeUpdate() {
+    this.code = this.code.toUpperCase();
     this.updated_at = DateTime.local().toISO();
   }
 
@@ -127,6 +135,8 @@ export class Collaborator extends BaseEntity {
       },
     };
   }
+
+  static populate = ['phones', 'addresses', 'bank', 'user'];
 
   /**
    * ------------------------------------------------------

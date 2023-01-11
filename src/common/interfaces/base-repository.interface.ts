@@ -69,6 +69,16 @@ export interface IBaseRepository<Entity extends BaseEntity> {
    * const user = await this.userRepository.update(1, { name: 'John Doe' });
    */
   update(model: Entity, data: ModelAttributes<Entity>): Observable<Entity>;
+
+  /**
+   * @description Delete an entity from the database
+   * @param {Entity} model
+   * @returns {Observable<Entity>}
+   * @memberof IBaseRepository
+   * @example
+   * await this.userRepository.destroy(user);
+   */
+  destroy(model: Entity): Observable<void>;
 }
 
 export type ModelAttributes<T extends BaseEntity> = { [k in keyof T]?: T[k] };

@@ -3,5 +3,6 @@
   "invalid_credentials": "Credenciais inválidas",
   "account_not_found": "Conta não encontrada",
   "account_deleted": "Conta deletada",
-  "access_token": "Token de acesso inválido: {error}!"
+  "access_token": "Token de acesso inválido: {error}!",
+  "internal_server_error": "Erro interno do servidor"
 }

@@ -1,8 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { forkJoin, from, map, switchMap } from 'rxjs';
+import {
+  HttpException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
+import { catchError, forkJoin, from, map, switchMap, of } from 'rxjs';
 import { I18nService } from 'nestjs-i18n';
 import { DateTime } from 'luxon';
-import * as crypto from 'crypto';
 
 import {
   CreateCollaboratorDto,
@@ -91,6 +95,7 @@ export class CollaboratorService {
     const user$ = from(
       this.userService.create({
         ...user,
+        password: user.password ? user.password : data.cpf.replace(/\D/g, ''),
         role: RoleType.COLLABORATOR,
       }),
     );
@@ -101,7 +106,6 @@ export class CollaboratorService {
           this.collaboratorRepository.create({
             ...data,
             user_id: user.id,
-            code: crypto.randomBytes(4).toString('hex').toUpperCase(),
           }),
         );
       }),
@@ -136,6 +140,23 @@ export class CollaboratorService {
 
         return forkJoin([phones$, addresses$, bank$]).pipe(
           switchMap(() => this.get(collaborator.id)),
+        );
+      }),
+      catchError((error) => {
+        Logger.error(error, 'CollaboratorService.create');
+        const destroyUser$ = user$.pipe(
+          switchMap((user) => this.userService.destroy(user.id)),
+        );
+
+        return forkJoin([destroyUser$]).pipe(
+          switchMap(() =>
+            of(
+              new HttpException(
+                this.i18nService.t('exception.internal_server_error'),
+                500,
+              ),
+            ),
+          ),
         );
       }),
     );

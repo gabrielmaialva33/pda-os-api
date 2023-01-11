@@ -8,6 +8,7 @@ import { CreateAddressSchema } from '@modules/address/dto';
 import { CreateBankSchema } from '@modules/bank/dto';
 
 const CreateCollaboratorSchema = z.object({
+  code: z.string().optional(),
   cpf: z.string().trim(),
   rg: z.string().trim(),
   birth_date: z.string().trim(),
@@ -37,7 +38,7 @@ const CreateCollaboratorSchema = z.object({
       .superRefine(async (value, ctx) =>
         isUnique<User>({ model: User, field: 'user_name', value, ctx }),
       ),
-    password: z.string().min(1).max(118),
+    password: z.string().min(1).max(118).optional(),
     avatar: z.string().min(1).max(255).optional(),
   }),
 });

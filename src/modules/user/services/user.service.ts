@@ -20,6 +20,29 @@ export class UserService {
     private readonly i18nService: I18nService<I18nTranslations>,
   ) {}
 
+  paginate({ page, per_page, search, sort, order }: ListOptions<User>) {
+    return from(
+      this.userRepository.paginate({
+        page,
+        per_page,
+        search,
+        sort,
+        order,
+        context: { populate: '[roles]' },
+      }),
+    ).pipe(
+      map(({ total, results: data }) =>
+        PaginationObject<User>({
+          data,
+          total,
+          page,
+          per_page,
+          route: '/users',
+        }),
+      ),
+    );
+  }
+
   list({ sort, order }: ListOptions<User>) {
     return from(this.userRepository.list({ sort, order })).pipe(
       map((users) => users),
@@ -29,6 +52,25 @@ export class UserService {
   get(id: string) {
     return from(
       this.userRepository.getBy(['id'], id, {
+        populate: '[roles]',
+      }),
+    ).pipe(
+      map((user) => {
+        if (!user)
+          throw new NotFoundException(
+            this.i18nService.t('exception.not_found', {
+              args: { entity: this.i18nService.t('model.user.entity') },
+            }),
+          );
+
+        return user;
+      }),
+    );
+  }
+
+  getBy(keys: ModelProps<User>[], value: any) {
+    return from(
+      this.userRepository.getBy(keys, value, {
         populate: '[roles]',
       }),
     ).pipe(
@@ -79,45 +121,9 @@ export class UserService {
     return from(this.userRepository.softDelete(id)).pipe(map((user) => user));
   }
 
-  paginate({ page, per_page, search, sort, order }: ListOptions<User>) {
-    return from(
-      this.userRepository.paginate({
-        page,
-        per_page,
-        search,
-        sort,
-        order,
-        context: { populate: '[roles]' },
-      }),
-    ).pipe(
-      map(({ total, results: data }) =>
-        PaginationObject<User>({
-          data,
-          total,
-          page,
-          per_page,
-          route: '/users',
-        }),
-      ),
-    );
-  }
-
-  getBy(keys: ModelProps<User>[], value: any) {
-    return from(
-      this.userRepository.getBy(keys, value, {
-        populate: '[roles]',
-      }),
-    ).pipe(
-      map((user) => {
-        if (!user)
-          throw new NotFoundException(
-            this.i18nService.t('exception.not_found', {
-              args: { entity: this.i18nService.t('model.user.entity') },
-            }),
-          );
-
-        return user;
-      }),
+  destroy(id: string) {
+    return this.get(id).pipe(
+      switchMap((user) => from(this.userRepository.destroy(user))),
     );
   }
 }
